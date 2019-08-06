@@ -17,7 +17,7 @@
     width: 15%;
     height: 93%;
     .left-nav-mine {
-      height: 89%;
+      height: 81%;
       overflow: hidden;
       .nav-mine-title {
         height: 6%;
@@ -54,7 +54,7 @@
     .left-nav-bottom-btn {
       display: flex;
       position: absolute;
-      bottom: 0;
+      bottom: 12% ;
       left: 0;
       height: 11%;
       width: 100%;
@@ -72,6 +72,24 @@
           margin: 0 auto;
           cursor: pointer;
         }
+      }
+    }
+
+    .manager-left-btn {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+
+      .nav-manager-title {
+        height: 6%;
+        width: 100%;
+        background-color: rgb(247, 183, 101);
+        font-size: 24px;
+        text-align: center;
+        color: #fff;
+        border: 0px;
+        margin-top: 2px;
       }
     }
   }

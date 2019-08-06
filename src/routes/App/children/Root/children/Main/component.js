@@ -6,6 +6,7 @@ import Loadable from 'components/Loadable'
 
 const Home = Loadable(import('./children/Home'))
 const Minitoring = Loadable(import('./children/Minitoring'))
+const Manager = Loadable(import('./children/Manager'))
 
 class Main extends React.Component {
   render() {
@@ -23,6 +24,11 @@ class Main extends React.Component {
               <AuthRouter
                 path={`${match.url}/minitoring`}
                 component={Minitoring}
+                permissionPath={[]}
+              />
+              <AuthRouter
+                path={`${match.url}/manager`}
+                component={Manager}
                 permissionPath={[]}
               />
             </Switch>

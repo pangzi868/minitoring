@@ -22,6 +22,7 @@ class Minitoring extends React.Component {
       isRealTimeShow: false,
       isEmergencyShow: false,
       isAnalysisShow: false,
+      isLogListShow: false,
 
       // 模拟列表数据
       myMinitoringList: [
@@ -112,21 +113,32 @@ class Minitoring extends React.Component {
         this.setState({
           isRealTimeShow: true,
           isEmergencyShow: false,
-          isAnalysisShow: false
+          isAnalysisShow: false,
+          isLogListShow: false,
         })
         break;
       case '告警信息':
         this.setState({
           isRealTimeShow: false,
           isEmergencyShow: true,
-          isAnalysisShow: false
+          isAnalysisShow: false,
+          isLogListShow: false,
         })
         break;
       case '密度分析':
         this.setState({
           isRealTimeShow: false,
           isEmergencyShow: false,
-          isAnalysisShow: true
+          isAnalysisShow: true,
+          isLogListShow: false,
+        })
+        break;
+      case '日志列表':
+        this.setState({
+          isRealTimeShow: false,
+          isEmergencyShow: false,
+          isAnalysisShow: false,
+          isLogListShow: true,
         })
         break;
       default:
@@ -173,6 +185,7 @@ class Minitoring extends React.Component {
                               <Menu.Item key={`${item.minitoringName + items.id}-1`}>实时视频</Menu.Item>
                               <Menu.Item key={`${item.minitoringName + items.id}-2`}>告警信息</Menu.Item>
                               <Menu.Item key={`${item.minitoringName + items.id}-3`}>密度分析</Menu.Item>
+                              <Menu.Item key={`${item.minitoringName + items.id}-4`}>日志列表</Menu.Item>
                             </SubMenu>
                           )) : ''
                         }
@@ -192,6 +205,11 @@ class Minitoring extends React.Component {
               <img className='left-add-img' src={EquipmentAddition} alt='left-add-img'></img>
               <span className='left-add-equipment-title'>添加设备</span>
             </div>
+          </div>
+
+          <div className='manager-left-btn'>
+            <div className='nav-manager-title'>设备管理</div>
+            <div className='nav-manager-title'>更新固件</div>
           </div>
         </div>
 

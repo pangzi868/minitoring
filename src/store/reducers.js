@@ -1,14 +1,15 @@
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 
 /** 天威 START**/
 import user from './modules/user'
 import minitoring from './modules/minitoring'
+import manager from './modules/manager'
 /** 天威 END **/
 
 import global from './modules/global'
 import account from './modules/account'
 import loginOut from './modules/loginOut'
-export const injectReducer = (store, {key, reducer}) => {
+export const injectReducer = (store, { key, reducer }) => {
 
   if (Object.hasOwnProperty.call(store.asyncReducers, key)) return
 
@@ -21,6 +22,7 @@ export const makeRootReducer = (asyncReducers) => {
     //天威
     user,
     minitoring,
+    manager,
     //
     account,
     loginOut,

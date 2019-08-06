@@ -300,7 +300,7 @@ class LoginForm extends React.Component {
           </Tabs>
         </div>
 
-        { /** 密码登录/短信登录表单 */}
+        { /** 密码登录/短信修改表单 */}
         <div className={`modifier-div ${this.state.isModifierShow || this.state.isModifierComfirmShow ? '' : 'hide'}`}>
           <div className={`modifier-psw-content ${this.state.isModifierShow ? '' : 'hide'}`}>
             <div className='modifier-div-top'>找回密码</div>
@@ -355,7 +355,6 @@ class LoginForm extends React.Component {
               </Form>
             </div>
           </div>
-
           <div className={`comfirm-psw-content ${this.state.isModifierComfirmShow ? '' : 'hide'}`}>
             <div className='modifier-div-top'>修改密码</div>
             <div className='modifier-div-content'>
