@@ -1,0 +1,13 @@
+.no-data-component {
+  display: flex;
+  height: 88px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  color: rgba(153,153,153,1);
+  .no-data {
+    height: 88px;
+    margin-right: 32px;
+  }
+}

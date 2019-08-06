@@ -1,0 +1,17 @@
+// $iconList: [legwork, report, schedule, chance];
+.split-component {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  font-size: 32px;
+  font-weight: 500;
+  color: rgba(51, 51, 51, 1);
+  line-height: 80px;
+  border-bottom: 1px solid rgba(230,230,230,1);
+  .more-icon{
+    position: absolute;
+    right: 30px;
+    font-size: 40px;
+    color: #666;
+  }
+}

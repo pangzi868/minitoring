@@ -1,0 +1,24 @@
+.loadding-component {
+  position: fixed;
+  width: 100%;
+  height: calc(100vh);
+  z-index: 9999;
+  background-color: rgba(181, 181, 181, 0.5);
+  .am-activity-indicator-spinner {
+    height: 32px;
+    width: 32px;
+  }
+  .am-activity-indicator-tip {
+    font-size: 32px;
+  }
+  .loading{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 100px;
+    width: 200px;
+  }
+}

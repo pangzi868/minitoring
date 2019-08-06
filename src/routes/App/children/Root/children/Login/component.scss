@@ -1,0 +1,122 @@
+.login-component {
+  position: relative;
+  background: url('./images/loginBG.png') no-repeat;
+  height: 100%;
+  width: 100%;
+  background-size: 100% 100%;
+  overflow: hidden;
+  .register-div {
+    position: absolute;
+    top: 35%;
+    left: 36%;
+    width: 28%;
+    min-height: 60%;
+    background-color: #fff;
+    font-size: 26px;
+    .register-div-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(254, 223, 11, 1);
+      height: 12%;
+      width: 100%;
+    }
+    .register-div-content {
+      padding: 0 10%;
+      .ant-form {
+        margin-top: 10%;
+        .ant-form-item {
+          margin-bottom: 12px;
+        }
+        .ant-col-sm-16 {
+          width: 100%;
+        }
+        .ant-col-sm-offset-8 {
+          margin-left: 0;
+        }
+        .ant-btn-primary {
+          width: 100%;
+        }
+      }
+    }
+  }
+  .login-div {
+    position: absolute;
+    top: 35%;
+    left: 36%;
+    width: 28%;
+    min-height: 50%;
+    background-color: #fff;
+    font-size: 26px;
+    padding: 1% 2%;
+    .psw-login-div {
+      .ant-form {
+        margin-top: 10%;
+        .ant-form-item {
+          margin-bottom: 12px;
+        }
+        .ant-col-sm-16 {
+          width: 100%;
+        }
+        .ant-col-sm-offset-8 {
+          margin-left: 0;
+        }
+        .ant-btn-primary {
+          width: 100%;
+        }
+      }
+    }
+    .mail-login-div {
+      .ant-btn-primary {
+        width: 100%;
+      }
+    }
+    .login-operation {
+      float: right;
+    }
+  }
+  .modifier-div {
+    position: absolute;
+    top: 35%;
+    left: 36%;
+    width: 28%;
+    min-height: 30%;
+    background-color: #fff;
+    font-size: 26px;
+    .modifier-div-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+      height: 12%;
+      width: 100%;
+      font-size: 18px;
+      margin-top: 4%;
+    }
+    .modifier-div-content {
+      padding: 0 10%;
+      .ant-form {
+        margin-top: 10%;
+        .ant-form-item {
+          margin-bottom: 12px;
+        }
+        .ant-col-sm-16 {
+          width: 100%;
+        }
+        .ant-col-sm-offset-8 {
+          margin-left: 0;
+        }
+        .ant-btn-primary {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+.hide{
+  display: none;
+}
+.show{
+  display: block;
+}
+

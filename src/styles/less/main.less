@@ -1,0 +1,54 @@
+@import 'antd/modal/index.less';
+@import 'antd/picker/index.less';
+@import 'antd/switch/index.less';
+@import 'antd/search-bar/index.less';
+@import 'antd/navbar/index.less';
+
+
+/** Tabs Start**/
+.main-component{
+  .am-tabs{
+    .am-tabs-default-bar-top{
+      .am-tabs-default-bar-tab{
+        position: relative;
+        padding: 8px 0;
+        font-size: 24px;
+        color: #777;
+        &::after{
+          height: 0;
+        }
+      }
+      .am-tabs-default-bar-tab-active{
+        color: #4F4F4F;
+        &::before{
+          content: '';
+          display: block;
+          position: absolute;
+          width: 120px;
+          left: 50%;
+          bottom: -4px;
+          margin-left: -60px;
+          border-bottom: 2PX solid #108EE9;
+        }
+      }
+      .am-tabs-default-bar-underline{
+        border: 0px;
+      }
+    }
+  }
+}
+/** Tabs End**/
+
+/** PullToRefresh Start**/
+.am-pull-to-refresh-content-wrapper{
+  .am-list-body{
+    &::after, &::before{
+      background-color: #fff!important;
+    }
+  }
+  .am-pull-to-refresh-indicator{
+    font-size: 24px;
+    padding: 5px 0;
+  }
+}
+/** PullToRefresh Start**/
