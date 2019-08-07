@@ -26,9 +26,54 @@ class LoginForm extends React.Component {
       isRegisterShow: true,
       isLoginShow: false,
       isModifierShow: false,
-      isModifierComfirmShow: false
+      isModifierComfirmShow: false,
+
+      // 注册发送按钮
+      registerSendSMSBtn: true
+    }
+    this.hash = ''
+    this.tamp = ''
+    this.inputPhoneNumHandle = this.inputPhoneNumHandle.bind(this)
+  }
+
+  // 手机号码输入事件
+  inputPhoneNumHandle = e => {
+    var phoneNum = document.getElementById('register_phone').value
+    if (phoneNum.length === 11) {
+      this.setState({
+        registerSendSMSBtn: false
+      })
+    } else {
+      this.setState({
+        registerSendSMSBtn: true
+      })
     }
   }
+
+  // 发送验证码
+  sendCheckNum = e => {
+    e.preventDefault();
+    alert('已发送短信')
+    this.props.getSMSMessage({ phoneNumber: '17875769971' }, data => {
+      // 保存短信接口给的hash和tamp，用做校验的判断
+      this.hash = data.hash
+      this.tamp = data.tamp
+      console.log(data, 'wangyinbin')
+    })
+  }
+
+  // 注册按钮点击
+  registerHandleSubmit = e => {
+    e.preventDefault();
+    var msgNum = document.getElementById('register_captcha').value
+    this.props.ValidateCode({ msgNum: msgNum, hash: this.hash, tamp: this.tamp })
+    // this.props.form.validateFieldsAndScroll((err, values) => {
+    //   if (!err) {
+    //     console.log('Received values of form: ', values);
+    //   }
+    // });
+
+  };
 
   goToLogin = e => {
     e.preventDefault();
@@ -55,26 +100,13 @@ class LoginForm extends React.Component {
     })
   }
 
-  // 发送验证码
-  sendCheckNum = e => {
-    e.preventDefault();
-    alert('发送验证码')
-  }
 
   // 导航栏的点击切换
   tabsCallback = key => {
     console.log(key)
   }
 
-  // 注册按钮点击
-  registerHandleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  };
+
 
   // 找回密码下一步按钮点击
   modifierHandleSubmit = e => {
@@ -86,7 +118,7 @@ class LoginForm extends React.Component {
     });
     this.setState({
       isModifierShow: false,
-      isLoginShow : true,
+      isLoginShow: true,
       // isModifierComfirmShow: true
     })
   }
@@ -155,7 +187,6 @@ class LoginForm extends React.Component {
     })(
       <Select style={{ width: 70 }}>
         <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
       </Select>,
     );
 
@@ -164,6 +195,7 @@ class LoginForm extends React.Component {
         <div className={`register-div ${this.state.isRegisterShow ? '' : 'hide'}`}>
           <div className='register-div-top'>注册账号</div>
           <div className='register-div-content'>
+            {/** 注册账号表单 */}
             <Form {...formItemLayout} onSubmit={this.registerHandleSubmit}>
               <Form.Item label="">
                 {getFieldDecorator('phone', {
@@ -171,7 +203,8 @@ class LoginForm extends React.Component {
                 })(<Input
                   addonBefore={prefixSelector}
                   style={{ width: '100%' }}
-                  placeholder="手机号" />)}
+                  placeholder="手机号"
+                  onKeyUp={this.inputPhoneNumHandle.bind(this)} />)}
               </Form.Item>
 
               <Form.Item label="">
@@ -182,7 +215,7 @@ class LoginForm extends React.Component {
                     })(<Input placeholder="验证码" />)}
                   </Col>
                   <Col span={12}>
-                    <Button onClick={this.sendCheckNum}>发送验证码</Button>
+                    <Button disabled={this.state.registerSendSMSBtn} onClick={this.sendCheckNum}>发送验证码</Button>
                   </Col>
                 </Row>
               </Form.Item>

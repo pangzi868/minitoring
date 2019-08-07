@@ -38,23 +38,23 @@ const DEFAULT_CONFIG = {
   failConfig: null // {message: '', callback: function, isForceShow: false}
 };
 
-const formatPayload = responseData => {
-  if (!isPlainObject(responseData.payload)) {
-    if (!isNullOrUndefined(responseData.payload)) {
-      responseData.payload = {
-        // 如果payload不是{}对象，都被认为是丑陋的数据，封装到payload中
-        uglyData: responseData.payload
+const formatdata = responseData => {
+  if (!isPlainObject(responseData.data)) {
+    if (!isNullOrUndefined(responseData.data)) {
+      responseData.data = {
+        // 如果data不是{}对象，都被认为是丑陋的数据，封装到data中
+        uglyData: responseData.data
       };
     } else {
-      responseData.payload = {};
+      responseData.data = {};
     }
   }
-  // 如果payload只有一个data，则将data提升
+  // 如果data只有一个data，则将data提升
   if (
-    isPlainObject(responseData.payload.data) &&
-    Object.keys(responseData.payload).length === 1
+    isPlainObject(responseData.data.data) &&
+    Object.keys(responseData.data).length === 1
   ) {
-    responseData.payload = responseData.payload.data;
+    responseData.data = responseData.data.data;
   }
 };
 /**
@@ -63,7 +63,7 @@ const formatPayload = responseData => {
  *
  * @param data { PlainObject } 后端返回的reponse, 格式为：
  *   {
-      "payload": {...},
+      "data": {...},
       "success": false|true,
       "message": {
         "code": 504,
@@ -74,16 +74,16 @@ const formatPayload = responseData => {
  *
  */
 const responseHandler = (dispatch, config) => {
-  formatPayload(config.responseData);
-  // 后端返回的结果数据和前端发起请求时的额外数据，都会通过payload发给请求处理完毕的回调函数
-  config.responseData.payload.extendData = config.extendData;
-  if (config.responseData.success === true) {
+  formatdata(config.responseData);
+  // 后端返回的结果数据和前端发起请求时的额外数据，都会通过data发给请求处理完毕的回调函数
+  config.responseData.data.extendData = config.extendData;
+  if (config.responseData.code === '0000') {
     if (config.actionType) {
       dispatch({
         type: config.actionType,
         [config.actionDataKey]: config.responseData.pageSize
           ? config.responseData
-          : config.responseData.payload
+          : config.responseData.data
       });
     }
     if (config.successConfig) {
@@ -94,11 +94,11 @@ const responseHandler = (dispatch, config) => {
         config.successConfig.callback(
           config.responseData.pageSize
             ? config.responseData
-            : config.responseData.payload
+            : config.responseData.data
         );
       }
     }
-  } else {
+  } else if(config.responseData.code === '9999') {
     // 其它异常处理: 200的异常情况(success为false)、400、404、500(success标记位不存在)等
     if (!config.responseData.message) {
       config.responseData.message = {};
@@ -231,7 +231,7 @@ export const axiosHandler = config => {
       .then(response => {
         // 200
         // if (response.config.url.indexOf("api/relation_graph") > -1) {
-        //   response.data.payload = response.data.data;
+        //   response.data.data = response.data.data;
         //   // response.data.delete("data");
         // }
         // 1. 一种特殊的200，success为false

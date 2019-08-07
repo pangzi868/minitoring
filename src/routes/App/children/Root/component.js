@@ -8,7 +8,6 @@ import Loadable from 'components/Loadable'
 
 const Login = Loadable(import('./children/Login'))
 const Main = Loadable(import('./children/Main'))
-const Example = Loadable(import('./children/Example'))
 
 class Root extends React.Component {
 	// 声明需要使用的Context属性
@@ -29,7 +28,6 @@ class Root extends React.Component {
 				<div className="root-component-router">
 					<HashRouter>
 						<Switch>
-              <AuthRouter path={`${match.url}/example`} component={Example} />
 							<AuthRouter path={`${match.url}/login`} component={Login} />
 							<AuthRouter path={`${match.url}/main`} component={Main} />
 							<AuthRouter path={'/'} component={Login} />

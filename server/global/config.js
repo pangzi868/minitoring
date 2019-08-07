@@ -1,5 +1,5 @@
 // 监控接口
-const API_ADDRESS = 'http://192.168.41.163:8080';
+const API_ADDRESS = 'http://112.74.77.11:1010';
 
 /**
  * 前端项目端口

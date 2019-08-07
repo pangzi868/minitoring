@@ -1,13 +1,14 @@
 import { connect } from 'react-redux'
-
 import Component from './component'
-import { login } from 'store/modules/loginOut'
+import { getSMSMessage, ValidateCode } from 'store/modules/login'
 
 const mapDispatchToProps = {
-  login
+  getSMSMessage,
+  ValidateCode
 }
 
 const mapStateToProps = (state) => ({
+  SMSMessage: state.login.SMSMessage,
+  Code: state.login.Code
 })
-
 export default connect(mapStateToProps, mapDispatchToProps)(Component)

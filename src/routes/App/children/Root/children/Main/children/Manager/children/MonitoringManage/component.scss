@@ -1,0 +1,166 @@
+.monitoring-manager-component {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  .monitoring-manager-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5%;
+    background-color: rgb(143, 143, 143);
+    width: 100%;
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+  }
+  .monitoring-manager-middle {
+    height: 50%;
+    .monitoring-manager-search {
+      width: 100%;
+      height: 10%;
+      background-color: rgb(247, 183, 101);
+      .monitoring-manager-search-title {
+        display: inline-block;
+        width: 72px;
+        margin: 0 20px;
+        color: #fff;
+        font-size: 18px;
+      }
+      .monitoring-manager-search-input{
+        width: 20%;
+        padding: 0 5px;
+        margin-right: 5px;
+      }
+      .monitoring-manager-search-btn {
+        width: 80px;
+        margin-left: 40px;
+      }
+    }
+    .monitoring-manager-search-list {
+      width: 100%;
+      height: 90%;
+      border: 1px solid #F0F2F3;
+      .manager-search-list-title {
+        width: 100%;
+        height: 10%;
+        border: 1px solid #F0F2F3;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .manager-search-list-item {
+        width: 100%;
+        height: 90%;
+        font-size: 14px;
+        .search-item {
+          width: 100%;
+          height: 10%;
+          border: 1px solid #F0F2F3;
+          .search-item-span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          &:hover {
+            background-color: #F0F2F3;
+          }
+        }
+      }
+      .wd-span {
+        display: inline-block;
+        margin-right: 2%;
+        text-align: center;
+      }
+      .wd15 {
+        width: 13%;
+      }
+      .wd20 {
+        width: 18%;
+      }
+      .wd25 {
+        width: 23%;
+      }
+      .wd30 {
+        width: 28%;
+      }
+    }
+  }
+  .monitoring-manager-bottom {
+    height: 45%;
+    width: 100%;
+    border: 1px solid #666;
+
+    .manager-detail {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      .detail-left-message {
+        position: relative;
+        width: 40%;
+        height: 100%;
+        border: 1px solid #666;
+        .left-detail-message {
+          display: flex;
+          height: 90%;
+          flex-direction: column;
+          justify-content: space-around;
+          padding: 0 5%;
+          align-items: flex-start;
+          font-size: 18px;
+        }
+        .monitoring-manager-bottom-title {
+
+          width: 100%;
+          height: 10%;
+          padding-left: 2%;
+          font-size: 18px;
+          color: #fff;
+          background-color: rgb(247, 183, 101);
+        }
+
+      }
+      .detail-right-list {
+        width: 60%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .add-equipment-form {
+          display: flex;
+          flex-wrap: wrap;
+          text-align: center;
+          justify-content: flex-end;
+          background-color: rgb(247, 183, 101);
+          width: 90%;
+          height: 90%;
+          padding: 1%;
+          font-size: 18px;
+          font-family: 'Times New Roman', Times, serif;
+          border-radius: 10px;
+          .add-equipment-title {
+            display: inline-block;
+            width: 100%;
+            height: 10%;
+            margin-bottom: 1%;
+          }
+          .product-input {
+            display: inline-block;
+            height: 12%;
+            width: 100%;
+            border: 0px;
+            padding: 2%;
+            margin-bottom: 1%;
+            font-size: 18px;
+          }
+          .add-equipment-sure-btn {
+            display: inline-block;
+            height: 15%;
+            width: 20%;
+            text-align: right;
+            margin-right: 5%;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

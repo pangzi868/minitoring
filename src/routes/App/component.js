@@ -42,7 +42,6 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.props.setReduxStore(this.props.store)
   }
   componentDidMount () {
     // if (window.location.hash !== '#/login') {
