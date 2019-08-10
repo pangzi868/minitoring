@@ -25,9 +25,12 @@ class Register extends React.Component {
 
     this.state = {
     }
-
   }
 
+  // 按钮回退
+  backToRegister = e => {
+    this.props.history.push('/root/login')
+  }
 
   // 手机号码输入事件
   inputPhoneNumHandle = e => {
@@ -121,7 +124,7 @@ class Register extends React.Component {
       < div className="register-div-component" >
         <div className='register-div-top'>
           <div className='register-top-left'>
-            <img src={LeftIcon} alt='register-left-icon' className='register-left-icon'></img>
+            <img onClick={this.backToRegister} src={LeftIcon} alt='register-left-icon' className='register-left-icon'></img>
           </div>
           <div className='register-top-center'>
             <span>注册账号</span>

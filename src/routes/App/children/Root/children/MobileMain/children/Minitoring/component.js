@@ -7,17 +7,22 @@ import AddEquipment from './images/upper-bg.png'
 import EgVideos from './images/videos.png'
 import GroupAddition from './images/blue_add.png'
 import EquipmentAddition from './images/yellow_add.png'
+import Setting from './images/1.9.png'
 import RightBtn from './images/4.3.png'
 import DownloadBtn from './images/3.4.png'
 
 const { SubMenu } = Menu;
-
 
 class Minitoring extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      isShowHandle: {
+        isAdditionEquipmentShow: false,
+        isAdditionGroupShow: false
+      },
+
       isAdditionShow: true,
       isRealTimeShow: false,
       isEmergencyShow: false,
@@ -90,7 +95,34 @@ class Minitoring extends React.Component {
 
     this.secondMenuHandle = this.secondMenuHandle.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    this.additionShow = this.additionShow.bind(this)
 
+  }
+
+  additionShow = (type, e) => {
+    var temp = this.state.isShowHandle
+    switch (type) {
+      case 'equipment':
+        if (temp.isAdditionGroupShow) {
+          return
+        }
+        temp.isAdditionEquipmentShow = !temp.isAdditionEquipmentShow
+        this.setState({
+          isShowHandle: temp
+        })
+        break;
+      case 'group':
+        if (temp.isAdditionEquipmentShow) {
+          return
+        }
+        temp.isAdditionGroupShow = !temp.isAdditionGroupShow
+        this.setState({
+          isShowHandle: temp
+        })
+        break;
+      default:
+        break;
+    }
   }
 
   secondMenuHandle(item, e) {
@@ -103,31 +135,20 @@ class Minitoring extends React.Component {
 
   handleClick(e) {
     console.log('click', e);
-    this.setState({
-      isAdditionShow: false
-    })
+    // this.setState({
+    //   isAdditionShow: false
+    // })
     var contentType = e.item.props.children
+    var key = e.key
     switch (contentType) {
       case '实时视频':
-        this.setState({
-          isRealTimeShow: true,
-          isEmergencyShow: false,
-          isAnalysisShow: false
-        })
+        this.props.history.push('/root/main/videos')
         break;
       case '告警信息':
-        this.setState({
-          isRealTimeShow: false,
-          isEmergencyShow: true,
-          isAnalysisShow: false
-        })
+        this.props.history.push('/root/main/warning')
         break;
       case '密度分析':
-        this.setState({
-          isRealTimeShow: false,
-          isEmergencyShow: false,
-          isAnalysisShow: true
-        })
+        this.props.history.push('/root/main/density')
         break;
       default:
         break;
@@ -141,10 +162,14 @@ class Minitoring extends React.Component {
     const { match } = this.props
     const { myMinitoringList } = this.state
     return (
-      <div className="minitoring-component">
+      <div className="minitoring-mobile-component">
         <div className='minitoring-left-nav'>
           <div className='left-nav-mine'>
-            <div className='nav-mine-title'>我的设备</div>
+            <div className='nav-mine-title'>
+              <div className='left-icon'><img className='setting-icon' alt='setting-icon' src={Setting}></img></div>
+              <span className='center-title'>我的设备</span>
+              <div className='right-icon'></div>
+            </div>
             <div className='nav-mine-list'>
               <div className='nav-mine-item'>
                 <Menu onClick={this.handleClick} style={{ width: 256 }} mode="inline">
@@ -184,134 +209,31 @@ class Minitoring extends React.Component {
             </div>
           </div>
           <div className='left-nav-bottom-btn'>
-            <div className='left-add-group-btn'>
+            <div className='left-add-group-btn' onClick={this.additionShow.bind(this, 'group')}>
               <img className='left-add-img' src={GroupAddition} alt='left-add-img'></img>
               <span className='left-add-group-title'>添加分组</span>
             </div>
-            <div className='left-add-equipment-btn'>
+            <div className='left-add-equipment-btn' onClick={this.additionShow.bind(this, 'equipment')}>
               <img className='left-add-img' src={EquipmentAddition} alt='left-add-img'></img>
               <span className='left-add-equipment-title'>添加设备</span>
             </div>
           </div>
         </div>
 
-        <div className='minitoring-right-content'>
-
-          {/** 添加设备div
-            *  isAdditionShow控制
-            */}
-          <div className={`add-equipment-content ${this.state.isAdditionShow ? '' : 'hide'}`}>
-            <img alt='add-equipment-img' className='add-equipment-img' src={AddEquipment}></img>
-            <div className='add-equipment-form'>
-              <span className='add-equipment-title'>添加设备</span>
-              <input className='product-serial-number' placeholder='请输入产品序列号'></input>
-              <input className='product-psw' placeholder='请输入密码'></input>
-              <span className='add-equipment-sure-btn'>确认</span>
-            </div>
+        {/** 添加设备/分组div */}
+        <div className={`addition-model ${this.state.isShowHandle.isAdditionEquipmentShow || this.state.isShowHandle.isAdditionGroupShow ? '' : 'hide'}`}>
+          <div className={`add-equipment-form ${this.state.isShowHandle.isAdditionGroupShow ? '' : 'hide'}`}>
+            <span className='add-equipment-title'>添加分组</span>
+            <input id='addGroup' className='product-serial-number' placeholder='请输入分组名称'></input>
+            <span className='add-equipment-sure-btn'>确认</span>
           </div>
 
-          {/** 实时视频div
-            *  isRealTimeShow控制
-            */}
-          <div className={`monitoring-detail-content real-time-content ${this.state.isRealTimeShow ? '' : 'hide'}`}>
-            <div className='minitoring-real-time-videos'>
-              <div className='minitoring-real-time-videos-title'>
-                <span className='real-time-title left-title'>设备1</span>
-                <span className='real-time-title center-title'>实时视频</span>
-                <span className='real-time-title right-title'></span>
-
-              </div>
-
-              <img className='real-time-videos-img' src={AddEquipment} alt='real-time-videos-img'></img>
-            </div>
-            <div className='minitoring-real-time-list'>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
-              <img alt='real-time-right-btn' className='real-time-right-btn' src={RightBtn}></img>
-            </div>
+          <div className={`add-equipment-form ${this.state.isShowHandle.isAdditionEquipmentShow ? '' : 'hide'}`}>
+            <span className='add-equipment-title'>添加设备</span>
+            <input id='addEquipment' className='product-serial-number' placeholder='请输入产品序列号'></input>
+            <input id='addEquipmentPsw' className='product-psw' placeholder='请输入密码'></input>
+            <span className='add-equipment-sure-btn'>确认</span>
           </div>
-
-          {/** 告警信息div
-            *  isEmegencyShow控制
-          */}
-          <div className={`monitoring-detail-content emegency-message-content ${this.state.isEmergencyShow ? '' : 'hide'}`}>
-
-            <div className='emegency-left-content'>
-              <div className='emegency-left-title'>告警信息</div>
-              <div className='emegency-left-list'>
-                <div className='emegency-left-item'>
-                  <span className='wd-span wd33'>设备1</span>
-                  <span className='wd-span wd44'>2019-0807 01:08:09</span>
-                  <img src={AddEquipment} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
-                </div>
-                <div className='emegency-left-item'>
-                  <span className='wd-span wd33'>设备1</span>
-                  <span className='wd-span wd44'>2019-0807 01:08:09</span>
-                  <img src={AddEquipment} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
-                </div>
-                <div className='emegency-left-item'>
-                  <span className='wd-span wd33'>设备1</span>
-                  <span className='wd-span wd44'>2019-0807 01:08:09</span>
-                  <img src={AddEquipment} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
-                </div>
-              </div>
-            </div>
-
-            <div className='emegency-right-top-videos'>
-              <img src={AddEquipment} className='emegency-right-top-img' alt='emegency-right-top-img'></img>
-            </div>
-
-            <div className='emegency-right-bottom-message'>
-              <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
-              <span className='right-bottom-message right-bottom-message-2'>2019年02月5日，上午9时02分03秒，广州噼里啪啦设备机发现目标，目标在右下角，并成功驱赶</span>
-              <span className='right-bottom-message right-bottom-message-3'>有效期限：一个月</span>
-            </div>
-          </div>
-
-          {/** 密度分析div
-            *  isAnalysisShow控制
-          */}
-          <div className={`monitoring-detail-content density-analysis-content ${this.state.isAnalysisShow ? '' : 'hide'}`}>
-
-            <div className='minitoring-density-analysis-videos'>
-              <div className='minitoring-density-analysis-videos-title'>
-                <span className='density-analysis-title left-title'>设备1</span>
-                <span className='density-analysis-title center-title'>密度分析</span>
-                <span className='density-analysis-title right-title'></span>
-              </div>
-
-              <img className='density-analysis-videos-img' src={EgVideos} alt='density-analysis-videos-img'></img>
-            </div>
-            <div className='minitoring-density-analysis-list'>
-              <div className='density-analysis-item'>
-                <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-              </div>
-              <div className='density-analysis-item'>
-                <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-              </div>
-              <div className='density-analysis-item'>
-                <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-              </div>
-              <img alt='density-analysis-right-btn' className='density-analysis-right-btn' src={RightBtn}></img>
-            </div>
-          </div>
-
         </div>
       </div >
     )

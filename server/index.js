@@ -145,9 +145,28 @@ app.use("/crm-jj/api/relation_graph/:type", function (req, res, next) {
 /**
  * 引用body-parser, 会解析body对象，导致http-proxy-middleware的post出错
  * onProxyReq 将解析后的body数据再转回来
-*/
+// */
+// app.use(
+//   "/login",
+//   proxy({
+//     target: API_ADDRESS, // target host
+//     changeOrigin: true, // needed for virtual hosted sites
+//     ws: true, // proxy websockets
+//     onProxyReq: function (proxyReq, req, res, options) {
+//       if (req.body) {
+//         let bodyData = JSON.stringify(req.body);
+//         // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+//         proxyReq.setHeader('Content-Type', 'application/json;charset=UTF-8');
+//         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+//         // stream the content
+//         proxyReq.write(bodyData);
+//       }
+//     }
+//   })
+// );
+
 app.use(
-  "/login",
+  "/",
   proxy({
     target: API_ADDRESS, // target host
     changeOrigin: true, // needed for virtual hosted sites

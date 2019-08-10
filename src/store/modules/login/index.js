@@ -19,7 +19,7 @@ const isMock = mockClosure(IS_MOCK_CURRENT_MODULE)
 // 获取验证码
 export function getSMSMessage(params, cb) {
   return post({
-    url: `${isMock()}/login/smsSendCode`,
+    url: `${isMock()}/shungkon/login/smsSendCode`,
     bodyData: {
       phoneNumber: params.phoneNumber
     },
@@ -52,13 +52,17 @@ export function ValidateCode(params) {
 // 注册手机账号
 export function phoneNumRegister(params) {
   return post({
-    url: `${isMock()}/login/toRegister`,
+    url: `${isMock()}/shungkon/shungkon/toRegister`,
     bodyData: {
-      hash: params.hash,
       tamp: params.tamp,
-      msgNum: params.msgNum
+      hash: params.hash,
+      msgNum: params.msgNum,
+      phoneNumber: params.phoneNumber,
+      password: params.password
     },
     actionType: PHONENUMBER_REGISTER,
+    successConfig: {
+    },
     failConfig: {
       message: '注册账号密码失败'
     }
@@ -68,7 +72,7 @@ export function phoneNumRegister(params) {
 // 账号密码登录
 export function passWordLogin(params) {
   return post({
-    url: `${isMock()}/login/logOnByPwd`,
+    url: `${isMock()}/shungkon/login/logOnByPwd`,
     bodyData: {
       phoneNumber: params.phoneNumber,
       pwd: params.pwd,
@@ -83,7 +87,7 @@ export function passWordLogin(params) {
 // 短信登录
 export function SMSLogin(params) {
   return post({
-    url: `${isMock()}/login/logOnByMsg`,
+    url: `${isMock()}/shungkon/login/logOnByMsg`,
     bodyData:
     {
       phoneNumber: params.phoneNumber,

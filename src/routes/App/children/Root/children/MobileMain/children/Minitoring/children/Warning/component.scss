@@ -1,0 +1,27 @@
+.warning-mobile-component {
+  .warning-top-div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.2rem;
+    width: 100%;
+    padding: 0 0.3rem;
+    background: #D24545;
+    font-size: 0.5rem;
+    color: #fff;
+    .left-icon-div, .right-icon-div {
+      .left-icon,.menu-icon {
+        width: 0.6rem;
+      }
+    }
+  }
+
+  .space-box {
+    height: 1.2rem;
+    width: 100%;
+  }
+}

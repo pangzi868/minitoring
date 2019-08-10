@@ -15,6 +15,7 @@ import Loadable from 'components/Loadable'
 import 'styles/less/main.less'
 import 'styles/sass/main.scss'
 import './component.scss'
+import 'antd-mobile/dist/antd-mobile.css';
 
 const Root = Loadable(import('./children/Root/index'))
 

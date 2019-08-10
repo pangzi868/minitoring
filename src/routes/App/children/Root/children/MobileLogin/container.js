@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Component from './component'
-import { getSMSMessage, ValidateCode,phoneNumRegister } from 'store/modules/login'
+import { getSMSMessage, ValidateCode, phoneNumRegister } from 'store/modules/login'
 
 const mapDispatchToProps = {
   getSMSMessage,

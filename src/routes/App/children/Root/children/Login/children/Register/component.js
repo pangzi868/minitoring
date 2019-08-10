@@ -57,7 +57,16 @@ class Register extends React.Component {
   registerHandleSubmit = e => {
     e.preventDefault();
     var msgNum = document.getElementById('register_captcha').value
-    this.props.ValidateCode({ msgNum: msgNum, hash: this.hash, tamp: this.tamp })
+    var phoneNumber = document.getElementById('register_phone').value
+    var password = document.getElementById('register_password').value
+    // this.props.phoneNumRegister({"tamp":"20190810234434","hash":"3f194b52e4bee105d7e17fea2c7aef51","msgNum":"612638","phoneNumber":"17875769971","password":"17875769971qwe"})
+    this.props.phoneNumRegister({
+        tamp: this.tamp,
+        hash: this.hash,
+        msgNum: msgNum,
+        phoneNumber: phoneNumber,
+        password: password
+      })
     // this.props.ValidateCode({ msgNum: 'msgNum', hash: this.hash, tamp: this.tamp })
     // console.log(this.props.form)
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -127,7 +136,7 @@ class Register extends React.Component {
               addonBefore={prefixSelector}
               style={{ width: '100%' }}
               placeholder="手机号"
-              onKeyUp={this.inputPhoneNumHandle.bind(this)}  autocomplete="off"/>)}
+              onKeyUp={this.inputPhoneNumHandle.bind(this)} autocomplete="off" />)}
           </Form.Item>
 
           <Form.Item label="">
@@ -135,7 +144,7 @@ class Register extends React.Component {
               <Col span={12}>
                 {getFieldDecorator('captcha', {
                   rules: [{ required: true, message: '请输入验证码' }],
-                })(<Input placeholder="验证码"  autocomplete="off"/>)}
+                })(<Input placeholder="验证码" autocomplete="off" />)}
               </Col>
               <Col span={12}>
                 <Button disabled={this.state.registerSendSMSBtn} onClick={this.sendCheckNum}>发送验证码</Button>
@@ -154,7 +163,7 @@ class Register extends React.Component {
                   validator: this.validateToNextPassword,
                 },
               ],
-            })(<Input.Password placeholder="8-20位密码，字母/数字/符号至少2种"  autocomplete="off"/>)}
+            })(<Input.Password placeholder="8-20位密码，字母/数字/符号至少2种" autocomplete="off" />)}
           </Form.Item>
 
           <Form.Item {...tailFormItemLayout}>
