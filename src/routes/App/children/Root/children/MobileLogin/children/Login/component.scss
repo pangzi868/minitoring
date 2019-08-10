@@ -1,0 +1,126 @@
+.login-mobile-div-component {
+  position: relative;
+  background: url('./images/bg.png') no-repeat;
+  height: 100%;
+  width: 100%;
+  background-size: 100% 100%;
+  overflow: hidden;
+
+  .login-top-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 6rem;
+    .company-logo {
+      width: 3rem;
+    }
+    .company-name {
+      font-size: 0.7rem;
+      color: #fff;
+    }
+    .company-slogan {
+      font-size: 0.5rem;
+      color: #fff;
+    }
+  }
+  .login-div {
+    width: 100%;
+    min-height: 50%;
+    font-size: 26px;
+    background-color: rgba(255,255,255,0.1);
+    .ant-tabs {
+      .ant-tabs-bar {
+        margin: 0;
+        .ant-tabs-nav-container {
+          .ant-tabs-nav {
+            width: 100%;
+            .ant-tabs-tab {
+              width: 50%;
+              margin: 0;
+              font-size: 0.5rem;
+              text-align: center;
+              color: #fff;
+            }
+            .ant-tabs-tab-active {
+              color: #666;
+              background-color: #fff;
+            }
+
+          }
+        }
+      }
+    }
+    .psw-login-div,.mail-login-div {
+
+      .ant-form {
+        text-align: center;
+        .ant-form-item {
+          margin: 0;
+          .ant-form-item-children {
+            .ant-input {
+              height: 1.5rem;
+              font-size: 0.5rem;
+            }
+          }
+        }
+        .ant-col-12 {
+          height: 1.5rem;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          .ant-btn {
+            width: 60%;
+            height: 1.5rem;
+          }
+        }
+        .ant-col {
+          .ant-checkbox-wrapper {
+            float: left;
+            margin-left: 0.5rem;
+            color: #fff;
+          }
+          .login-operation {
+            color: #fff;
+            margin-right: 0.3rem;
+            a {
+              color: #fff;
+            }
+          }
+        }
+        .login-form-button {
+          width: 5rem !important;
+          height: 1.3rem;
+          margin-top: 1rem;
+          background-color: rgba(238,133,0, 1);
+          border-color: rgba(238,133,0, 1);
+          border-radius: 40px;
+          font-size: 0.7rem;
+        }
+        .ant-col-sm-16 {
+        }
+        .ant-col-sm-offset-8 {
+        }
+        .ant-btn-primary {
+          width: 100%;
+        }
+      }
+    }
+    .mail-login-div {
+      .ant-btn-primary {
+        width: 100%;
+      }
+    }
+    .login-operation {
+      float: right;
+    }
+  }
+}
+.hide{
+  display: none;
+}
+.show{
+  display: block;
+}
+

@@ -4,8 +4,11 @@ import { mockClosure } from 'utils/mock'
 
 const GET_SMS = 'GET_SMS'
 const VALIDATE_SMS = 'VALIDATE_SMS'
+const PHONENUMBER_REGISTER = 'PHONENUMBER_REGISTER'
+const PASSWORD_LOGIN = 'PASSWORD_LOGIN'
+const SMS_LOGIN = 'SMS_LOGIN'
 
-const IS_MOCK_CURRENT_MODULE = true  // 控制当前模块的所有接口是否使用mock
+const IS_MOCK_CURRENT_MODULE = false  // 控制当前模块的所有接口是否使用mock
 const isMock = mockClosure(IS_MOCK_CURRENT_MODULE)
 
 
@@ -16,7 +19,7 @@ const isMock = mockClosure(IS_MOCK_CURRENT_MODULE)
 // 获取验证码
 export function getSMSMessage(params, cb) {
   return post({
-    url: `${isMock()}/smsSendCode`,
+    url: `${isMock()}/login/smsSendCode`,
     bodyData: {
       phoneNumber: params.phoneNumber
     },
@@ -33,7 +36,7 @@ export function getSMSMessage(params, cb) {
 // 校验验证码
 export function ValidateCode(params) {
   return post({
-    url: `${isMock()}/smsValidate`,
+    url: `${isMock()}/login/smsValidate`,
     bodyData: {
       hash: params.hash,
       tamp: params.tamp,
@@ -42,6 +45,55 @@ export function ValidateCode(params) {
     actionType: VALIDATE_SMS,
     failConfig: {
       message: '校验验证码失败'
+    }
+  })
+}
+
+// 注册手机账号
+export function phoneNumRegister(params) {
+  return post({
+    url: `${isMock()}/login/toRegister`,
+    bodyData: {
+      hash: params.hash,
+      tamp: params.tamp,
+      msgNum: params.msgNum
+    },
+    actionType: PHONENUMBER_REGISTER,
+    failConfig: {
+      message: '注册账号密码失败'
+    }
+  })
+}
+
+// 账号密码登录
+export function passWordLogin(params) {
+  return post({
+    url: `${isMock()}/login/logOnByPwd`,
+    bodyData: {
+      phoneNumber: params.phoneNumber,
+      pwd: params.pwd,
+    },
+    actionType: PASSWORD_LOGIN,
+    failConfig: {
+      message: '账号/密码错误，登录失败'
+    }
+  })
+}
+
+// 短信登录
+export function SMSLogin(params) {
+  return post({
+    url: `${isMock()}/login/logOnByMsg`,
+    bodyData:
+    {
+      phoneNumber: params.phoneNumber,
+      hash: params.hash,
+      tamp: params.tamp,
+      msgNum: params.msgNum
+    },
+    actionType: SMS_LOGIN,
+    failConfig: {
+      message: '短信登录失败'
     }
   })
 }

@@ -1,0 +1,55 @@
+.forget-psw-component {
+  height: 100%;
+  width: 100%;
+  .forget-div-top {
+    display: flex;
+    height: 1.2rem;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(238,133,7);
+    padding: 0 0.2rem;
+    color: #fff;
+    font-size: 0.6rem;
+    .forget-top-left {
+      .forget-left-icon {
+        width: 1rem;
+      }
+    }
+    .forget-top-right{
+      width: 1rem;
+    }
+  }
+
+  .forget-psw-content {
+    width: 100%;
+    font-size: 26px;
+    padding: 0 0.6rem;
+    margin-top: 0.6rem;
+    .modifier-div-content {
+      padding: 0 10%;
+      .ant-form {
+        margin-top: 10%;
+        .ant-form-item {
+          margin-bottom: 12px;
+        }
+        .ant-col-sm-16 {
+          width: 100%;
+        }
+        .ant-col-sm-offset-8 {
+          margin-left: 0;
+        }
+        .ant-btn-primary {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+.hide{
+  display: none;
+}
+.show{
+  display: block;
+}
+
