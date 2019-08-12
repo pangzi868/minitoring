@@ -74,7 +74,7 @@ class UserManager extends React.Component {
     const { match } = this.props
     const { size, confirmLoading } = this.state;
     return (
-      <div className="user-manager-component">
+      <div className="user-mobile-manager-component">
         <div className='user-manager-title'>用户管理</div>
 
         <div className='user-manager-middle'>

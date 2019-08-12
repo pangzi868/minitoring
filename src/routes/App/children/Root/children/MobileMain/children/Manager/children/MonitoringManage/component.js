@@ -74,7 +74,7 @@ class MonitoringManage extends React.Component {
     const { match } = this.props
     const { size, confirmLoading } = this.state;
     return (
-      <div className="monitoring-manager-component">
+      <div className="monitoring-mobile-manager-component">
         <div className='monitoring-manager-title'>用户管理</div>
 
         <div className='monitoring-manager-middle'>

@@ -1,7 +1,7 @@
 import React from 'react'
 import './component.scss'
 
-import { Button, Radio, Icon, Modal, Input } from 'antd';
+import { Button, Radio, Icon, Modal, Input ,Pagination} from 'antd';
 
 
 const { confirm } = Modal;
@@ -105,6 +105,16 @@ class UserManager extends React.Component {
           </div>
 
         </div>
+
+        <Pagination
+          total={85}
+          showTotal={total => `总共 ${total} 条数据`}
+          pageSize={15}
+          defaultCurrent={1}
+          size='small'
+          className='pagination-div'
+        />
+
         <div className='user-manager-bottom'>
           <div className='user-manager-bottom-title'>当前用户信息</div>
           <div className='manager-detail'>

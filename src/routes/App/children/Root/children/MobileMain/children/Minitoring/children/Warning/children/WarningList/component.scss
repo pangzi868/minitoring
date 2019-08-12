@@ -1,0 +1,71 @@
+.warning-mobile-component {
+  .warning-top-div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.2rem;
+    width: 100%;
+    padding: 0 0.3rem;
+    background: #D24545;
+    font-size: 0.5rem;
+    color: #fff;
+    .left-icon-div, .right-icon-div {
+      .left-icon,.menu-icon {
+        width: 0.6rem;
+      }
+    }
+  }
+
+  .space-box {
+    height: 2.2rem;
+    width: 100%;
+  }
+
+  .warning-message-title {
+    position: absolute;
+    top: 1.2rem;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 1rem;
+    font-size: 0.4rem;
+    border-bottom: 1px solid #BDBDBD;
+    background-color: #fff;
+    .span-wd {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 33%;
+      border-right: 1px solid #BDBDBD;
+      height: 0.5rem;
+    }
+  }
+  .warning-message-list-div {
+    .warning-message-list {
+      .warning-message-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 2.4rem;
+        border-bottom: 1px solid #BDBDBD;
+        .item-wd-span {
+          text-align: center;
+          display: inline-block;
+          .warning-message-item-img {
+            width: 2.6rem;
+          }
+        }
+        .wd33 {
+          width: 33%;
+        }
+
+      }
+    }
+  }
+}

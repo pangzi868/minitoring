@@ -20,7 +20,7 @@ class LogListManage extends React.Component {
   render() {
     const { match, cont } = this.props
     return (
-      <div className="log-list-component" {...this.props}>
+      <div className="log-mobile-list-component" {...this.props}>
         <div className='log-list-title'>日志列表({cont ? cont : '设备'})</div>
         <div className='log-list-bottom-content'>
           <div className='list-search-content'>

@@ -1,6 +1,9 @@
 import React from "react";
 import "./component.scss";
 
+import SlideCaptcha from 'react-slide-captcha';
+import 'react-slide-captcha/dist/styles.css';
+
 import {
   Form,
   Input,
@@ -22,11 +25,20 @@ class Register extends React.Component {
     super(props)
 
     this.state = {
-      registerSendSMSBtn: true
+      registerSendSMSBtn: true,
+      registerPermission: true,
     }
+
+    this.CheckboxHandle = this.CheckboxHandle.bind(this)
 
   }
 
+  // 同意checkbox事件
+  CheckboxHandle = e => {
+    this.setState({
+      registerPermission: !this.state.registerPermission
+    })
+  }
 
   // 手机号码输入事件
   inputPhoneNumHandle = e => {
@@ -46,6 +58,12 @@ class Register extends React.Component {
   sendCheckNum = e => {
     e.preventDefault();
     var phoneNum = document.getElementById('register_phone').value
+    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+    if (!phoneNumberReg.test(phoneNum)) {
+      alert('请输入正确的手机号码')
+      return
+    }
     this.props.getSMSMessage({ phoneNumber: phoneNum }, data => {
       // 保存短信接口给的hash和tamp，用做校验的判断
       this.hash = data.hash
@@ -56,25 +74,43 @@ class Register extends React.Component {
   // 注册按钮点击
   registerHandleSubmit = e => {
     e.preventDefault();
-    var msgNum = document.getElementById('register_captcha').value
-    var phoneNumber = document.getElementById('register_phone').value
-    var password = document.getElementById('register_password').value
-    // this.props.phoneNumRegister({"tamp":"20190810234434","hash":"3f194b52e4bee105d7e17fea2c7aef51","msgNum":"612638","phoneNumber":"17875769971","password":"17875769971qwe"})
-    this.props.phoneNumRegister({
-        tamp: this.tamp,
-        hash: this.hash,
-        msgNum: msgNum,
-        phoneNumber: phoneNumber,
-        password: password
-      })
     // this.props.ValidateCode({ msgNum: 'msgNum', hash: this.hash, tamp: this.tamp })
     // console.log(this.props.form)
     this.props.form.validateFieldsAndScroll((err, values) => {
       console.log('Received values of form: ', values);
       if (!err) {
+        var msgNum = document.getElementById('register_captcha').value
+        var phoneNumber = document.getElementById('register_phone').value
+        var password = document.getElementById('register_password').value
+        var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
+        var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+        if (!phoneNumberReg.test(phoneNumber)) {
+          alert('请输入正确的手机号码')
+          return
+        }
+
+        if (!passwordReg.test(password)) {
+          alert('请输入8-20位密码，字母/数字/符号至少2种')
+          return
+        }
+
+        this.props.phoneNumRegister({
+          tamp: this.tamp,
+          hash: this.hash,
+          msgNum: msgNum,
+          phoneNumber: phoneNumber,
+          password: password
+        })
       }
     });
   };
+
+
+  // 滑块向右滑动事件
+  resultCallback = e => {
+    console.log(e, 'wangyinbin')
+  }
 
   // 登录跳转链接
   registerGoToLogin = e => {
@@ -140,6 +176,16 @@ class Register extends React.Component {
           </Form.Item>
 
           <Form.Item label="">
+            <SlideCaptcha
+              puzzleUrl={this.state.puzzleUrl}
+              bgUrl={this.state.bgUrl}
+              onRequest={this.resultCallback}
+              containerClassName="test"
+            />
+
+          </Form.Item>
+
+          <Form.Item label="">
             <Row gutter={8}>
               <Col span={12}>
                 {getFieldDecorator('captcha', {
@@ -170,13 +216,13 @@ class Register extends React.Component {
             {getFieldDecorator('agreement', {
               valuePropName: 'checked',
             })(
-              <Checkbox>
+              <Checkbox onChange={this.CheckboxHandle.bind(this)}>
                 我已阅读并接受<a href=""> 用户协议 </a>和<a href=""> 隐私政策 </a>
               </Checkbox>,
             )}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" disabled={this.state.registerPermission}>
               注册
                 </Button>
           </Form.Item>

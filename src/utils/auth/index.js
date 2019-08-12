@@ -1,6 +1,3 @@
-/**
- * tips: 天威视讯项目目前没用到这个
- */
 import axios from "axios";
 export const cacheAuth = (type, callback) => {
   // debugger

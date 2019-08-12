@@ -1,0 +1,51 @@
+.warning-detail-mobile-component {
+  .warning-top-div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1rem;
+    width: 100%;
+    padding: 0 0.3rem;
+    background: rgba(0,0,0,0.2);
+    font-size: 0.5rem;
+    color: #fff;
+    .left-icon-div, .right-icon-div {
+      .left-icon,.menu-icon {
+        width: 0.6rem;
+      }
+    }
+  }
+
+  .warning-content {
+    .real-time-videos {
+      width: 100%;
+      height: 8rem;
+      .real-time-videos-img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .warning-right-bottom-message {
+      width: 100%;
+      height: 7rem;
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+      background-color: #fff;
+      margin-top: 1rem;
+      padding: 0 0.5rem;
+      font-size: 0.5rem;
+      .right-bottom-message {
+        width: 100%;
+      }
+      .right-bottom-message-1 {
+        color: #D24545;
+      }
+    }
+  }
+}

@@ -87,6 +87,7 @@
       }
       .add-equipment-form {
         display: flex;
+        z-index: 10;
         flex-wrap: wrap;
         text-align: center;
         justify-content: flex-end;
@@ -172,39 +173,62 @@
         }
       }
       .minitoring-real-time-list {
-        display: flex;
-        vertical-align: center;
-        flex-wrap: nowrap;
-        align-items: center;
         position: absolute;
+        overflow: hidden;
         bottom: 0;
         left: 0;
         width: 100%;
         height: 22%;
         background-color: #fff;
-        .real-time-item {
-          position: relative;
-          height: 85%;
-          width: 148px;
-          margin: 0 12px;
-          .real-time-item-img {
-            width: 100%;
-            height: 82%;
-          }
-          .real-time-download-img {
-            position: absolute;
-            bottom: 19%;
-            right: 2px;
-            width: 18px;
-            height: 18px;
+        .real-time-list {
+          display: flex;
+          vertical-align: center;
+          flex-wrap: nowrap;
+          align-items: center;
+          height: 100%;
+          overflow-x: auto;
+          .real-time-item {
+            flex-shrink: 0;
+            position: relative;
+            height: 85%;
+            width: 148px;
+            margin: 0 12px;
+            .real-time-item-img {
+              width: 100%;
+              height: 82%;
+            }
+            .real-time-download-img {
+              cursor: pointer;
+              position: absolute;
+              bottom: 19%;
+              right: 2px;
+              width: 18px;
+              height: 18px;
+            }
           }
         }
+        // .real-time-left-btn {
+        //   cursor: pointer;
+        //   position: absolute;
+        //   top: 0;
+        //   left: 0;
+        //   width: 30px;
+        //   height: 100%;
+        //   z-index: 10;
+        //   transform: rotate(180deg);
+        //   ms-transform: rotate(180deg); /* IE 9 */
+        //   moz-transform: rotate(180deg); /* Firefox */
+        //   webkit-transform: rotate(180deg); /* Safari and Chrome */
+        //   o-transform: rotate(180deg); /* Opera */
+        // }
         .real-time-right-btn {
+          cursor: pointer;
           position: absolute;
           top: 0;
           right: 0;
           width: 30px;
           height: 100%;
+          z-index: 10;
         }
 
       }
@@ -234,6 +258,7 @@
           padding: 0 8px;
           font-size: 22px;
           .emegency-left-item {
+            cursor: pointer;
             display: flex;
             flex-wrap: nowrap;
             align-items: center;
@@ -333,31 +358,40 @@
         }
       }
       .minitoring-density-analysis-list {
-        display: flex;
-        vertical-align: center;
-        flex-wrap: nowrap;
-        align-items: center;
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
         height: 22%;
+        overflow: hidden;
         background-color: #fff;
-        .density-analysis-item {
-          position: relative;
-          height: 85%;
-          width: 148px;
-          margin: 0 12px;
-          .density-analysis-item-img {
-            width: 100%;
-            height: 82%;
-          }
-          .density-analysis-download-img {
-            position: absolute;
-            bottom: 19%;
-            right: 2px;
-            width: 18px;
-            height: 18px;
+        .mimitoring-density-list {
+          display: flex;
+          vertical-align: center;
+          flex-wrap: nowrap;
+          align-items: center;
+          height: 100%;
+          width: 100%;
+          overflow-x: auto;
+          padding-right: 2px;
+          .density-analysis-item {
+            position: relative;
+            flex-shrink: 0;
+            height: 85%;
+            width: 148px;
+            margin: 0 12px;
+            .density-analysis-item-img {
+              width: 100%;
+              height: 82%;
+            }
+            .density-analysis-download-img {
+              position: absolute;
+              cursor: pointer;
+              bottom: 19%;
+              right: 2px;
+              width: 18px;
+              height: 18px;
+            }
           }
         }
         .density-analysis-right-btn {

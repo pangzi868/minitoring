@@ -28,14 +28,18 @@ class Minitoring extends React.Component {
     this.state = {
       LogListMonitoring: '',
       isWindowShow: {
-        isAdditionShow: true,
         isRealTimeShow: false,
         isEmergencyShow: false,
         isAnalysisShow: false,
         isLogListShow: false,
         isUpdateFirmwareShow: false,
         isUserManagerShow: false,
-        isMinitoringManagerShow: false
+        isMinitoringManagerShow: false,
+
+        isAdditionShow: true,
+
+        isAdditionEquipmentShow: true,
+        isAdditionGroupShow: false
       },
       fileList: [],
       uploading: false,
@@ -107,6 +111,9 @@ class Minitoring extends React.Component {
     this.secondMenuHandle = this.secondMenuHandle.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.leftBottomShowOrHideHandle = this.leftBottomShowOrHideHandle.bind(this)
+    this.additionShowHandle = this.additionShowHandle.bind(this)
+    this.addGroupHandle = this.addGroupHandle.bind(this)
+    this.addEquipmentHandle = this.addEquipmentHandle.bind(this)
   }
 
   secondMenuHandle(item, e) {
@@ -115,6 +122,53 @@ class Minitoring extends React.Component {
 
   editMinitoring(item, e) {
     console.log(item)
+  }
+
+  // 添加分组确定按钮
+  addGroupHandle = e => {
+    var groupName = document.getElementById('add-group-input').value
+    alert('添加成功')
+    var temp = this.state.isWindowShow
+    temp.isAdditionGroupShow = false
+    this.setState({
+      isWindowShow: temp
+    })
+  }
+
+  // 添加设备确定按钮
+  addEquipmentHandle = e => {
+    var productNun = document.getElementById('add-equipment-product-num').value
+    var password = document.getElementById('add-equipment-psw').value
+    alert('添加成功')
+    var temp = this.state.isWindowShow
+    temp.isAdditionEquipmentShow = false
+    this.setState({
+      isWindowShow: temp
+    })
+
+  }
+
+  // 控制添加设备/分组显示
+  additionShowHandle = (type, e) => {
+    var temp = this.state.isWindowShow
+    switch (type) {
+      case 'group':
+        temp.isAdditionGroupShow = !temp.isAdditionGroupShow;
+        temp.isAdditionEquipmentShow = false;
+        this.setState({
+          isWindowShow: temp
+        })
+        break;
+      case 'equipment':
+        temp.isAdditionEquipmentShow = !temp.isAdditionEquipmentShow;
+        temp.isAdditionGroupShow = false;
+        this.setState({
+          isWindowShow: temp
+        })
+        break;
+      default:
+        break;
+    }
   }
 
   handleClick(e) {
@@ -134,6 +188,8 @@ class Minitoring extends React.Component {
               break;
           }
         })
+        isWindowShowCopy.isAdditionGroupShow = false
+        isWindowShowCopy.isAdditionEquipmentShow = false
         this.setState({
           isWindowShow: isWindowShowCopy
         })
@@ -149,6 +205,8 @@ class Minitoring extends React.Component {
               break;
           }
         })
+        isWindowShowCopy.isAdditionGroupShow = false
+        isWindowShowCopy.isAdditionEquipmentShow = false
         this.setState({
           isWindowShow: isWindowShowCopy
         })
@@ -164,6 +222,8 @@ class Minitoring extends React.Component {
               break;
           }
         })
+        isWindowShowCopy.isAdditionGroupShow = false
+        isWindowShowCopy.isAdditionEquipmentShow = false
         this.setState({
           isWindowShow: isWindowShowCopy
         })
@@ -350,11 +410,11 @@ class Minitoring extends React.Component {
           </div>
           <div className='left-bottom-nav'>
             <div className='left-nav-bottom-btn'>
-              <div className='left-add-group-btn'>
+              <div className='left-add-group-btn' onClick={this.additionShowHandle.bind(this, 'group')}>
                 <img className='left-add-img' src={GroupAddition} alt='left-add-img'></img>
                 <span className='left-add-group-title'>添加分组</span>
               </div>
-              <div className='left-add-equipment-btn'>
+              <div className='left-add-equipment-btn' onClick={this.additionShowHandle.bind(this, 'equipment')}>
                 <img className='left-add-img' src={EquipmentAddition} alt='left-add-img'></img>
                 <span className='left-add-equipment-title'>添加设备</span>
               </div>
@@ -375,11 +435,22 @@ class Minitoring extends React.Component {
             */}
           <div className={`add-equipment-content ${this.state.isWindowShow.isAdditionShow ? '' : 'hide'}`}>
             <img alt='add-equipment-img' className='add-equipment-img' src={AddEquipment}></img>
-            <div className='add-equipment-form'>
-              <span className='add-equipment-title'>添加设备</span>
-              <input className='product-serial-number' placeholder='请输入产品序列号'></input>
-              <input className='product-psw' placeholder='请输入密码'></input>
-              <span className='add-equipment-sure-btn'>确认</span>
+          </div>
+          <div className='add-equipment-content'>
+            <div className={`add-equipment-comfirm ${this.state.isWindowShow.isAdditionEquipmentShow ? '' : 'hide'}`}>
+              <div className='add-equipment-form'>
+                <span className='add-equipment-title'>添加设备</span>
+                <input id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
+                <input id='add-equipment-psw' className='product-psw' placeholder='请输入密码'></input>
+                <span className='add-equipment-sure-btn' onClick={this.addEquipmentHandle.bind(this)}>确认</span>
+              </div>
+            </div>
+            <div className={`add-equipment-comfirm ${this.state.isWindowShow.isAdditionGroupShow ? '' : 'hide'}`}>
+              <div className='add-equipment-form'>
+                <span className='add-equipment-title'>添加分组</span>
+                <input id='add-group-input' className='product-serial-number' placeholder='请输入分组名称'></input>
+                <span className='add-equipment-sure-btn' onClick={this.addGroupHandle.bind(this)}>确认</span>
+              </div>
             </div>
           </div>
 
@@ -398,22 +469,39 @@ class Minitoring extends React.Component {
               <img className='real-time-videos-img' src={AddEquipment} alt='real-time-videos-img'></img>
             </div>
             <div className='minitoring-real-time-list'>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+              <div className='real-time-list'>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
               </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
-              <img alt='real-time-right-btn' className='real-time-right-btn' src={RightBtn}></img>
+              {/* <img alt='real-time-right-btn' className='real-time-right-btn' src={RightBtn}></img> */}
             </div>
           </div>
 
@@ -469,19 +557,28 @@ class Minitoring extends React.Component {
               <img className='density-analysis-videos-img' src={EgVideos} alt='density-analysis-videos-img'></img>
             </div>
             <div className='minitoring-density-analysis-list'>
-              <div className='density-analysis-item'>
-                <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+              <div className='mimitoring-density-list'>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
               </div>
-              <div className='density-analysis-item'>
-                <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-              </div>
-              <div className='density-analysis-item'>
-                <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-              </div>
-              <img alt='density-analysis-right-btn' className='density-analysis-right-btn' src={RightBtn}></img>
             </div>
           </div>
 

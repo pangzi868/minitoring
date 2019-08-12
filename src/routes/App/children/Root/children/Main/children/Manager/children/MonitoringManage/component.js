@@ -1,12 +1,14 @@
 import React from 'react'
 import './component.scss'
 
-import { Button, Radio, Icon, Modal, Input } from 'antd';
+import { DatePicker, Radio, Button, Input, Pagination, Modal } from 'antd';
 
-
-const { confirm } = Modal;
 
 const searchListIndex = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+const { confirm } = Modal;
+const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
+
 
 class MonitoringManage extends React.Component {
   constructor(props) {
@@ -75,7 +77,7 @@ class MonitoringManage extends React.Component {
     const { size, confirmLoading } = this.state;
     return (
       <div className="monitoring-manager-component">
-        <div className='monitoring-manager-title'>用户管理</div>
+        <div className='monitoring-manager-title'>设备管理</div>
 
         <div className='monitoring-manager-middle'>
           <div className='monitoring-manager-search'>
@@ -111,6 +113,15 @@ class MonitoringManage extends React.Component {
           </div>
 
         </div>
+
+        <Pagination
+          total={85}
+          showTotal={total => `总共 ${total} 条数据`}
+          pageSize={15}
+          defaultCurrent={1}
+          size='small'
+          className='pagination-div'
+        />
         <div className='monitoring-manager-bottom'>
           <div className='manager-detail'>
             <div className='detail-left-message'>

@@ -9,8 +9,33 @@ import GroupAddition from './images/blue_add.png'
 import EquipmentAddition from './images/yellow_add.png'
 import RightBtn from './images/4.3.png'
 import DownloadBtn from './images/3.4.png'
+import WarningPicture from './images/warning.png'
 
 const { SubMenu } = Menu;
+
+// 格式化日期，如月、日、时、分、秒保证为2位数
+function formatNumber(n) {
+  n = n.toString()
+  return n[1] ? n : '0' + n;
+}
+// 参数number为毫秒时间戳，format为需要转换成的日期格式
+function formatTime(number, format) {
+  let time = new Date(number)
+  let newArr = []
+  let formatArr = ['Y', 'M', 'D', 'h', 'm', 's']
+  newArr.push(time.getFullYear())
+  newArr.push(formatNumber(time.getMonth() + 1))
+  newArr.push(formatNumber(time.getDate()))
+
+  newArr.push(formatNumber(time.getHours()))
+  newArr.push(formatNumber(time.getMinutes()))
+  newArr.push(formatNumber(time.getSeconds()))
+
+  for (let i in newArr) {
+    format = format.replace(formatArr[i], newArr[i])
+  }
+  return format;
+}
 
 
 class Minitoring extends React.Component {
@@ -22,6 +47,11 @@ class Minitoring extends React.Component {
       isRealTimeShow: false,
       isEmergencyShow: false,
       isAnalysisShow: false,
+      isAdditionEquipmentShow: true,
+      isAdditionGroupShow: false,
+
+      warningMessageDetails: [],
+      warningDetailIndex: 0,
 
       // 模拟列表数据
       myMinitoringList: [
@@ -90,7 +120,10 @@ class Minitoring extends React.Component {
 
     this.secondMenuHandle = this.secondMenuHandle.bind(this)
     this.handleClick = this.handleClick.bind(this)
-
+    this.additionShowHandle = this.additionShowHandle.bind(this)
+    this.addGroupHandle = this.addGroupHandle.bind(this)
+    this.addEquipmentHandle = this.addEquipmentHandle.bind(this)
+    this.warningDetailChangeHandle = this.warningDetailChangeHandle.bind(this)
   }
 
   secondMenuHandle(item, e) {
@@ -99,6 +132,55 @@ class Minitoring extends React.Component {
 
   editMinitoring(item, e) {
     console.log(item)
+  }
+
+  // 添加分组确定按钮
+  addGroupHandle = e => {
+    var groupName = document.getElementById('add-group-input').value
+    alert('添加成功')
+    this.setState({
+      isAdditionGroupShow: false
+    })
+  }
+
+  // 添加设备确定按钮
+  addEquipmentHandle = e => {
+    var productNun = document.getElementById('add-equipment-product-num').value
+    var password = document.getElementById('add-equipment-psw').value
+    alert('添加成功')
+    this.setState({
+      isAdditionEquipmentShow: false
+    })
+
+  }
+
+  // 控制添加设备/分组显示
+  additionShowHandle = (type, e) => {
+    switch (type) {
+      case 'group':
+        this.setState({
+          isAdditionGroupShow: !this.state.isAdditionGroupShow,
+          isAdditionEquipmentShow: false
+        })
+        break;
+      case 'equipment':
+        this.setState({
+          isAdditionEquipmentShow: !this.state.isAdditionEquipmentShow,
+          isAdditionGroupShow: false
+        })
+        break;
+      default:
+        break;
+    }
+  }
+
+  // 告警信息详细信息切换
+  warningDetailChangeHandle = index => {
+    if (this.state.warningDetailIndex !== index) {
+      this.setState({
+        warningDetailIndex: index
+      })
+    }
   }
 
   handleClick(e) {
@@ -112,21 +194,40 @@ class Minitoring extends React.Component {
         this.setState({
           isRealTimeShow: true,
           isEmergencyShow: false,
-          isAnalysisShow: false
+          isAnalysisShow: false,
+          isAdditionEquipmentShow: false,
+          isAdditionGroupShow: false,
         })
         break;
       case '告警信息':
+        // 请求告警信息数据
+        this.props.getWarningVideos({ serial: 'QSZN001' }, data => {
+          if (data.uglyData) {
+            var temp = data.uglyData
+            var detailsTemp = []
+            temp.map((item, index) => {
+              detailsTemp.push({ 'eventId': item.eventId, 'warningMessage': item.warningMessage, 'vaildDate': '一个月' })
+            })
+            this.setState({
+              warningMessageDetails: detailsTemp
+            })
+          }
+        })
         this.setState({
           isRealTimeShow: false,
           isEmergencyShow: true,
-          isAnalysisShow: false
+          isAnalysisShow: false,
+          isAdditionEquipmentShow: false,
+          isAdditionGroupShow: false,
         })
         break;
       case '密度分析':
         this.setState({
           isRealTimeShow: false,
           isEmergencyShow: false,
-          isAnalysisShow: true
+          isAnalysisShow: true,
+          isAdditionEquipmentShow: false,
+          isAdditionGroupShow: false,
         })
         break;
       default:
@@ -138,7 +239,7 @@ class Minitoring extends React.Component {
   }
 
   render() {
-    const { match } = this.props
+    const { match, warningVideos } = this.props
     const { myMinitoringList } = this.state
     return (
       <div className="minitoring-component">
@@ -184,11 +285,11 @@ class Minitoring extends React.Component {
             </div>
           </div>
           <div className='left-nav-bottom-btn'>
-            <div className='left-add-group-btn'>
+            <div className='left-add-group-btn' onClick={this.additionShowHandle.bind(this, 'group')}>
               <img className='left-add-img' src={GroupAddition} alt='left-add-img'></img>
               <span className='left-add-group-title'>添加分组</span>
             </div>
-            <div className='left-add-equipment-btn'>
+            <div className='left-add-equipment-btn' onClick={this.additionShowHandle.bind(this, 'equipment')}>
               <img className='left-add-img' src={EquipmentAddition} alt='left-add-img'></img>
               <span className='left-add-equipment-title'>添加设备</span>
             </div>
@@ -202,11 +303,22 @@ class Minitoring extends React.Component {
             */}
           <div className={`add-equipment-content ${this.state.isAdditionShow ? '' : 'hide'}`}>
             <img alt='add-equipment-img' className='add-equipment-img' src={AddEquipment}></img>
-            <div className='add-equipment-form'>
-              <span className='add-equipment-title'>添加设备</span>
-              <input className='product-serial-number' placeholder='请输入产品序列号'></input>
-              <input className='product-psw' placeholder='请输入密码'></input>
-              <span className='add-equipment-sure-btn'>确认</span>
+          </div>
+          <div className='add-equipment-content'>
+            <div className={`add-equipment-comfirm ${this.state.isAdditionEquipmentShow ? '' : 'hide'}`}>
+              <div className='add-equipment-form'>
+                <span className='add-equipment-title'>添加设备</span>
+                <input id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
+                <input id='add-equipment-psw' className='product-psw' placeholder='请输入密码'></input>
+                <span className='add-equipment-sure-btn' onClick={this.addEquipmentHandle.bind(this)}>确认</span>
+              </div>
+            </div>
+            <div className={`add-equipment-comfirm ${this.state.isAdditionGroupShow ? '' : 'hide'}`}>
+              <div className='add-equipment-form'>
+                <span className='add-equipment-title'>添加分组</span>
+                <input id='add-group-input' className='product-serial-number' placeholder='请输入分组名称'></input>
+                <span className='add-equipment-sure-btn' onClick={this.addGroupHandle.bind(this)}>确认</span>
+              </div>
             </div>
           </div>
 
@@ -225,22 +337,39 @@ class Minitoring extends React.Component {
               <img className='real-time-videos-img' src={AddEquipment} alt='real-time-videos-img'></img>
             </div>
             <div className='minitoring-real-time-list'>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+              <div className='real-time-list'>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
+                <div className='real-time-item'>
+                  <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
+                  <span className='real-time-item-date'>2019-0730-17:30:00</span>
+                  <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+                </div>
               </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={AddEquipment}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
-              <img alt='real-time-right-btn' className='real-time-right-btn' src={RightBtn}></img>
+              {/* <img alt='real-time-right-btn' className='real-time-right-btn' src={RightBtn}></img> */}
             </div>
           </div>
 
@@ -252,21 +381,17 @@ class Minitoring extends React.Component {
             <div className='emegency-left-content'>
               <div className='emegency-left-title'>告警信息</div>
               <div className='emegency-left-list'>
-                <div className='emegency-left-item'>
-                  <span className='wd-span wd33'>设备1</span>
-                  <span className='wd-span wd44'>2019-0807 01:08:09</span>
-                  <img src={AddEquipment} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
-                </div>
-                <div className='emegency-left-item'>
-                  <span className='wd-span wd33'>设备1</span>
-                  <span className='wd-span wd44'>2019-0807 01:08:09</span>
-                  <img src={AddEquipment} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
-                </div>
-                <div className='emegency-left-item'>
-                  <span className='wd-span wd33'>设备1</span>
-                  <span className='wd-span wd44'>2019-0807 01:08:09</span>
-                  <img src={AddEquipment} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
-                </div>
+                {
+                  warningVideos.uglyData && warningVideos.uglyData.length > 0 ? warningVideos.uglyData.map((item, index) => (
+                    <div className='emegency-left-item' key={index} onClick={this.warningDetailChangeHandle.bind(this, index)}>
+                      <span className='wd-span wd33'>{item.serial}</span>
+                      {/* <span className='wd-span wd44'>{formatTime(item.createTime, 'Y-M-D h:m:s')}</span> */}
+                      <span className='wd-span wd44'>{item.warningTime}</span>
+                      <img src={WarningPicture} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
+                    </div>
+                  ))
+                    : ''
+                }
               </div>
             </div>
 
@@ -274,11 +399,22 @@ class Minitoring extends React.Component {
               <img src={AddEquipment} className='emegency-right-top-img' alt='emegency-right-top-img'></img>
             </div>
 
-            <div className='emegency-right-bottom-message'>
-              <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
-              <span className='right-bottom-message right-bottom-message-2'>2019年02月5日，上午9时02分03秒，广州噼里啪啦设备机发现目标，目标在右下角，并成功驱赶</span>
-              <span className='right-bottom-message right-bottom-message-3'>有效期限：一个月</span>
-            </div>
+            {
+              this.state.warningMessageDetails.length > 0 ?
+                Object.keys(this.state.warningMessageDetails[this.state.warningDetailIndex]).map((item, index) => (
+                  <div className='emegency-right-bottom-message' key={index}>
+                    <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
+                    <span className='right-bottom-message right-bottom-message-2'>{this.state.warningMessageDetails[this.state.warningDetailIndex]['warningMessage']}</span>
+                    <span className='right-bottom-message right-bottom-message-3'>有效期限：{this.state.warningMessageDetails[this.state.warningDetailIndex]['vaildDate']}</span>
+                  </div>
+                )) :
+                <div className='emegency-right-bottom-message'>
+                  <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
+                  <span className='right-bottom-message right-bottom-message-2'>暂无</span>
+                  <span className='right-bottom-message right-bottom-message-3'>有效期限：--</span>
+                </div>
+            }
+
           </div>
 
           {/** 密度分析div
@@ -296,20 +432,30 @@ class Minitoring extends React.Component {
               <img className='density-analysis-videos-img' src={EgVideos} alt='density-analysis-videos-img'></img>
             </div>
             <div className='minitoring-density-analysis-list'>
-              <div className='density-analysis-item'>
-                <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+              <div className='mimitoring-density-list'>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
+                <div className='density-analysis-item'>
+                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
+                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
+                </div>
               </div>
-              <div className='density-analysis-item'>
-                <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-              </div>
-              <div className='density-analysis-item'>
-                <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-              </div>
-              <img alt='density-analysis-right-btn' className='density-analysis-right-btn' src={RightBtn}></img>
             </div>
+            {/* <img alt='density-analysis-right-btn' className='density-analysis-right-btn' src={RightBtn}></img> */}
           </div>
 
         </div>

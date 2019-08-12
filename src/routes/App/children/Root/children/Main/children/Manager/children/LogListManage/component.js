@@ -58,6 +58,7 @@ class LogListManage extends React.Component {
               pageSize={15}
               defaultCurrent={1}
               size='small'
+              className='pagination-div'
             />
           </div>
         </div>

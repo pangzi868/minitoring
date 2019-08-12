@@ -152,6 +152,12 @@ class Login extends React.Component {
 
     var phoneNum = document.getElementById('login_username').value
     var password = document.getElementById('login_password').value
+    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+    if (!phoneNumberReg.test(phoneNum)) {
+      alert('请输入正确的手机号码')
+      return
+    }
     this.props.passWordLogin({
       phoneNumber: phoneNum,
       pwd: password
@@ -159,7 +165,6 @@ class Login extends React.Component {
       // 保存短信接口给的hash和tamp，用做校验的判断
       // this.hash = data.hash
       // this.tamp = data.tamp
-      console.log('登录成功', data)
     })
 
 
@@ -177,6 +182,12 @@ class Login extends React.Component {
 
     var phoneNum = document.getElementById('login_phone').value
     var captcha = document.getElementById('login_captcha').value
+    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+    if (!phoneNumberReg.test(phoneNum)) {
+      alert('请输入正确的手机号码')
+      return
+    }
     this.props.SMSLogin({
       phoneNumber: phoneNum,
       hash: this.hash,
@@ -201,6 +212,12 @@ class Login extends React.Component {
   sendCheckNum = e => {
     e.preventDefault();
     var phoneNum = document.getElementById('login_phone').value
+    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+    if (!phoneNumberReg.test(phoneNum)) {
+      alert('请输入正确的手机号码')
+      return
+    }
     this.props.getSMSMessage({ phoneNumber: phoneNum }, data => {
       // 保存短信接口给的hash和tamp，用做校验的判断
       this.hash = data.hash

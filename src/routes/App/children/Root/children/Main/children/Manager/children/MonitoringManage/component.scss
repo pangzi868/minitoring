@@ -52,6 +52,7 @@
         height: 90%;
         font-size: 14px;
         .search-item {
+          cursor: pointer;
           width: 100%;
           height: 10%;
           border: 1px solid #F0F2F3;
@@ -84,8 +85,14 @@
       }
     }
   }
+  .pagination-div {
+    display: flex;
+    align-items: center;
+    height: 5%;
+    padding: 0 10px;
+  }
   .monitoring-manager-bottom {
-    height: 45%;
+    height: 40%;
     width: 100%;
     border: 1px solid #666;
 
