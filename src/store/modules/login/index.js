@@ -28,7 +28,8 @@ export function getSMSMessage(params, cb) {
       callback: cb
     },
     failConfig: {
-      message: '获取验证码失败'
+      message: '获取验证码失败',
+      isForceShow: false
     }
   })
 }
@@ -44,13 +45,14 @@ export function ValidateCode(params) {
     },
     actionType: VALIDATE_SMS,
     failConfig: {
-      message: '校验验证码失败'
+      message: '校验验证码失败',
+      isForceShow: false
     }
   })
 }
 
 // 注册手机账号
-export function phoneNumRegister(params) {
+export function phoneNumRegister(params,cb) {
   return post({
     url: `${isMock()}/shungkon/shungkon/toRegister`,
     bodyData: {
@@ -62,9 +64,11 @@ export function phoneNumRegister(params) {
     },
     actionType: PHONENUMBER_REGISTER,
     successConfig: {
+      callback: cb
     },
     failConfig: {
-      message: '注册账号密码失败'
+      message: '注册账号密码失败',
+      isForceShow: false
     }
   })
 }
@@ -79,7 +83,8 @@ export function passWordLogin(params) {
     },
     actionType: PASSWORD_LOGIN,
     failConfig: {
-      message: '账号/密码错误，登录失败'
+      message: '账号/密码错误，登录失败',
+      isForceShow: false
     }
   })
 }
@@ -97,7 +102,8 @@ export function SMSLogin(params) {
     },
     actionType: SMS_LOGIN,
     failConfig: {
-      message: '短信登录失败'
+      message: '短信登录失败',
+      isForceShow: false
     }
   })
 }

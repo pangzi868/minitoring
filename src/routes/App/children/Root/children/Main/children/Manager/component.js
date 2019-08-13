@@ -1,7 +1,8 @@
 import React from 'react'
 import './component.scss'
 
-import { Menu, Icon, Upload, Button, message } from 'antd';
+import { Menu, Upload, Button, message, Row, Col, Icon, Layout, Card } from 'antd';
+
 
 // import reqwest from 'reqwest';
 
@@ -26,6 +27,7 @@ class Minitoring extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      iFrameHeight: '0px',
       LogListMonitoring: '',
       isWindowShow: {
         isRealTimeShow: false,
@@ -44,6 +46,11 @@ class Minitoring extends React.Component {
       fileList: [],
       uploading: false,
       // 模拟列表数据
+
+      // myGroupList: [
+      //   { 'groupId': 0, 'isShow': false }
+      // ],
+
       myMinitoringList: [
         {
           minitoringName: '南山分店',
@@ -107,6 +114,7 @@ class Minitoring extends React.Component {
         },
       ]
     }
+    this.fileInput = React.createRef();
 
     this.secondMenuHandle = this.secondMenuHandle.bind(this)
     this.handleClick = this.handleClick.bind(this)
@@ -114,6 +122,7 @@ class Minitoring extends React.Component {
     this.additionShowHandle = this.additionShowHandle.bind(this)
     this.addGroupHandle = this.addGroupHandle.bind(this)
     this.addEquipmentHandle = this.addEquipmentHandle.bind(this)
+    // this.groupShowAndHide = this.groupShowAndHide.bind(this)
   }
 
   secondMenuHandle(item, e) {
@@ -123,6 +132,15 @@ class Minitoring extends React.Component {
   editMinitoring(item, e) {
     console.log(item)
   }
+
+  // 分组列表的显示
+  // groupShowAndHide = (index, e) => {
+  //   var temp = this.state.myGroupList
+  //   temp[index]['isShow'] = !temp[index]['isShow']
+  //   this.setState({
+  //     myGroupList: temp
+  //   })
+  // }
 
   // 添加分组确定按钮
   addGroupHandle = e => {
@@ -338,6 +356,25 @@ class Minitoring extends React.Component {
     // });
   };
 
+  // // 上传固件
+  // fileSubmit = (e) => {
+  //   e.preventDefault();
+  //   let formData = new FormData(e.target);
+  //   fetch('/shungkon/attach/upload', {
+  //     method: 'POST',
+  //     enctype: "multipart/form-data",
+  //     contentType: "",
+  //     body: formData //自动将input:file的name属性与文件对象组合成键值对
+  //   }).then(response => console.log(response))
+  // };
+
+  upload = () => {
+    var temp = new FormData();
+    temp.append('file', this.fileInput.current.files[0]);
+    this.props.uploadAttach({ temp }, data => {
+      console.log(data, 'wangyinbin')
+    })
+  };
 
   componentWillMount() {
   }
@@ -371,16 +408,24 @@ class Minitoring extends React.Component {
             <div className='nav-mine-title'>我的设备</div>
             <div className='nav-mine-list'>
               <div className='nav-mine-item'>
-                <Menu onClick={this.handleClick} style={{ width: 256 }} mode="inline">
+                {/* <div className='my-group-name' onClick={this.groupShowAndHide.bind(this, 0)}> + 我的分组</div>
+                <div className='nav-mine-group'> */}
+                <Menu
+                  // className={`${this.state.myGroupList[0]['isShow'] ? '' : 'hide'}`}
+                  onClick={this.handleClick}
+                  style={{ width: 256 }}
+                  mode="inline"
+                >
                   {
                     myMinitoringList && myMinitoringList.length !== 0 ? myMinitoringList.map((item, index) => (
                       <SubMenu
                         key={index}
                         title={
                           <span>
-                            <span>{item.minitoringName}</span>
+                            <span>{` + ` + item.minitoringName}</span>
                           </span>
                         }
+
                       >
                         {
                           item.childrenList && item.childrenList.length !== 0 ? item.childrenList.map((items, indexs) => (
@@ -389,10 +434,9 @@ class Minitoring extends React.Component {
                               title={
                                 <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', width: '100%', display: 'block' }}>
                                   {/* <Icon type="appstore" /> */}
-                                  <span>{items.name}</span>
+                                  <span>{` + ` + items.name}</span>
                                 </span>
                               }
-
                             >
                               <Menu.Item key={`${item.minitoringName + '-' + items.name}-1`}>实时视频</Menu.Item>
                               <Menu.Item key={`${item.minitoringName + '-' + items.name}-2`}>告警信息</Menu.Item>
@@ -405,6 +449,7 @@ class Minitoring extends React.Component {
                     )) : ''
                   }
                 </Menu>
+                {/* </div> */}
               </div>
             </div>
           </div>
@@ -421,9 +466,9 @@ class Minitoring extends React.Component {
             </div>
 
             <div className='manager-left-btn'>
-              <div className='nav-manager-title' onClick={this.leftBottomShowOrHideHandle.bind(this, '1')}>用户管理</div>
-              <div className='nav-manager-title' onClick={this.leftBottomShowOrHideHandle.bind(this, '2')}>设备管理</div>
-              <div className='nav-manager-title' onClick={this.leftBottomShowOrHideHandle.bind(this, '3')}>更新固件</div>
+              <div className={`nav-manager-title ${this.state.isWindowShow.isUserManagerShow ? 'nav-manager-title-active' : ''}`} onClick={this.leftBottomShowOrHideHandle.bind(this, '1')}>用户管理</div>
+              <div className={`nav-manager-title ${this.state.isWindowShow.isMinitoringManagerShow ? 'nav-manager-title-active' : ''}`} onClick={this.leftBottomShowOrHideHandle.bind(this, '2')}>设备管理</div>
+              <div className={`nav-manager-title ${this.state.isWindowShow.isUpdateFirmwareShow ? 'nav-manager-title-active' : ''}`} onClick={this.leftBottomShowOrHideHandle.bind(this, '3')}>更新固件</div>
             </div>
           </div>
         </div>
@@ -599,24 +644,25 @@ class Minitoring extends React.Component {
               <span className='firmware-content-filename'>shangkang-2019.0731</span>
             </div>
             <div className='upload-content'>
-              <Upload {...props}>
-                <div className='upload-div'>
-                  <input className='upload-input'></input>
-                  <img src={UploadFile} alt='upload-img' className='upload-img'></img>
-                </div>
-                {/* <Button>
-                    <Icon type="upload" /> Select File
-                  </Button> */}
-              </Upload>
-              <Button
-                type="primary"
-                onClick={this.handleUpload}
-                disabled={fileList.length === 0}
-                loading={uploading}
-                className='upload-btn'
-              >
-                {uploading ? '上传中...' : '上传固件'}
-              </Button>
+              <form action="http://112.74.77.11:2019/shungkon/attach/upload" method="post" enctype="multipart/form-data" target="targetIfr">
+                <input type="file" name='file' />
+                <input type="submit" value="上传" />
+              </form>
+              <iframe
+                style={{ width: '100%', height: this.state.iFrameHeight, overflow: 'visible' }}
+                ref="iframe"
+                src="/courses.html"
+                width="100%"
+                height={this.state.iFrameHeight}
+                scrolling="no"
+                frameBorder="0"
+                name="targetIfr"
+                display='none'
+              />
+              {/* <div>
+                <input type="file" name='file' ref={this.fileInput} />
+                <input type="button" value="上传" onClick={this.upload} />
+              </div> */}
             </div>
           </div>
 

@@ -1,17 +1,20 @@
 import React from 'react'
 import './component.scss'
 
-import { Menu, Icon } from 'antd';
+import { Menu, Icon, Dropdown, Modal } from 'antd';
 
 import AddEquipment from './images/upper-bg.png'
 import EgVideos from './images/videos.png'
 import GroupAddition from './images/blue_add.png'
 import EquipmentAddition from './images/yellow_add.png'
 import RightBtn from './images/4.3.png'
+import ViewMore from './images/sidebar-viewmore.svg'
 import DownloadBtn from './images/3.4.png'
 import WarningPicture from './images/warning.png'
 
 const { SubMenu } = Menu;
+
+const SRC_PATH = 'http://112.74.77.11:2019/shungkon'
 
 // 格式化日期，如月、日、时、分、秒保证为2位数
 function formatNumber(n) {
@@ -37,12 +40,12 @@ function formatTime(number, format) {
   return format;
 }
 
-
 class Minitoring extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      editGroupVisibled: false,
       isAdditionShow: true,
       isRealTimeShow: false,
       isEmergencyShow: false,
@@ -51,7 +54,9 @@ class Minitoring extends React.Component {
       isAdditionGroupShow: false,
 
       warningMessageDetails: [],
+      densityList: [],
       warningDetailIndex: 0,
+      densityDetailIndex: 0,
 
       // 模拟列表数据
       myMinitoringList: [
@@ -124,7 +129,72 @@ class Minitoring extends React.Component {
     this.addGroupHandle = this.addGroupHandle.bind(this)
     this.addEquipmentHandle = this.addEquipmentHandle.bind(this)
     this.warningDetailChangeHandle = this.warningDetailChangeHandle.bind(this)
+    this.onGroupMenuClick = this.onGroupMenuClick.bind(this)
+    this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
   }
+
+  // 分组菜单按钮
+  onGroupMenuClick = ({ key }, e) => {
+
+    e.preventDefault();
+    switch (key) {
+      case '0':
+        this.showEditGroupModal();
+        break;
+      case '1':
+        Modal.confirm({
+          title: '删除分组',
+          content: '是否删除该分组？',
+          okText: '确认',
+          cancelText: '取消',
+        });
+        break;
+      default:
+        break;
+    }
+  };
+  // 设备菜单按钮
+  onEquipmentMenuClick = ({ key }, e) => {
+    e.preventDefault();
+    switch (key) {
+      case '0':
+        break;
+      case '1':
+        Modal.confirm({
+          title: '删除分组',
+          content: '是否删除该分组？',
+          okText: '确认',
+          cancelText: '取消',
+        });
+        break;
+      case '2':
+        Modal.confirm({
+          title: '删除分组',
+          content: '是否删除该分组？',
+          okText: '确认',
+          cancelText: '取消',
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
+  // 修改分组弹窗
+  showEditGroupModal = (e) => {
+    e.preventDefault();
+    this.setState({
+      editGroupVisibled: true,
+    });
+  };
+
+  // 隐藏
+  hideEditGroupModal = (e) => {
+    e.preventDefault();
+    this.setState({
+      editGroupVisibled: false,
+    });
+  };
 
   secondMenuHandle(item, e) {
     console.log(e, item)
@@ -206,7 +276,7 @@ class Minitoring extends React.Component {
             var temp = data.uglyData
             var detailsTemp = []
             temp.map((item, index) => {
-              detailsTemp.push({ 'eventId': item.eventId, 'warningMessage': item.warningMessage, 'vaildDate': '一个月' })
+              detailsTemp.push(Object.assign({}, item, { 'validDate': '一个月' }))
             })
             this.setState({
               warningMessageDetails: detailsTemp
@@ -222,6 +292,20 @@ class Minitoring extends React.Component {
         })
         break;
       case '密度分析':
+        // 请求密度分析数据
+        this.props.getDensityPicture({ serial: 'QSZN001' }, data => {
+          if (data.uglyData) {
+            var temp = data.uglyData
+            var densityListTemp = []
+            temp.map((item, index) => {
+              densityListTemp.push({ 'path': item, 'validDate': '2019-0807-15:00:00' })
+            })
+            this.setState({
+              densityList: densityListTemp
+            })
+          }
+        })
+
         this.setState({
           isRealTimeShow: false,
           isEmergencyShow: false,
@@ -235,12 +319,43 @@ class Minitoring extends React.Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
+    this.props.getDeviceGroup({}, data => {
+      console.log(data, 'wangyinbinb')
+    })
   }
 
   render() {
     const { match, warningVideos } = this.props
-    const { myMinitoringList } = this.state
+    const { myMinitoringList, densityList, densityDetailIndex, warningDetailIndex } = this.state
+    const groupMenu = (
+      <Menu onClick={this.onGroupMenuClick.bind(this)}>
+        <Menu.Item key="0">修改分组名称</Menu.Item>
+        <Modal
+          title="Modal"
+          visible={this.state.editGroupVisibled}
+          onOk={this.hideEditGroupModal}
+          onCancel={this.hideEditGroupModal}
+          okText="确认"
+          cancelText="取消"
+        >
+          <p>Bla bla ...</p>
+          <p>Bla bla ...</p>
+          <p>Bla bla ...</p>
+        </Modal>
+        {/* <Menu.Divider /> */}
+        <Menu.Item key="1">删除</Menu.Item>
+      </Menu>
+    );
+
+    const equipmentMenu = (
+      <Menu onClick={this.onEquipmentMenuClick.bind(this)}>
+        <Menu.Item key="0">修改设备名称</Menu.Item>
+        <Menu.Item key="1">移动分组</Menu.Item>
+        {/* <Menu.Divider /> */}
+        <Menu.Item key="2">删除</Menu.Item>
+      </Menu>
+    );
     return (
       <div className="minitoring-component">
         <div className='minitoring-left-nav'>
@@ -255,7 +370,10 @@ class Minitoring extends React.Component {
                         key={index}
                         title={
                           <span>
-                            <span>{item.minitoringName}</span>
+                            <span>{` + ` + item.minitoringName}</span>
+                            <Dropdown overlay={groupMenu} trigger={['click']}>
+                              <span className='group-right-btn'><img className='group-right-img' alt='group-right-img' src={ViewMore}></img></span>
+                            </Dropdown>
                           </span>
                         }
                       >
@@ -266,7 +384,10 @@ class Minitoring extends React.Component {
                               title={
                                 <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', width: '100%', display: 'block' }}>
                                   {/* <Icon type="appstore" /> */}
-                                  <span>{items.name}</span>
+                                  <span>{` + ` + items.name}</span>
+                                  <Dropdown overlay={equipmentMenu} trigger={['click']}>
+                                    <span className='group-right-btn'><img className='group-right-img' alt='group-right-img' src={ViewMore}></img></span>
+                                  </Dropdown>
                                 </span>
                               }
 
@@ -401,11 +522,11 @@ class Minitoring extends React.Component {
 
             {
               this.state.warningMessageDetails.length > 0 ?
-                Object.keys(this.state.warningMessageDetails[this.state.warningDetailIndex]).map((item, index) => (
+                Object.keys(this.state.warningMessageDetails[warningDetailIndex]).map((item, index) => (
                   <div className='emegency-right-bottom-message' key={index}>
                     <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
-                    <span className='right-bottom-message right-bottom-message-2'>{this.state.warningMessageDetails[this.state.warningDetailIndex]['warningMessage']}</span>
-                    <span className='right-bottom-message right-bottom-message-3'>有效期限：{this.state.warningMessageDetails[this.state.warningDetailIndex]['vaildDate']}</span>
+                    <span className='right-bottom-message right-bottom-message-2'>{this.state.warningMessageDetails[warningDetailIndex]['warningMessage']}</span>
+                    <span className='right-bottom-message right-bottom-message-3'>有效期限：{this.state.warningMessageDetails[warningDetailIndex]['validDate']}</span>
                   </div>
                 )) :
                 <div className='emegency-right-bottom-message'>
@@ -429,30 +550,18 @@ class Minitoring extends React.Component {
                 <span className='density-analysis-title right-title'></span>
               </div>
 
-              <img className='density-analysis-videos-img' src={EgVideos} alt='density-analysis-videos-img'></img>
+              <img className='density-analysis-videos-img' src={densityList.length !== 0 ? SRC_PATH + densityList[densityDetailIndex].path : ''} alt='density-analysis-videos-img'></img>
             </div>
             <div className='minitoring-density-analysis-list'>
               <div className='mimitoring-density-list'>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
+                {
+                  densityList && densityList.length !== 0 ? densityList.map((item, index) => (
+                    <div className='density-analysis-item' key={index}>
+                      <img className='density-analysis-item-img' alt='density-analysis-item-img' src={SRC_PATH + item.path}></img>
+                      <span className='density-analysis-item-date'>{item.validDate}</span>
+                    </div>
+                  )) : ''
+                }
               </div>
             </div>
             {/* <img alt='density-analysis-right-btn' className='density-analysis-right-btn' src={RightBtn}></img> */}

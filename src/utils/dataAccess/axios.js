@@ -98,12 +98,12 @@ const responseHandler = (dispatch, config) => {
         );
       }
     }
-  } else if(config.responseData.code === '9999') {
+  } else if (config.responseData.code === '9999') {
     // 其它异常处理: 200的异常情况(success为false)、400、404、500(success标记位不存在)等
     if (!config.responseData.message) {
       config.responseData.message = {};
     }
-    const errorMsg = config.responseData.message.desc;
+    const errorMsg = config.responseData.message;
     const errorCode = config.responseData.message.code;
     if (errorMsg) {
       if (config.failConfig && config.failConfig.isForceShow) {
@@ -202,18 +202,17 @@ export const axiosHandler = config => {
       config.method.toLowerCase() === "post" ||
       config.method.toLowerCase() === "put"
     ) {
-      let contentType = "application/json";
-      // let contentType = "application/x-www-form-urlencoded";
-
-      // if (!(config.bodyData instanceof FormData)) {
-      //   contentType = 'application/json'
-      // } else if (config.bodyData instanceof FormData && config.contentType === 'multipart/form-data') {
-      //   contentType = 'multipart/form-data'
-      // } else if (config.bodyData instanceof FormData) {
-      //   contentType = 'application/x-www-form-urlencoded'
-      //   config.bodyData = [...config.bodyData.entries()].map((d) => `${d[0]}=${d[1]}`)
-      //   config.bodyData = config.bodyData.join('&')
-      // }
+      // let contentType = "application/json";
+      let contentType = "application/x-www-form-urlencoded";
+      if (!(config.bodyData instanceof FormData)) {
+        contentType = 'application/json'
+      } else if (config.bodyData instanceof FormData && config.contentType === 'multipart/form-data') {
+        contentType = 'multipart/form-data'
+      } else if (config.bodyData instanceof FormData) {
+        contentType = 'application/x-www-form-urlencoded'
+        config.bodyData = [...config.bodyData.entries()].map((d) => `${d[0]}=${d[1]}`)
+        config.bodyData = config.bodyData.join('&')
+      }
 
       axiosConfig = Object.assign(axiosConfig, {
         headers: contentType ? { "content-type": contentType } : {},
@@ -309,7 +308,7 @@ export const axiosHandler = config => {
         // {"success":false,"message":{"code":10017,"desc":"用户名或密码错误"}}
         // config.responseData = error.response || {message: error.message}
         config.responseData = {
-          success: false,
+          success: '9999',
           message: { desc: error.message }
         };
         responseHandler(dispatch, config);

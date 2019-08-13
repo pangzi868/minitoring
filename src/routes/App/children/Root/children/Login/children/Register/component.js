@@ -101,6 +101,8 @@ class Register extends React.Component {
           msgNum: msgNum,
           phoneNumber: phoneNumber,
           password: password
+        }, data => {
+          this.props.goToLogin && this.props.goToLogin()
         })
       }
     });

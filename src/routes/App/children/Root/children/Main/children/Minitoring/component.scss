@@ -39,6 +39,23 @@
           .ant-menu {
             width: 100% !important;
             min-height: 100%;
+            .ant-menu-submenu-title {
+              padding-right: 14px;
+              .group-right-btn {
+                float: right;
+                .group-right-img {
+                  transform: rotate(90deg);
+                  ms-transform: rotate(90deg); /* IE 9 */
+                  moz-transform: rotate(90deg); /* Firefox */
+                  webkit-transform: rotate(90deg); /* Safari and Chrome */
+                  o-transform: rotate(90deg); /* Opera */
+                  width: 20px;
+                }
+              }
+              .ant-menu-submenu-arrow {
+                display: none;
+              }
+            }
             // border-right: 0px;
             // .ant-menu-submenu {
             //   height: 42px;

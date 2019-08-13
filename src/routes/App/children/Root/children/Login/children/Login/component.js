@@ -162,6 +162,8 @@ class Login extends React.Component {
       phoneNumber: phoneNum,
       pwd: password
     }, data => {
+      // 根据后端返回判断管理员还是非管理员页面
+
       // 保存短信接口给的hash和tamp，用做校验的判断
       // this.hash = data.hash
       // this.tamp = data.tamp

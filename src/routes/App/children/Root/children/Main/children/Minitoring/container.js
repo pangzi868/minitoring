@@ -6,7 +6,8 @@ import {
   getDensityPicture,
   getDensityPictureData,
   downloadWarningVideos,
-  uploadAttach
+  uploadAttach,
+  getDeviceGroup
 } from 'store/modules/manager'
 
 const mapDispatchToProps = {
@@ -15,7 +16,8 @@ const mapDispatchToProps = {
   getDensityPicture,
   getDensityPictureData,
   downloadWarningVideos,
-  uploadAttach
+  uploadAttach,
+  getDeviceGroup
 }
 
 const mapStateToProps = (state) => ({
@@ -23,5 +25,6 @@ const mapStateToProps = (state) => ({
   warningVideosDetail: state.manager.warningVideosDetail,
   densityPicture: state.manager.densityPicture,
   densityPictureData: state.manager.densityPictureData,
+  deviceGroup: state.manager.deviceGroup,
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Component)
