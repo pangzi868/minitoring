@@ -147,7 +147,7 @@ app.use("/crm-jj/api/relation_graph/:type", function (req, res, next) {
  * onProxyReq 将解析后的body数据再转回来
 */
 app.use(
-  "/dsp",
+  "/",
   proxy({
     target: API_ADDRESS, // target host
     changeOrigin: true, // needed for virtual hosted sites

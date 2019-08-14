@@ -142,9 +142,13 @@ class Minitoring extends React.Component {
   }
 
   // 分组菜单按钮
-  onGroupMenuClick = ({ key }) => {
-
-    switch (key) {
+  onGroupMenuClick = (e) => {
+    e.domEvent.stopPropagation();
+    console.log(e, 'wangyinbin')
+    console.log(document.getElementById('groupDropdown-1'))
+    console.log(document.getElementById('groupDropdown-1').defineGroupId)
+    console.log(document.getElementById('groupDropdown-1').defineGroupName)
+    switch (e.key) {
       case '0':
         this.showEditGroupModal();
         break;
@@ -161,8 +165,9 @@ class Minitoring extends React.Component {
     }
   };
   // 设备菜单按钮
-  onEquipmentMenuClick = ({ key }) => {
-    switch (key) {
+  onEquipmentMenuClick = (e) => {
+    e.domEvent.stopPropagation();
+    switch (e.key) {
       case '0':
         this.showEditEquipmentModal();
         break;
@@ -187,14 +192,14 @@ class Minitoring extends React.Component {
     }
   };
 
-  // 修改分组弹窗
+  // 修改分组名称弹窗
   showEditGroupModal = (e) => {
     this.setState({
       editGroupVisibled: true,
     });
   };
 
-  // 隐藏
+  // 隐藏修改分组名称弹窗
   hideEditGroupModal = (e) => {
     e.preventDefault();
     this.setState({
@@ -202,14 +207,14 @@ class Minitoring extends React.Component {
     });
   };
 
-  // 修改分组弹窗
+  // 修改设备名称弹窗
   showEditEquipmentModal = (e) => {
     this.setState({
       editEquipmentVisibled: true,
     });
   };
 
-  // 隐藏
+  // 隐藏设备名称弹窗
   hideEditEquipmentModal = (e) => {
     e.preventDefault();
     this.setState({
@@ -340,7 +345,7 @@ class Minitoring extends React.Component {
   }
 
   UNSAFE_componentWillMount() {
-    this.props.getDeviceGroup({}, data => {
+    this.props.getDeviceGroup({ userId: '3' }, data => {
       console.log(data, 'wangyinbinb')
     })
   }
@@ -351,7 +356,6 @@ class Minitoring extends React.Component {
     const groupMenu = (
       <Menu onClick={this.onGroupMenuClick.bind(this)}>
         <Menu.Item key="0">修改分组名称</Menu.Item>
-        {/* <Menu.Divider /> */}
         <Menu.Item key="1">删除</Menu.Item>
       </Menu>
     );
@@ -360,7 +364,6 @@ class Minitoring extends React.Component {
       <Menu onClick={this.onEquipmentMenuClick.bind(this)}>
         <Menu.Item key="0">修改设备名称</Menu.Item>
         <Menu.Item key="1">移动分组</Menu.Item>
-        {/* <Menu.Divider /> */}
         <Menu.Item key="2">删除</Menu.Item>
       </Menu>
     );
@@ -379,8 +382,8 @@ class Minitoring extends React.Component {
                         title={
                           <span>
                             <span>{` + ` + item.minitoringName}</span>
-                            <Dropdown overlay={groupMenu} trigger={['click']}>
-                              <span className='group-right-btn'><img className='group-right-img' alt='group-right-img' src={ViewMore}></img></span>
+                            <Dropdown id={`groupDropdown-2`} overlay={groupMenu} trigger={['click']}>
+                              <span id={`groupDropdown-1`} className='group-right-btn' defineGroupId={`1`} defineGroupName={`ww`}><img className='group-right-img' alt='group-right-img' src={ViewMore}></img></span>
                             </Dropdown>
                           </span>
                         }
@@ -551,10 +554,6 @@ class Minitoring extends React.Component {
               this.state.warningMessageDetails.length > 0 ?
                 <div>
                   <div className='emegency-right-top-videos'>
-                    {/* <video width='100%' height='100%' controls="controls" autoplay="autoplay">
-                      <source src={SRC_PATH + this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video> */}
                     <div style={{ width: '100%', height: '100%' }}>
                       <Player>
                         {/* <source src={SRC_PATH + this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']} /> */}
@@ -574,11 +573,6 @@ class Minitoring extends React.Component {
                         </ControlBar>
                       </Player>
                     </div>
-                    {/* <Player ref="player" videoId="video-1">
-
-                      <source src={SRC_PATH + this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']} />
-
-                    </Player> */}
                   </div>
                   <div className='emegency-right-bottom-message'>
                     <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>

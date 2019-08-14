@@ -10,7 +10,14 @@ import {
   getDeviceList,
   getFuzzyDeviceList,
   addDeviceToSystem,
-  getDeviceDetails
+  getDeviceDetails,
+  getDeviceGroup,
+  addGroup,
+  editGroupName,
+  deleteGroupName,
+  editEquipmentName,
+  deleteDeviceByRelation,
+  addDevGroup
 } from 'store/modules/manager'
 
 const mapDispatchToProps = {
@@ -23,7 +30,14 @@ const mapDispatchToProps = {
   getDeviceList,
   getFuzzyDeviceList,
   addDeviceToSystem,
-  getDeviceDetails
+  getDeviceDetails,
+  getDeviceGroup,
+  addGroup,
+  editGroupName,
+  deleteGroupName,
+  editEquipmentName,
+  deleteDeviceByRelation,
+  addDevGroup
 }
 
 const mapStateToProps = (state) => ({
@@ -33,6 +47,7 @@ const mapStateToProps = (state) => ({
   densityPictureData: state.manager.densityPictureData,
   deviceList: state.manager.deviceList,
   fuzzyDeviceList: state.manager.fuzzyDeviceList,
-  deviceDetails: state.manager.deviceDetails
+  deviceDetails: state.manager.deviceDetails,
+  deviceGroup: state.manager.deviceGroup
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Component)

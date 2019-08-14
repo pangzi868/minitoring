@@ -60,6 +60,17 @@
               .ant-menu-submenu-arrow {
                 display: none;
               }
+              .group-right-btn {
+                float: right;
+                .group-right-img {
+                  transform: rotate(90deg);
+                  ms-transform: rotate(90deg); /* IE 9 */
+                  moz-transform: rotate(90deg); /* Firefox */
+                  webkit-transform: rotate(90deg); /* Safari and Chrome */
+                  o-transform: rotate(90deg); /* Opera */
+                  width: 20px;
+                }
+              }
             }
             // border-right: 0px;
             // .ant-menu-submenu {
@@ -132,7 +143,7 @@
         left: 35%;
         top: 30%;
         width: 35%;
-        height: 36%;
+        min-height: 36%;
         padding: 1%;
         font-size: 24px;
         font-family: 'Times New Roman', Times, serif;
@@ -142,6 +153,9 @@
           width: 100%;
           height: 15%;
           margin-bottom: 3%;
+        }
+        .ant-select {
+          margin-bottom: 5%;
         }
         .product-serial-number,.product-psw  {
           display: inline-block;

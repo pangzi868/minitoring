@@ -11,6 +11,11 @@ const UPLOAD_ATTACH = 'UPLOAD_ATTACH'
 const ADD_DEVICE = 'ADD_DEVICE'
 const ADD_GROUP = 'ADD_GROUP'
 const GET_DEVICE_GROUP = 'GET_DEVICE_GROUP'
+const EDIT_GROUP_NAME = 'EDIT_GROUP_NAME'
+const DELETE_GROUP_NAME = 'DELETE_GROUP_NAME'
+const EDIT_EQUIPMENT_NAME = 'EDIT_EQUIPMENT_NAME'
+const DELETE_EQUIPMENT_NAME = 'DELETE_EQUIPMENT_NAME'
+const ADD_DEV_GROUP = 'ADD_DEV_GROUP'
 const GET_FUZZY_DEVICE_LIST = 'GET_FUZZY_DEVICE_LIST'
 const GET_DEVICE_LIST = 'GET_DEVICE_LIST'
 const ADD_DEVICE_TO_SYSTEM = 'ADD_DEVICE_TO_SYSTEM'
@@ -127,10 +132,7 @@ export function addDevice(params, cb) {
 // 获取验证码
 export function addGroup(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/login/smsSendCode`,
-    bodyData: {
-      phoneNumber: params.phoneNumber
-    },
+    url: `${isMock()}/shungkon/device/addGroup?groupName=${params.groupName}`,
     actionType: ADD_GROUP,
     successConfig: {
       callback: cb
@@ -145,9 +147,8 @@ export function addGroup(params, cb) {
 
 // 获取分组列表
 export function getDeviceGroup(params, cb) {
-  return post({
-    url: `${isMock()}/shungkon/getDeviceGroup`,
-    bodyData: {},
+  return get({
+    url: `${isMock()}/shungkon/device/getDeviceByUserId?userId=${params.userId}`,
     actionType: GET_DEVICE_GROUP,
     successConfig: {
       callback: cb
@@ -168,6 +169,88 @@ const deviceGroup = (previousState = {}, action) => {
   }
 }
 
+// 修改分组名称
+export function editGroupName(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/device/modifyDeviceGroupName`,
+    bodyData: {
+      groupId: params.groupId,
+      groupName: params.groupName,
+    },
+    actionType: EDIT_GROUP_NAME,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '修改分组名称失败',
+      isForceShow: false
+    }
+  })
+}
+
+// 删除分组名称
+export function deleteGroupName(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/device/deleteDeviceGroup?groupId=${params.groupId}`,
+    actionType: DELETE_GROUP_NAME,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '删除分组失败',
+      isForceShow: false
+    }
+  })
+}
+
+// 修改分组名称
+export function editEquipmentName(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/device/updateDevice`,
+    bodyData: {
+      deviceId: params.deviceId,
+      deviceName: params.deviceName,
+    },
+    actionType: EDIT_EQUIPMENT_NAME,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '修改设备名称失败',
+      isForceShow: false
+    }
+  })
+}
+
+// 删除分组中的设备
+export function deleteDeviceByRelation(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/device/deleteDevice?deviceId=${params.deviceId}`,
+    actionType: DELETE_EQUIPMENT_NAME,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '删除设备失败',
+      isForceShow: false
+    }
+  })
+}
+
+// 往分组中添加设备
+export function addDevGroup(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/device/addDevGroup?serial=${params.serial}&deviceVerifyCode=${params.deviceVerifyCode}&groupId=${params.groupId}`,
+    actionType: ADD_DEV_GROUP,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '添加设备分组失败',
+      isForceShow: false
+    }
+  })
+}
 
 // 获取设备列表
 export function getDeviceList(params, cb) {
@@ -325,6 +408,6 @@ const manager = combineReducers({
   deviceGroup,
   deviceList,
   fuzzyDeviceList,
-  deviceDetails
+  deviceDetails,
 });
 export default manager;

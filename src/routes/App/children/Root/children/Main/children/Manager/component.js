@@ -1,9 +1,13 @@
 import React from 'react'
 import './component.scss'
 
-import { Menu, Upload, Button, message, Row, Col, Icon, Layout, Card } from 'antd';
+import { Menu, Select, Dropdown, Modal, Upload, Button, message, Row, Col, Icon, Layout, Card } from 'antd';
 
-
+import {
+  Player, ControlBar, ReplayControl,
+  ForwardControl, CurrentTimeDisplay,
+  TimeDivider, PlaybackRateMenuButton, VolumeMenuButton
+} from 'video-react';
 // import reqwest from 'reqwest';
 
 import UserManager from './children/UserManager'
@@ -16,14 +20,20 @@ import GroupAddition from './images/blue_add.png'
 import EquipmentAddition from './images/yellow_add.png'
 import RightBtn from './images/4.3.png'
 import DownloadBtn from './images/3.4.png'
+import ViewMore from './images/sidebar-viewmore.svg'
 import File from './images/4.1.png'
 import UploadFile from './images/4.2.png'
+import WarningPicture from './images/warning.png'
 
 const { SubMenu } = Menu;
 
+const { Option } = Select;
 const FILE_UPLOAD_ADDRESS = 'http://112.74.77.11:2019/shungkon/attach/upload'
 
+const SRC_PATH = 'http://112.74.77.11/shungkon'
 
+
+let addGroupId = -1;
 class Minitoring extends React.Component {
 
   constructor(props) {
@@ -45,78 +55,33 @@ class Minitoring extends React.Component {
         isAdditionEquipmentShow: true,
         isAdditionGroupShow: false
       },
+
+      // 分组操作数据
+      editGroupVisibled: false,
+      editGroupItem: null,
+      deleteGroupVisibled: false,
+      deleteGroupItem: null,
+
+      // 设备操作数据
+      editEquipmentVisibled: false,
+      editEquipmentItem: null,
+      deleteEquipmentVisibled: false,
+      deleteEquipmentItem: null,
+
       fileList: [],
       uploading: false,
       clickMinitoring: {},
       isMinitoringClick: false,
-      // 模拟列表数据
 
-      // myGroupList: [
-      //   { 'groupId': 0, 'isShow': false }
-      // ],
+      // 告警信息
+      warningMessageDetails: [],
+      warningDetailIndex: 0,
 
-      myMinitoringList: [
-        {
-          minitoringName: '南山分店',
-          childrenList: [
-            {
-              'name': '设备1',
-              'id': '1',
-              'status': true
-            },
-            {
-              'name': '设备2',
-              'id': '2',
-              'status': false
-            },
-            {
-              'name': '设备3',
-              'id': '3',
-              'status': false
-            },
-          ]
-        },
-        {
-          minitoringName: '龙华分店',
-          childrenList: [
-            {
-              'name': '设备1',
-              'id': '4',
-              'status': true
-            },
-            {
-              'name': '设备2',
-              'id': '5',
-              'status': false
-            },
-            {
-              'name': '设备3',
-              'id': '6',
-              'status': false
-            },
-          ]
-        },
-        {
-          minitoringName: '宝安分店',
-          childrenList: [
-            {
-              'name': '设备1',
-              'id': '7',
-              'status': true
-            },
-            {
-              'name': '设备2',
-              'id': '8',
-              'status': false
-            },
-            {
-              'name': '设备3',
-              'id': '9',
-              'status': false
-            },
-          ]
-        },
-      ]
+      // 密度分析
+      densityList: [],
+      densityDetailIndex: 0,
+
+      myMinitoringGroup: [],
     }
     this.tempDeviceList = null;
     this.deviceDetail = null;
@@ -134,8 +99,149 @@ class Minitoring extends React.Component {
     this.getDeviceListByCondition = this.getDeviceListByCondition.bind(this)
     this.getDeviceDetail = this.getDeviceDetail.bind(this)
     // this.groupShowAndHide = this.groupShowAndHide.bind(this)
-
+    this.onGroupMenuClick = this.onGroupMenuClick.bind(this)
+    this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
   }
+
+  // 分组菜单按钮
+  onGroupMenuClick = (item, e) => {
+    e.domEvent.stopPropagation();
+    console.log(item, 'wangyinbin')
+    switch (e.key) {
+      case '0':
+        this.showEditGroupModal(item);
+        break;
+      case '1':
+        this.showDeleteGroupModal(item);
+        break;
+      default:
+        break;
+    }
+  };
+  // 设备菜单按钮
+  onEquipmentMenuClick = (item, e) => {
+    e.domEvent.stopPropagation();
+    switch (e.key) {
+      case '0':
+        this.showEditEquipmentModal(item);
+        break;
+      case '1':
+        Modal.confirm({
+          title: '删除分组',
+          content: '是否删除该分组？',
+          okText: '确认',
+          cancelText: '取消',
+        });
+        break;
+      case '2':
+        this.showDeleteEquipmentModal(item)
+        break;
+      default:
+        break;
+    }
+  };
+
+  // 修改分组名称弹窗
+  showEditGroupModal = (item, e) => {
+    var groupId = item.groupId
+    this.setState({
+      editGroupVisibled: true,
+      editGroupItem: { groupId: groupId }
+    });
+  };
+
+  // 隐藏修改分组名称弹窗
+  hideEditGroupModal = (item, bool, e) => {
+    e.preventDefault();
+    if (bool) {
+      var groupName = document.getElementById('edit-group-name').value
+      this.props.editGroupName({ groupId: item.groupId, groupName: groupName },
+        data => {
+          this.props.getDeviceGroup({ userId: '3' })
+        }
+      )
+    }
+    this.setState({
+      editGroupVisibled: false,
+      editGroupItem: null
+    });
+  };
+
+  // 删除分组弹窗
+  showDeleteGroupModal = (item, e) => {
+    var groupId = item.groupId
+    this.setState({
+      deleteGroupVisibled: true,
+      deleteGroupItem: { groupId: groupId }
+    });
+  };
+
+  // 删除修改分组弹窗
+  hideDeleteGroupModal = (item, bool, e) => {
+    e.preventDefault();
+    if (bool) {
+      this.props.deleteGroupName({ groupId: item.groupId },
+        data => {
+          this.props.getDeviceGroup({ userId: '3' })
+        }
+      )
+    }
+    this.setState({
+      deleteGroupVisibled: false,
+      deleteGroupItem: null
+    });
+  };
+
+  // 修改设备名称弹窗
+  showEditEquipmentModal = (item, e) => {
+    var deviceId = item.deviceId
+    this.setState({
+      editEquipmentVisibled: true,
+      editEquipmentItem: { deviceId: deviceId }
+    });
+  };
+
+  // 隐藏设备名称弹窗
+  hideEditEquipmentModal = (item, bool, e) => {
+    e.preventDefault();
+    if (bool) {
+      var deviceName = document.getElementById('edit-equipment-name').value
+      this.props.editEquipmentName({ deviceId: item.deviceId, deviceName: deviceName },
+        data => {
+          this.props.getDeviceGroup({ userId: '3' })
+        }
+      )
+    }
+    this.setState({
+      editEquipmentVisibled: false,
+      editEquipmentItem: null
+    });
+  };
+
+  // 删除设备弹窗
+  showDeleteEquipmentModal = (item, e) => {
+    var deviceId = item.deviceId
+    this.setState({
+      deleteEquipmentVisibled: true,
+      deleteEquipmentItem: { deviceId: deviceId }
+    });
+  };
+
+  // 删除修改设备弹窗
+  hideDeleteEquipmentModal = (item, bool, e) => {
+    e.preventDefault();
+    if (bool) {
+      this.props.deleteDeviceByRelation({ deviceId: item.deviceId },
+        data => {
+          this.props.getDeviceGroup({ userId: '3' })
+        }
+      )
+    }
+    this.setState({
+      deleteEquipmentVisibled: false,
+      deleteEquipmentItem: null
+    });
+  };
 
   // 录入设备信息
   enterDeviceToSystem = (params) => {
@@ -184,6 +290,28 @@ class Minitoring extends React.Component {
     console.log(item)
   }
 
+
+  /** 添加分组列表下拉操作start */
+  onChange(value) {
+    if (value) {
+      addGroupId = JSON.parse(JSON.stringify(value))
+    }
+    console.log(`selected ${value}`);
+  }
+
+  onBlur() {
+    console.log('blur');
+  }
+
+  onFocus() {
+    console.log('focus');
+  }
+
+  onSearch(val) {
+    console.log('search:', val);
+  }
+  /** 添加分组列表下拉操作end */
+
   // 分组列表的显示
   // groupShowAndHide = (index, e) => {
   //   var temp = this.state.myGroupList
@@ -196,7 +324,10 @@ class Minitoring extends React.Component {
   // 添加分组确定按钮
   addGroupHandle = e => {
     var groupName = document.getElementById('add-group-input').value
-    alert('添加成功')
+    this.props.addGroup({ groupName: groupName }, data => {
+      alert('添加成功')
+      this.props.getDeviceGroup({ userId: '3' })
+    })
     var temp = this.state.isWindowShow
     temp.isAdditionGroupShow = false
     this.setState({
@@ -206,9 +337,21 @@ class Minitoring extends React.Component {
 
   // 添加设备确定按钮
   addEquipmentHandle = e => {
-    var productNun = document.getElementById('add-equipment-product-num').value
-    var password = document.getElementById('add-equipment-psw').value
-    alert('添加成功')
+    var serial = document.getElementById('add-equipment-product-num').value
+    var code = document.getElementById('add-equipment-psw').value
+    var groupId = addGroupId
+    if (groupId !== -1) {
+      this.props.addDevGroup({
+        serial: serial,
+        deviceVerifyCode: code,
+        groupId: groupId
+      },data=> {
+        this.props.getDeviceGroup({ userId: '3' })
+      })
+    } else {
+      alert('请选择分组')
+      return
+    }
     var temp = this.state.isWindowShow
     temp.isAdditionEquipmentShow = false
     this.setState({
@@ -240,6 +383,14 @@ class Minitoring extends React.Component {
     }
   }
 
+  // 告警信息详细信息切换
+  warningDetailChangeHandle = index => {
+    if (this.state.warningDetailIndex !== index) {
+      this.setState({
+        warningDetailIndex: index
+      })
+    }
+  }
   handleClick(e) {
     var contentType = e.item.props.children
     var monitoringName = e.key
@@ -263,6 +414,19 @@ class Minitoring extends React.Component {
         })
         break;
       case '告警信息':
+        // 请求告警信息数据
+        this.props.getWarningVideos({ serial: 'QSZN001' }, data => {
+          if (data.uglyData) {
+            var temp = data.uglyData
+            var detailsTemp = []
+            temp.map((item, index) => {
+              detailsTemp.push(Object.assign({}, item, { 'validDate': '一个月' }))
+            })
+            this.setState({
+              warningMessageDetails: detailsTemp
+            })
+          }
+        })
         Object.keys(isWindowShowCopy).map((items, index) => {
           switch (items) {
             case 'isEmergencyShow':
@@ -280,6 +444,19 @@ class Minitoring extends React.Component {
         })
         break;
       case '密度分析':
+        // 请求密度分析数据
+        this.props.getDensityPicture({ serial: 'QSZN001' }, data => {
+          if (data.uglyData) {
+            var temp = data.uglyData
+            var densityListTemp = []
+            temp.map((item, index) => {
+              densityListTemp.push({ 'path': item, 'validDate': '2019-0807-15:00:00' })
+            })
+            this.setState({
+              densityList: densityListTemp
+            })
+          }
+        })
         Object.keys(isWindowShowCopy).map((items, index) => {
           switch (items) {
             case 'isAnalysisShow':
@@ -417,12 +594,27 @@ class Minitoring extends React.Component {
       JSON.parse(res).message ? alert(JSON.parse(res).message) : alert('上传失败'))
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
+    this.props.getDeviceGroup({ userId: '3' })
+  }
+
+  UNSAFE_componentWillReceiveProps(props, state) {
+    if (props.deviceGroup.devGroupList !== state.myMinitoringGroup) {
+      this.setState({
+        myMinitoringGroup: props.deviceGroup.devGroupList
+      })
+    }
   }
 
   render() {
-    const { match } = this.props
-    const { uploading, fileList, myMinitoringList, LogListMonitoring } = this.state
+    const { match, warningVideos } = this.props
+    const { uploading,
+      fileList,
+      LogListMonitoring,
+      myMinitoringGroup,
+      warningDetailIndex,
+      densityList,
+      densityDetailIndex } = this.state
     const props = {
       onRemove: file => {
         this.setState(state => {
@@ -458,40 +650,103 @@ class Minitoring extends React.Component {
                   mode="inline"
                 >
                   {
-                    myMinitoringList && myMinitoringList.length !== 0 ? myMinitoringList.map((item, index) => (
-                      <SubMenu
-                        key={index}
-                        title={
-                          <span>
-                            <span>{` + ` + item.minitoringName}</span>
-                          </span>
-                        }
+                    myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
+                      return (
+                        item.devGroup !== undefined ?
+                          <SubMenu
+                            key={index}
+                            title={
+                              <span>
+                                <span>{` + ` + item.devGroup.groupName}</span>
+                                <Dropdown overlay={
+                                  <Menu onClick={this.onGroupMenuClick.bind(this, item.devGroup)}>
+                                    <Menu.Item key="0">修改分组名称</Menu.Item>
+                                    <Menu.Item key="1">删除</Menu.Item>
+                                  </Menu>
+                                } trigger={['click']}>
+                                  <span className='group-right-btn' defineGroupId={`1`} defineGroupName={`ww`}><img className='group-right-img' alt='group-right-img' src={ViewMore}></img></span>
+                                </Dropdown>
+                              </span>
+                            }
 
-                      >
-                        {
-                          item.childrenList && item.childrenList.length !== 0 ? item.childrenList.map((items, indexs) => (
-                            <SubMenu
-                              key={item.minitoringName + items.name}
-                              title={
-                                <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', width: '100%', display: 'block' }}>
-                                  {/* <Icon type="appstore" /> */}
-                                  <span>{` + ` + items.name}</span>
-                                </span>
-                              }
-                            >
-                              {/* <Menu.Item key={`${item.minitoringName + '-' + items.name}-1`}>实时视频</Menu.Item> */}
-                              <Menu.Item key={`${item.minitoringName + '-' + items.name}-2`}>告警信息</Menu.Item>
-                              <Menu.Item key={`${item.minitoringName + '-' + items.name}-3`}>密度分析</Menu.Item>
-                              <Menu.Item key={`${item.minitoringName + '-' + items.name}-4`}>日志列表</Menu.Item>
-                            </SubMenu>
-                          )) : ''
-                        }
-                      </SubMenu>
-                    )) : ''
+                          >
+                            {
+                              item.deviceList && item.deviceList.length !== 0 ? item.deviceList.map((items, indexs) => {
+                                return (
+                                  items !== null ?
+                                    <SubMenu
+                                      key={item.devGroup.groupName + items.deviceName}
+                                      title={
+                                        <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', width: '100%', display: 'block' }}>
+                                          {/* <Icon type="appstore" /> */}
+                                          <span>{` + ` + items.deviceName}</span>
+                                          <Dropdown overlay={
+                                            <Menu onClick={this.onEquipmentMenuClick.bind(this, items)}>
+                                              <Menu.Item key="0">修改设备名称</Menu.Item>
+                                              <Menu.Item key="1">移动分组</Menu.Item>
+                                              <Menu.Item key="2">删除</Menu.Item>
+                                            </Menu>
+                                          } trigger={['click']}>
+                                            <span className='group-right-btn'><img className='group-right-img' alt='group-right-img' src={ViewMore}></img></span>
+                                          </Dropdown>
+                                        </span>
+                                      }
+                                    >
+                                      {/* <Menu.Item key={`${item.devGroup.groupName + '-' + items.deviceName}-1`}>实时视频</Menu.Item> */}
+                                      <Menu.Item key={`${item.devGroup.groupName + '-' + items.deviceName}-2`}>告警信息</Menu.Item>
+                                      <Menu.Item key={`${item.devGroup.groupName + '-' + items.deviceName}-3`}>密度分析</Menu.Item>
+                                      <Menu.Item key={`${item.devGroup.groupName + '-' + items.deviceName}-4`}>日志列表</Menu.Item>
+                                    </SubMenu> : null
+                                )
+                              }) : ''
+                            }
+                          </SubMenu> : null
+                      )
+                    }) : ''
                   }
                 </Menu>
                 {/* </div> */}
               </div>
+              <Modal
+                title="修改分组名称"
+                visible={this.state.editGroupVisibled}
+                onOk={this.hideEditGroupModal.bind(this, this.state.editGroupItem, true)}
+                onCancel={this.hideEditGroupModal.bind(this, this.state.editGroupItem, false)}
+                okText="确认"
+                cancelText="取消"
+              >
+                <input placeholder='请输入分组名称' id='edit-group-name'></input>
+              </Modal>
+              <Modal
+                title="删除分组"
+                visible={this.state.deleteGroupVisibled}
+                onOk={this.hideDeleteGroupModal.bind(this, this.state.deleteGroupItem, true)}
+                onCancel={this.hideDeleteGroupModal.bind(this, this.state.deleteGroupItem, false)}
+                okText="确认"
+                cancelText="取消"
+              >
+                <p>确定删除该分组？</p>
+              </Modal>
+              <Modal
+                title="修改设备名称"
+                visible={this.state.editEquipmentVisibled}
+                onOk={this.hideEditEquipmentModal.bind(this, this.state.editEquipmentItem, true)}
+                onCancel={this.hideEditEquipmentModal.bind(this, this.state.editEquipmentItem, false)}
+                okText="确认"
+                cancelText="取消"
+              >
+                <input placeholder='请输入设备名称' id='edit-equipment-name'></input>
+              </Modal>
+              <Modal
+                title="删除设备"
+                visible={this.state.deleteEquipmentVisibled}
+                onOk={this.hideDeleteEquipmentModal.bind(this, this.state.deleteEquipmentItem, true)}
+                onCancel={this.hideDeleteEquipmentModal.bind(this, this.state.deleteEquipmentItem, false)}
+                okText="确认"
+                cancelText="取消"
+              >
+                <p>确定删除该设备？</p>
+              </Modal>
             </div>
           </div>
           <div className='left-bottom-nav'>
@@ -527,6 +782,29 @@ class Minitoring extends React.Component {
               <div className='add-equipment-form'>
                 <span className='add-equipment-title'>添加设备</span>
                 <input id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
+                <Select
+                  showSearch
+                  style={{ width: '100%' }}
+                  placeholder="请选择分组"
+                  optionFilterProp="children"
+                  onChange={this.onChange}
+                  onFocus={this.onFocus}
+                  onBlur={this.onBlur}
+                  onSearch={this.onSearch}
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {
+                    myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
+                      return (
+                        item.devGroup !== undefined ?
+                          <Option value={item.devGroup.groupId} key={index}>{item.devGroup.groupName}</Option>
+                          : null
+                      )
+                    }) : ''
+                  }
+                </Select>
                 <input id='add-equipment-psw' className='product-psw' placeholder='请输入密码'></input>
                 <span className='add-equipment-sure-btn' onClick={this.addEquipmentHandle.bind(this)}>确认</span>
               </div>
@@ -599,33 +877,60 @@ class Minitoring extends React.Component {
             <div className='emegency-left-content'>
               <div className='emegency-left-title'>告警信息</div>
               <div className='emegency-left-list'>
-                <div className='emegency-left-item'>
-                  <span className='wd-span wd33'>设备1</span>
-                  <span className='wd-span wd44'>2019-0807 01:08:09</span>
-                  <img src={AddEquipment} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
-                </div>
-                <div className='emegency-left-item'>
-                  <span className='wd-span wd33'>设备1</span>
-                  <span className='wd-span wd44'>2019-0807 01:08:09</span>
-                  <img src={AddEquipment} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
-                </div>
-                <div className='emegency-left-item'>
-                  <span className='wd-span wd33'>设备1</span>
-                  <span className='wd-span wd44'>2019-0807 01:08:09</span>
-                  <img src={AddEquipment} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
-                </div>
+                {
+                  warningVideos.uglyData && warningVideos.uglyData.length > 0 ? warningVideos.uglyData.map((item, index) => (
+                    <div className='emegency-left-item' key={index} onClick={this.warningDetailChangeHandle.bind(this, index)}>
+                      <span className='wd-span wd33'>{item.serial}</span>
+                      {/* <span className='wd-span wd44'>{formatTime(item.createTime, 'Y-M-D h:m:s')}</span> */}
+                      <span className='wd-span wd44'>{item.warningTime}</span>
+                      <img src={WarningPicture} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
+                    </div>
+                  ))
+                    : ''
+                }
               </div>
             </div>
-
-            <div className='emegency-right-top-videos'>
-              <img src={AddEquipment} className='emegency-right-top-img' alt='emegency-right-top-img'></img>
-            </div>
-
-            <div className='emegency-right-bottom-message'>
-              <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
-              <span className='right-bottom-message right-bottom-message-2'>2019年02月5日，上午9时02分03秒，广州噼里啪啦设备机发现目标，目标在右下角，并成功驱赶</span>
-              <span className='right-bottom-message right-bottom-message-3'>有效期限：一个月</span>
-            </div>
+            {
+              this.state.warningMessageDetails.length > 0 ?
+                <div>
+                  <div className='emegency-right-top-videos'>
+                    <div style={{ width: '100%', height: '100%' }}>
+                      <Player>
+                        {/* <source src={SRC_PATH + this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']} /> */}
+                        <source src={`file:///home/ftp123${this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']}`} />
+                        {/* <source src="http://peach.themazzone.com/durian/movies/sintel-1024-surround.mp4" /> */}
+                        {/* <source src="http://mirrorblender.top-ix.org/movies/sintel-1024-surround.mp4" /> */}
+                        <ControlBar>
+                          <ReplayControl seconds={10} order={1.1} />
+                          <ForwardControl seconds={30} order={1.2} />
+                          <CurrentTimeDisplay order={4.1} />
+                          <TimeDivider order={4.2} />
+                          <PlaybackRateMenuButton
+                            rates={[5, 2, 1, 0.5, 0.1]}
+                            order={7.1}
+                          />
+                          <VolumeMenuButton disabled />
+                        </ControlBar>
+                      </Player>
+                    </div>
+                  </div>
+                  <div className='emegency-right-bottom-message'>
+                    <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
+                    <span className='right-bottom-message right-bottom-message-2'>{this.state.warningMessageDetails[warningDetailIndex]['warningMessage']}</span>
+                    <span className='right-bottom-message right-bottom-message-3'>有效期限：{this.state.warningMessageDetails[warningDetailIndex]['validDate']}</span>
+                  </div>
+                </div> :
+                <div>
+                  <div className='emegency-right-top-videos'>
+                    <img src={WarningPicture} className='emegency-right-top-img' alt='emegency-right-top-img'></img>
+                  </div>
+                  <div className='emegency-right-bottom-message'>
+                    <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
+                    <span className='right-bottom-message right-bottom-message-2'>暂无</span>
+                    <span className='right-bottom-message right-bottom-message-3'>有效期限：--</span>
+                  </div>
+                </div>
+            }
           </div>
 
           {/** 密度分析div
@@ -640,30 +945,18 @@ class Minitoring extends React.Component {
                 <span className='density-analysis-title right-title'></span>
               </div>
 
-              <img className='density-analysis-videos-img' src={EgVideos} alt='density-analysis-videos-img'></img>
+              <img className='density-analysis-videos-img' src={densityList.length !== 0 ? SRC_PATH + densityList[densityDetailIndex].path : ''} alt='density-analysis-videos-img'></img>
             </div>
             <div className='minitoring-density-analysis-list'>
               <div className='mimitoring-density-list'>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
-                <div className='density-analysis-item'>
-                  <img className='density-analysis-item-img' alt='density-analysis-item-img' src={EgVideos}></img>
-                  <span className='density-analysis-item-date'>2019-0730-17:30:00</span>
-                </div>
+                {
+                  densityList && densityList.length !== 0 ? densityList.map((item, index) => (
+                    <div className='density-analysis-item' key={index}>
+                      <img className='density-analysis-item-img' alt='density-analysis-item-img' src={SRC_PATH + item.path}></img>
+                      <span className='density-analysis-item-date'>{item.validDate}</span>
+                    </div>
+                  )) : ''
+                }
               </div>
             </div>
           </div>
@@ -685,29 +978,10 @@ class Minitoring extends React.Component {
               <span className='firmware-content-filename'>shangkang-2019.0731</span>
             </div>
             <div className='upload-content'>
-              {/* <form action="http://112.74.77.11:2019/shungkon/attach/upload" method="post" enctype="multipart/form-data" target="targetIfr">
-                <input type="file" name='file' />
-                <input type="submit" value="上传" />
-              </form>
-              <iframe
-                style={{ width: '100%', height: this.state.iFrameHeight, overflow: 'visible' }}
-                ref="iframe"
-                src="/courses.html"
-                width="100%"
-                height={this.state.iFrameHeight}
-                scrolling="no"
-                frameBorder="0"
-                name="targetIfr"
-                display='none'
-              /> */}
               <form ref={this.myForm} method="post">
                 <input type="file" name='file' ref={this.fileInput} />
                 <input type="submit" value="上传" onClick={this.upload} />
               </form>
-              {/* <div>
-                <input type="file" name='file' ref={this.fileInput} />
-                <input type="button" value="上传" onClick={this.upload} />
-              </div> */}
             </div>
           </div>
 
