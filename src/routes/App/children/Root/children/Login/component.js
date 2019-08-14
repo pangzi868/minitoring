@@ -90,7 +90,9 @@ class LoginForm extends React.Component {
           <div className={`modifier-psw-content`}>
             <div className='modifier-div-top'>找回密码</div>
             <div className='modifier-div-content'>
-              <ForgetPsw modifierHandleSubmit={this.modifierHandleSubmit.bind(this)}/>
+              <ForgetPsw
+                modifierHandleSubmit={this.modifierHandleSubmit.bind(this)}
+              />
             </div>
           </div>
         </div>

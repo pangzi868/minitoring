@@ -132,20 +132,6 @@ class Login extends React.Component {
     console.log(key)
   }
 
-  // 找回密码下一步按钮点击
-  // modifierHandleSubmit = e => {
-  //   e.preventDefault();
-  //   this.props.form.validateFieldsAndScroll((err, values) => {
-  //     if (!err) {
-  //       console.log('Received values of form: ', values);
-  //     }
-  //   });
-  //   this.setState({
-  //     isModifierShow: false,
-  //     isLoginShow: true
-  //   })
-  // }
-
   // 密码登录按钮点击
   pswLoginHandleSubmit = e => {
     e.preventDefault();
@@ -163,7 +149,9 @@ class Login extends React.Component {
       pwd: password
     }, data => {
       // 根据后端返回判断管理员还是非管理员页面
+      console.log(data,'wangyinbin')
 
+      this.props.history.push('/root/main/minitoring')
       // 保存短信接口给的hash和tamp，用做校验的判断
       // this.hash = data.hash
       // this.tamp = data.tamp
@@ -196,9 +184,8 @@ class Login extends React.Component {
       tamp: this.tamp,
       msgNum: captcha
     }, data => {
-      // 保存短信接口给的hash和tamp，用做校验的判断
-      // this.hash = data.hash
-      // this.tamp = data.tamp
+      this.props.history.push('/root/main/minitoring')
+
       console.log('登录成功', data)
     })
 

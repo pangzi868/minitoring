@@ -21,7 +21,7 @@ import UploadFile from './images/4.2.png'
 
 const { SubMenu } = Menu;
 
-const FILE_UPLOAD_ADDRESS = 'http://localhost:2019/shungkon/attach/upload'
+const FILE_UPLOAD_ADDRESS = 'http://112.74.77.11:2019/shungkon/attach/upload'
 
 
 class Minitoring extends React.Component {
@@ -396,40 +396,8 @@ class Minitoring extends React.Component {
     this.setState({
       uploading: true,
     });
-
-    // You can use any AJAX library you like
-    // reqwest({
-    //   url: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    //   method: 'post',
-    //   processData: false,
-    //   data: formData,
-    //   success: () => {
-    //     this.setState({
-    //       fileList: [],
-    //       uploading: false,
-    //     });
-    //     message.success('upload successfully.');
-    //   },
-    //   error: () => {
-    //     this.setState({
-    //       uploading: false,
-    //     });
-    //     message.error('upload failed.');
-    //   },
-    // });
   };
 
-  // // 上传固件
-  // fileSubmit = (e) => {
-  //   e.preventDefault();
-  //   let formData = new FormData(e.target);
-  //   fetch('/shungkon/attach/upload', {
-  //     method: 'POST',
-  //     enctype: "multipart/form-data",
-  //     contentType: false,
-  //     body: formData //自动将input:file的name属性与文件对象组合成键值对
-  //   }).then(response => console.log(response))
-  // };
 
   upload = (e) => {
     e.preventDefault();
@@ -445,16 +413,8 @@ class Minitoring extends React.Component {
       body: formData,
       mode: 'cors'
     });
-    fetch(request).then(response => console.log(response));
-
-    // var temp = new FormData();
-    // temp.append('file', this.fileInput.current.files[0]);
-    // fetch(FILE_UPLOAD_ADDRESS, {
-    //   method: 'POST',
-    //   enctype: "multipart/form-data",
-    //   contentType: false,
-    //   body: temp //自动将input:file的name属性与文件对象组合成键值对
-    // }).then(response => console.log(response))
+    fetch(request).then(res => res.text()).then(res =>
+      JSON.parse(res).message ? alert(JSON.parse(res).message) : alert('上传失败'))
   };
 
   componentWillMount() {

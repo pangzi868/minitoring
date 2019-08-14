@@ -52,7 +52,7 @@ export function ValidateCode(params) {
 }
 
 // 注册手机账号
-export function phoneNumRegister(params,cb) {
+export function phoneNumRegister(params, cb) {
   return post({
     url: `${isMock()}/shungkon/shungkon/toRegister`,
     bodyData: {
@@ -84,6 +84,26 @@ export function passWordLogin(params) {
     actionType: PASSWORD_LOGIN,
     failConfig: {
       message: '账号/密码错误，登录失败',
+      isForceShow: false
+    }
+  })
+}
+
+// 账号密码登录
+export function retrievePassword(params,cb) {
+  return post({
+    url: `${isMock()}/shungkon/forgetPwd`,
+    bodyData: {
+      phoneNumber: params.phoneNumber,
+      messageCode: params.messageCode,
+      newPassword: params.newPassword
+    },
+    actionType: PASSWORD_LOGIN,
+    successConfig : {
+      callback: cb
+    },
+    failConfig: {
+      message: '修改密码失败',
       isForceShow: false
     }
   })

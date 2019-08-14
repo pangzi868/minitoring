@@ -50,6 +50,7 @@ class ForgetPsw extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         var phoneNum = document.getElementById('forgetPsw_phone').value
+        var code = document.getElementById('forgetPsw_captcha').value
         var password = document.getElementById('forgetPsw_password').value
         var passwordAgain = document.getElementById('forgetPsw_password-confirm').value
 
@@ -72,11 +73,18 @@ class ForgetPsw extends React.Component {
         }
 
         // 验证成功后登录
-
-        console.log('Received values of form: ', values);
+        this.props.retrievePassword({
+          phoneNumber: phoneNum,
+          messageCode: code,
+          newPassword: password
+        }, data => {
+          alert('修改密码成功')
+          setInterval(() => {
+            this.props.modifierHandleSubmit && this.props.modifierHandleSubmit()
+          }, 1000);
+        })
       }
     });
-    // this.props.modifierHandleSubmit && this.props.modifierHandleSubmit()
   }
 
   // 发送验证码
