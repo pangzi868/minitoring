@@ -132,7 +132,7 @@ class PaginationList extends React.Component {
     // 刷新iscroller组件
     this.updateWrapper()
   }
-  componentWillReceiveProps({ list, totalCount, pageSize }) {
+  UNSAFE_componentWillReceiveProps({ list, totalCount, pageSize }) {
     // debugger
     if (list !== this.props.list) {
       var listLength = list.props.children.length

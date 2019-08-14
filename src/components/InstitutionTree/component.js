@@ -414,7 +414,7 @@ class InstitutionTree extends React.Component {
   componentDidMount() {
   }
 
-  componentWillReceiveProps({ treeData }) {
+  UNSAFE_componentWillReceiveProps({ treeData }) {
     if (treeData !== this.props.treeData) {
       this.initData(treeData)
     }

@@ -31,7 +31,7 @@ class XXX extends React.Component {
 
   }
 
-  componentWillReceiveProps({ xxx }) {
+  UNSAFE_componentWillReceiveProps({ xxx }) {
     if (xxx !== this.props.xxx) {
 
     }

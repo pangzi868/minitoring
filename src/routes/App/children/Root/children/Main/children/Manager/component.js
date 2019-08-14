@@ -21,6 +21,8 @@ import UploadFile from './images/4.2.png'
 
 const { SubMenu } = Menu;
 
+const FILE_UPLOAD_ADDRESS = 'http://localhost:2019/shungkon/attach/upload'
+
 
 class Minitoring extends React.Component {
 
@@ -45,6 +47,8 @@ class Minitoring extends React.Component {
       },
       fileList: [],
       uploading: false,
+      clickMinitoring: {},
+      isMinitoringClick: false,
       // 模拟列表数据
 
       // myGroupList: [
@@ -114,7 +118,11 @@ class Minitoring extends React.Component {
         },
       ]
     }
+    this.tempDeviceList = null;
+    this.deviceDetail = null;
+
     this.fileInput = React.createRef();
+    this.myForm = React.createRef();
 
     this.secondMenuHandle = this.secondMenuHandle.bind(this)
     this.handleClick = this.handleClick.bind(this)
@@ -122,7 +130,50 @@ class Minitoring extends React.Component {
     this.additionShowHandle = this.additionShowHandle.bind(this)
     this.addGroupHandle = this.addGroupHandle.bind(this)
     this.addEquipmentHandle = this.addEquipmentHandle.bind(this)
+    this.enterDeviceToSystem = this.enterDeviceToSystem.bind(this)
+    this.getDeviceListByCondition = this.getDeviceListByCondition.bind(this)
+    this.getDeviceDetail = this.getDeviceDetail.bind(this)
     // this.groupShowAndHide = this.groupShowAndHide.bind(this)
+
+  }
+
+  // 录入设备信息
+  enterDeviceToSystem = (params) => {
+    this.props.addDeviceToSystem(params, data => {
+      this.props.getFuzzyDeviceList({
+        // serial: "w4324",
+        serial: "",
+        deviceType: "",
+        produceDate: "",
+        pageNo: 1,
+        pageSize: 10
+      }, data => {
+        this.tempDeviceList = JSON.parse(JSON.stringify(data))
+        this.setState({})
+      })
+    })
+  }
+
+  // 根据条件查询信息
+  getDeviceListByCondition = (params) => {
+    this.props.getFuzzyDeviceList({
+      // serial: "w4324",
+      serial: params.serial,
+      deviceType: params.deviceType,
+      produceDate: params.produceDate,
+      pageNo: 1,
+      pageSize: 10
+    }, data => {
+      this.tempDeviceList = JSON.parse(JSON.stringify(data))
+      this.setState({})
+    })
+  }
+
+  getDeviceDetail = (deviceId) => {
+    this.props.getDeviceDetails({ deviceId: deviceId }, data => {
+      this.deviceDetail = JSON.parse(JSON.stringify(data))
+      this.setState({})
+    })
   }
 
   secondMenuHandle(item, e) {
@@ -190,7 +241,6 @@ class Minitoring extends React.Component {
   }
 
   handleClick(e) {
-    console.log('click', e);
     var contentType = e.item.props.children
     var monitoringName = e.key
     var isWindowShowCopy = this.state.isWindowShow
@@ -287,6 +337,18 @@ class Minitoring extends React.Component {
         })
         break;
       case '2':
+        this.props.getFuzzyDeviceList({
+          // serial: "w4324",
+          serial: "",
+          deviceType: "",
+          produceDate: "",
+          pageNo: 1,
+          pageSize: 10
+        }, data => {
+          this.tempDeviceList = JSON.parse(JSON.stringify(data))
+          this.setState({})
+        })
+
         Object.keys(isWindowShowCopy).map((items, index) => {
           switch (items) {
             case 'isMinitoringManagerShow':
@@ -298,6 +360,7 @@ class Minitoring extends React.Component {
           }
         })
         this.setState({
+          isMinitoringClick: true,
           isWindowShow: isWindowShowCopy
         })
         break;
@@ -363,17 +426,35 @@ class Minitoring extends React.Component {
   //   fetch('/shungkon/attach/upload', {
   //     method: 'POST',
   //     enctype: "multipart/form-data",
-  //     contentType: "",
+  //     contentType: false,
   //     body: formData //自动将input:file的name属性与文件对象组合成键值对
   //   }).then(response => console.log(response))
   // };
 
-  upload = () => {
-    var temp = new FormData();
-    temp.append('file', this.fileInput.current.files[0]);
-    this.props.uploadAttach({ temp }, data => {
-      console.log(data, 'wangyinbin')
-    })
+  upload = (e) => {
+    e.preventDefault();
+    let formData = new FormData();
+    formData.append("file", this.fileInput.current.files[0]);
+    let request = new Request(FILE_UPLOAD_ADDRESS, {
+      method: 'POST',
+      // credentials: 'include',
+      headers: {
+        'Accept': '*',
+      },
+      contentType: 'multipart/form-data',
+      body: formData,
+      mode: 'cors'
+    });
+    fetch(request).then(response => console.log(response));
+
+    // var temp = new FormData();
+    // temp.append('file', this.fileInput.current.files[0]);
+    // fetch(FILE_UPLOAD_ADDRESS, {
+    //   method: 'POST',
+    //   enctype: "multipart/form-data",
+    //   contentType: false,
+    //   body: temp //自动将input:file的name属性与文件对象组合成键值对
+    // }).then(response => console.log(response))
   };
 
   componentWillMount() {
@@ -438,7 +519,7 @@ class Minitoring extends React.Component {
                                 </span>
                               }
                             >
-                              <Menu.Item key={`${item.minitoringName + '-' + items.name}-1`}>实时视频</Menu.Item>
+                              {/* <Menu.Item key={`${item.minitoringName + '-' + items.name}-1`}>实时视频</Menu.Item> */}
                               <Menu.Item key={`${item.minitoringName + '-' + items.name}-2`}>告警信息</Menu.Item>
                               <Menu.Item key={`${item.minitoringName + '-' + items.name}-3`}>密度分析</Menu.Item>
                               <Menu.Item key={`${item.minitoringName + '-' + items.name}-4`}>日志列表</Menu.Item>
@@ -644,7 +725,7 @@ class Minitoring extends React.Component {
               <span className='firmware-content-filename'>shangkang-2019.0731</span>
             </div>
             <div className='upload-content'>
-              <form action="http://112.74.77.11:2019/shungkon/attach/upload" method="post" enctype="multipart/form-data" target="targetIfr">
+              {/* <form action="http://112.74.77.11:2019/shungkon/attach/upload" method="post" enctype="multipart/form-data" target="targetIfr">
                 <input type="file" name='file' />
                 <input type="submit" value="上传" />
               </form>
@@ -658,7 +739,11 @@ class Minitoring extends React.Component {
                 frameBorder="0"
                 name="targetIfr"
                 display='none'
-              />
+              /> */}
+              <form ref={this.myForm} method="post">
+                <input type="file" name='file' ref={this.fileInput} />
+                <input type="submit" value="上传" onClick={this.upload} />
+              </form>
               {/* <div>
                 <input type="file" name='file' ref={this.fileInput} />
                 <input type="button" value="上传" onClick={this.upload} />
@@ -679,7 +764,12 @@ class Minitoring extends React.Component {
             *  isMinitoringManagerShow控制
           */}
           <div className={`monitoring-detail-content minitoring-manager-content ${this.state.isWindowShow.isMinitoringManagerShow ? '' : 'hide'}`}>
-            <MonitoringManage />
+            <MonitoringManage
+              clickMinitoring={this.tempDeviceList}
+              deviceDetail={this.deviceDetail}
+              enterDeviceToSystem={this.enterDeviceToSystem.bind(this)}
+              getDeviceListByCondition={this.getDeviceListByCondition.bind(this)}
+              getDeviceDetail={this.getDeviceDetail.bind(this)} />
           </div>
         </div>
       </div >

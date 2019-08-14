@@ -23,7 +23,7 @@ class CreateItem extends React.Component {
   }
   componentWillMount() {
   }
-  componentWillReceiveProps({ userPermission }) {
+  UNSAFE_componentWillReceiveProps({ userPermission }) {
   }
 
   render() {

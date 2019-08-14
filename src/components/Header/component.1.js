@@ -46,7 +46,7 @@ class Header extends React.Component {
     this.props.getLoginUserInfo()
   }
 
-  componentWillReceiveProps({ userPermission }) {
+  UNSAFE_componentWillReceiveProps({ userPermission }) {
   }
 
   render() {

@@ -1,8 +1,9 @@
 import React from "react";
 import "./component.scss";
 
-import SlideCaptcha from 'react-slide-captcha';
-import 'react-slide-captcha/dist/styles.css';
+// 滑块组件 暂时屏蔽
+// import SlideCaptcha from 'react-slide-captcha';
+// import 'react-slide-captcha/dist/styles.css';
 
 import {
   Form,
@@ -175,16 +176,6 @@ class Register extends React.Component {
               style={{ width: '100%' }}
               placeholder="手机号"
               onKeyUp={this.inputPhoneNumHandle.bind(this)} autocomplete="off" />)}
-          </Form.Item>
-
-          <Form.Item label="">
-            <SlideCaptcha
-              puzzleUrl={this.state.puzzleUrl}
-              bgUrl={this.state.bgUrl}
-              onRequest={this.resultCallback}
-              containerClassName="test"
-            />
-
           </Form.Item>
 
           <Form.Item label="">

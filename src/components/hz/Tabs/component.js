@@ -41,7 +41,7 @@ class Tabs extends PureComponent {
   }
   componentDidMount() {
   }
-  componentWillReceiveProps({ component }) {
+  UNSAFE_componentWillReceiveProps({ component }) {
     if (component !== this.props.component) {
     }
   }

@@ -155,7 +155,7 @@ class Minitoring extends React.Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
   }
 
   render() {

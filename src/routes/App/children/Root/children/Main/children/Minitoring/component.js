@@ -1,5 +1,12 @@
 import React from 'react'
 import './component.scss'
+import {
+  Player, ControlBar, ReplayControl,
+  ForwardControl, CurrentTimeDisplay,
+  TimeDivider, PlaybackRateMenuButton, VolumeMenuButton
+} from 'video-react';
+// import "node_modules/video-react/dist/video-react.css"; // import css
+// import '~video-react/dist/video-react.css';
 
 import { Menu, Icon, Dropdown, Modal } from 'antd';
 
@@ -14,7 +21,7 @@ import WarningPicture from './images/warning.png'
 
 const { SubMenu } = Menu;
 
-const SRC_PATH = 'http://112.74.77.11:2019/shungkon'
+const SRC_PATH = 'http://112.74.77.11/shungkon'
 
 // 格式化日期，如月、日、时、分、秒保证为2位数
 function formatNumber(n) {
@@ -46,6 +53,7 @@ class Minitoring extends React.Component {
     super(props)
     this.state = {
       editGroupVisibled: false,
+      editEquipmentVisibled: false,
       isAdditionShow: true,
       isRealTimeShow: false,
       isEmergencyShow: false,
@@ -134,9 +142,8 @@ class Minitoring extends React.Component {
   }
 
   // 分组菜单按钮
-  onGroupMenuClick = ({ key }, e) => {
+  onGroupMenuClick = ({ key }) => {
 
-    e.preventDefault();
     switch (key) {
       case '0':
         this.showEditGroupModal();
@@ -154,10 +161,10 @@ class Minitoring extends React.Component {
     }
   };
   // 设备菜单按钮
-  onEquipmentMenuClick = ({ key }, e) => {
-    e.preventDefault();
+  onEquipmentMenuClick = ({ key }) => {
     switch (key) {
       case '0':
+        this.showEditEquipmentModal();
         break;
       case '1':
         Modal.confirm({
@@ -182,7 +189,6 @@ class Minitoring extends React.Component {
 
   // 修改分组弹窗
   showEditGroupModal = (e) => {
-    e.preventDefault();
     this.setState({
       editGroupVisibled: true,
     });
@@ -193,6 +199,21 @@ class Minitoring extends React.Component {
     e.preventDefault();
     this.setState({
       editGroupVisibled: false,
+    });
+  };
+
+  // 修改分组弹窗
+  showEditEquipmentModal = (e) => {
+    this.setState({
+      editEquipmentVisibled: true,
+    });
+  };
+
+  // 隐藏
+  hideEditEquipmentModal = (e) => {
+    e.preventDefault();
+    this.setState({
+      editEquipmentVisibled: false,
     });
   };
 
@@ -254,7 +275,6 @@ class Minitoring extends React.Component {
   }
 
   handleClick(e) {
-    console.log('click', e);
     this.setState({
       isAdditionShow: false
     })
@@ -331,18 +351,6 @@ class Minitoring extends React.Component {
     const groupMenu = (
       <Menu onClick={this.onGroupMenuClick.bind(this)}>
         <Menu.Item key="0">修改分组名称</Menu.Item>
-        <Modal
-          title="Modal"
-          visible={this.state.editGroupVisibled}
-          onOk={this.hideEditGroupModal}
-          onCancel={this.hideEditGroupModal}
-          okText="确认"
-          cancelText="取消"
-        >
-          <p>Bla bla ...</p>
-          <p>Bla bla ...</p>
-          <p>Bla bla ...</p>
-        </Modal>
         {/* <Menu.Divider /> */}
         <Menu.Item key="1">删除</Menu.Item>
       </Menu>
@@ -392,7 +400,7 @@ class Minitoring extends React.Component {
                               }
 
                             >
-                              <Menu.Item key={`${item.minitoringName + items.id}-1`}>实时视频</Menu.Item>
+                              {/* <Menu.Item key={`${item.minitoringName + items.id}-1`}>实时视频</Menu.Item> */}
                               <Menu.Item key={`${item.minitoringName + items.id}-2`}>告警信息</Menu.Item>
                               <Menu.Item key={`${item.minitoringName + items.id}-3`}>密度分析</Menu.Item>
                             </SubMenu>
@@ -403,6 +411,30 @@ class Minitoring extends React.Component {
                   }
                 </Menu>
               </div>
+              <Modal
+                title="Modal"
+                visible={this.state.editGroupVisibled}
+                onOk={this.hideEditGroupModal.bind(this)}
+                onCancel={this.hideEditGroupModal.bind(this)}
+                okText="确认"
+                cancelText="取消"
+              >
+                <p>Bla bla ...</p>
+                <p>Bla bla ...</p>
+                <p>Bla bla ...</p>
+              </Modal>
+              <Modal
+                title="Modal"
+                visible={this.state.editEquipmentVisibled}
+                onOk={this.hideEditEquipmentModal.bind(this)}
+                onCancel={this.hideEditEquipmentModal.bind(this)}
+                okText="确认"
+                cancelText="取消"
+              >
+                <p>Bla bla .</p>
+                <p>Bla bla .</p>
+                <p>Bla bla .</p>
+              </Modal>
             </div>
           </div>
           <div className='left-nav-bottom-btn'>
@@ -515,24 +547,54 @@ class Minitoring extends React.Component {
                 }
               </div>
             </div>
-
-            <div className='emegency-right-top-videos'>
-              <img src={AddEquipment} className='emegency-right-top-img' alt='emegency-right-top-img'></img>
-            </div>
-
             {
               this.state.warningMessageDetails.length > 0 ?
-                Object.keys(this.state.warningMessageDetails[warningDetailIndex]).map((item, index) => (
-                  <div className='emegency-right-bottom-message' key={index}>
+                <div>
+                  <div className='emegency-right-top-videos'>
+                    {/* <video width='100%' height='100%' controls="controls" autoplay="autoplay">
+                      <source src={SRC_PATH + this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video> */}
+                    <div style={{ width: '100%', height: '100%' }}>
+                      <Player>
+                        {/* <source src={SRC_PATH + this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']} /> */}
+                        <source src={`file:///home/ftp123${this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']}`} />
+                        {/* <source src="http://peach.themazzone.com/durian/movies/sintel-1024-surround.mp4" /> */}
+                        {/* <source src="http://mirrorblender.top-ix.org/movies/sintel-1024-surround.mp4" /> */}
+                        <ControlBar>
+                          <ReplayControl seconds={10} order={1.1} />
+                          <ForwardControl seconds={30} order={1.2} />
+                          <CurrentTimeDisplay order={4.1} />
+                          <TimeDivider order={4.2} />
+                          <PlaybackRateMenuButton
+                            rates={[5, 2, 1, 0.5, 0.1]}
+                            order={7.1}
+                          />
+                          <VolumeMenuButton disabled />
+                        </ControlBar>
+                      </Player>
+                    </div>
+                    {/* <Player ref="player" videoId="video-1">
+
+                      <source src={SRC_PATH + this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']} />
+
+                    </Player> */}
+                  </div>
+                  <div className='emegency-right-bottom-message'>
                     <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
                     <span className='right-bottom-message right-bottom-message-2'>{this.state.warningMessageDetails[warningDetailIndex]['warningMessage']}</span>
                     <span className='right-bottom-message right-bottom-message-3'>有效期限：{this.state.warningMessageDetails[warningDetailIndex]['validDate']}</span>
                   </div>
-                )) :
-                <div className='emegency-right-bottom-message'>
-                  <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
-                  <span className='right-bottom-message right-bottom-message-2'>暂无</span>
-                  <span className='right-bottom-message right-bottom-message-3'>有效期限：--</span>
+                </div> :
+                <div>
+                  <div className='emegency-right-top-videos'>
+                    <img src={WarningPicture} className='emegency-right-top-img' alt='emegency-right-top-img'></img>
+                  </div>
+                  <div className='emegency-right-bottom-message'>
+                    <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
+                    <span className='right-bottom-message right-bottom-message-2'>暂无</span>
+                    <span className='right-bottom-message right-bottom-message-3'>有效期限：--</span>
+                  </div>
                 </div>
             }
 

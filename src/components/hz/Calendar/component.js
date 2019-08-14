@@ -223,7 +223,7 @@ class Calendar extends React.Component {
     this.getEvents()
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
 
   }
   render () {

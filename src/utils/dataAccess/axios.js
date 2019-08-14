@@ -38,7 +38,7 @@ const DEFAULT_CONFIG = {
   failConfig: null // {message: '', callback: function, isForceShow: false}
 };
 
-const formatdata = responseData => {
+const formatPayload = responseData => {
   if (!isPlainObject(responseData.data)) {
     if (!isNullOrUndefined(responseData.data)) {
       responseData.data = {
@@ -74,8 +74,8 @@ const formatdata = responseData => {
  *
  */
 const responseHandler = (dispatch, config) => {
-  formatdata(config.responseData);
-  // 后端返回的结果数据和前端发起请求时的额外数据，都会通过data发给请求处理完毕的回调函数
+  formatPayload(config.responseData);
+  // 后端返回的结果数据和前端发起请求时的额外数据，都会通过payload发给请求处理完毕的回调函数
   config.responseData.data.extendData = config.extendData;
   if (config.responseData.code === '0000') {
     if (config.actionType) {
@@ -202,17 +202,18 @@ export const axiosHandler = config => {
       config.method.toLowerCase() === "post" ||
       config.method.toLowerCase() === "put"
     ) {
-      // let contentType = "application/json";
-      let contentType = "application/x-www-form-urlencoded";
-      if (!(config.bodyData instanceof FormData)) {
-        contentType = 'application/json'
-      } else if (config.bodyData instanceof FormData && config.contentType === 'multipart/form-data') {
-        contentType = 'multipart/form-data'
-      } else if (config.bodyData instanceof FormData) {
-        contentType = 'application/x-www-form-urlencoded'
-        config.bodyData = [...config.bodyData.entries()].map((d) => `${d[0]}=${d[1]}`)
-        config.bodyData = config.bodyData.join('&')
-      }
+      let contentType = "application/json";
+      // let contentType = "application/x-www-form-urlencoded";
+
+      // if (!(config.bodyData instanceof FormData)) {
+      //   contentType = 'application/json'
+      // } else if (config.bodyData instanceof FormData && config.contentType === 'multipart/form-data') {
+      //   contentType = 'multipart/form-data'
+      // } else if (config.bodyData instanceof FormData) {
+      //   contentType = 'application/x-www-form-urlencoded'
+      //   config.bodyData = [...config.bodyData.entries()].map((d) => `${d[0]}=${d[1]}`)
+      //   config.bodyData = config.bodyData.join('&')
+      // }
 
       axiosConfig = Object.assign(axiosConfig, {
         headers: contentType ? { "content-type": contentType } : {},

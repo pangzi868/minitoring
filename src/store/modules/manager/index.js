@@ -11,6 +11,10 @@ const UPLOAD_ATTACH = 'UPLOAD_ATTACH'
 const ADD_DEVICE = 'ADD_DEVICE'
 const ADD_GROUP = 'ADD_GROUP'
 const GET_DEVICE_GROUP = 'GET_DEVICE_GROUP'
+const GET_FUZZY_DEVICE_LIST = 'GET_FUZZY_DEVICE_LIST'
+const GET_DEVICE_LIST = 'GET_DEVICE_LIST'
+const ADD_DEVICE_TO_SYSTEM = 'ADD_DEVICE_TO_SYSTEM'
+const GET_DEVICE_DETAIL = 'GET_DEVICE_DETAIL'
 
 const IS_MOCK_CURRENT_MODULE = false  // 控制当前模块的所有接口是否使用mock
 const isMock = mockClosure(IS_MOCK_CURRENT_MODULE)
@@ -139,7 +143,7 @@ export function addGroup(params, cb) {
 }
 
 
-// 获取验证码
+// 获取分组列表
 export function getDeviceGroup(params, cb) {
   return post({
     url: `${isMock()}/shungkon/getDeviceGroup`,
@@ -158,6 +162,79 @@ export function getDeviceGroup(params, cb) {
 
 const deviceGroup = (previousState = {}, action) => {
   if (action.type === GET_DEVICE_GROUP) {
+    return action.data
+  } else {
+    return previousState
+  }
+}
+
+
+// 获取设备列表
+export function getDeviceList(params, cb) {
+  return get({
+    url: `${isMock()}/shungkon/device/getDeviceByCondition?deviceType=${params.deviceType}&isValid=${params.isValid}`,
+    actionType: GET_DEVICE_LIST,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '获取分组列表失败',
+      isForceShow: false
+    }
+  })
+}
+
+
+const deviceList = (previousState = {}, action) => {
+  if (action.type === GET_DEVICE_LIST) {
+    return action.data
+  } else {
+    return previousState
+  }
+}
+
+// 获取设备列表
+export function getFuzzyDeviceList(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/device/getDeviceLikeCondition?serial=${params.serial}&deviceType=${params.deviceType}&pageNo=${params.pageNo}&pageSize=${params.pageSize}&produceDate=${params.produceDate}`,
+    actionType: GET_FUZZY_DEVICE_LIST,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '获取模糊分组列表失败',
+      isForceShow: false
+    }
+  })
+}
+
+
+const fuzzyDeviceList = (previousState = {}, action) => {
+  if (action.type === GET_FUZZY_DEVICE_LIST) {
+    return action.data
+  } else {
+    return previousState
+  }
+}
+
+// 获取设备详情
+export function getDeviceDetails(params, cb) {
+  return get({
+    url: `${isMock()}/shungkon/device/getDeviceByDeviceId?deviceId=${params.deviceId}`,
+    actionType: GET_DEVICE_DETAIL,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '获取设备详情失败',
+      isForceShow: false
+    }
+  })
+}
+
+
+const deviceDetails = (previousState = {}, action) => {
+  if (action.type === GET_DEVICE_DETAIL) {
     return action.data
   } else {
     return previousState
@@ -203,6 +280,27 @@ export function downloadWarningVideos(params) {
   });
 }
 
+// 管理员录入设备
+export function addDeviceToSystem(params, cb) {
+  return post({
+    url: `/shungkon/device/addDevice`,
+    actionType: ADD_DEVICE_TO_SYSTEM,
+    bodyData: {
+      serial: params.serial,
+      deviceVerifyCode: params.deviceVerifyCode,
+      deviceType: params.deviceType,
+      softVersion: params.softVersion,
+      productDate: params.productDate,
+    },
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: "录入设备失败"
+    }
+  });
+}
+
 // 获取视频详情接口
 // 备注：前端一个表单，选择文件，form的enctype为multipart/form-data 报文头不需要设置Content-Type
 export function uploadAttach(params) {
@@ -224,6 +322,9 @@ const manager = combineReducers({
   warningVideosDetail,
   densityPicture,
   densityPictureData,
-  deviceGroup
+  deviceGroup,
+  deviceList,
+  fuzzyDeviceList,
+  deviceDetails
 });
 export default manager;

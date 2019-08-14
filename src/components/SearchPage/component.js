@@ -136,7 +136,7 @@ class SearchPage extends React.Component {
   componentWillMount() {
     this.getHistoryResultHandler()
   }
-  componentWillReceiveProps({ userPermission }) {
+  UNSAFE_componentWillReceiveProps({ userPermission }) {
   }
 
   render() {

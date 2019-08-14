@@ -20,7 +20,7 @@ class NoData extends React.Component {
 
   componentWillMount() {
   }
-  componentWillReceiveProps({ cont }) {
+  UNSAFE_componentWillReceiveProps({ cont }) {
     if (cont !== this.props.cont) {
     }
   }

@@ -17,7 +17,7 @@ class Root extends React.Component {
     reduxStore: PropTypes.object,
   }
 
-  componentWillMount() { }
+  UNSAFE_componentWillMount() { }
 
   render() {
     const { match } = this.props

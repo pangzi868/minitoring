@@ -14,7 +14,7 @@ class BottomNav extends React.Component {
 
   componentWillMount() {}
 
-  componentWillReceiveProps({ userPermission }) {}
+  UNSAFE_componentWillReceiveProps({ userPermission }) {}
 
   render() {
     const { activeIndex } = this.props;

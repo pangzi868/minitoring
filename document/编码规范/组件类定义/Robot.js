@@ -61,7 +61,7 @@ class Robot extends React.Component {
     // ...
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     // ...
   }
 

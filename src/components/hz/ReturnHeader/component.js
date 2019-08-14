@@ -37,7 +37,7 @@ class ReturnHeader extends React.Component {
     }
   }
 
-  componentWillReceiveProps({  }) {
+  UNSAFE_componentWillReceiveProps({  }) {
 
   }
   render () {

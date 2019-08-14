@@ -42,7 +42,7 @@ class App extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
   }
   componentDidMount () {
     // if (window.location.hash !== '#/login') {

@@ -15,7 +15,7 @@ class MobileLogin extends React.Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
   }
   render() {
     const { match } = this.props

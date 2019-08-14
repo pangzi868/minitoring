@@ -40,7 +40,7 @@ class InnerPage extends React.Component {
 
   componentWillMount() {
   }
-  componentWillReceiveProps({ title }) {
+  UNSAFE_componentWillReceiveProps({ title }) {
     if (title !== this.props.title) {
     }
   }

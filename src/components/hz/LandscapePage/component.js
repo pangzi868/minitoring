@@ -45,7 +45,7 @@ class LandscapePage extends React.Component {
       this.detectOrient()
   }
 
-  componentWillReceiveProps({ LandscapePage }) {
+  UNSAFE_componentWillReceiveProps({ LandscapePage }) {
     if (LandscapePage !== this.props.LandscapePage) {
 
     }
