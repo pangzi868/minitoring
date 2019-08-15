@@ -119,7 +119,7 @@ class MonitoringManage extends React.Component {
                 <span className='detail-left-message-span'><span>序列号：</span><span>xicha</span></span>
                 <span className='detail-left-message-span'><span>验证码：</span><span>1888888888</span></span>
                 <span className='detail-left-message-span'><span>设备型号：</span><span>sd180</span></span>
-                <span className='detail-left-message-span'><span>软件型号：</span><span>xicha20190808</span></span>
+                <span className='detail-left-message-span'><span>软件版本：</span><span>xicha20190808</span></span>
                 <span className='detail-left-message-span'><span>生产日期：</span><span>x20190808</span></span>
               </div>
             </div>

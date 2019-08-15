@@ -7,6 +7,7 @@ const WARNING_VIDEOS_DETAIL = 'WARNING_VIDEOS_DETAIL'
 const DOWNLOAD_WARNING_VIDEOS = 'DOWNLOAD_WARNING_VIDEOS'
 const DENSITY_PICTURE = 'DENSITY_PICTURE'
 const DENSITY_PICTURE_DATA = 'DENSITY_PICTURE_DATA'
+const GET_LOG_LIST = 'GET_LOG_LIST'
 const UPLOAD_ATTACH = 'UPLOAD_ATTACH'
 const ADD_DEVICE = 'ADD_DEVICE'
 const ADD_GROUP = 'ADD_GROUP'
@@ -20,6 +21,7 @@ const GET_FUZZY_DEVICE_LIST = 'GET_FUZZY_DEVICE_LIST'
 const GET_DEVICE_LIST = 'GET_DEVICE_LIST'
 const ADD_DEVICE_TO_SYSTEM = 'ADD_DEVICE_TO_SYSTEM'
 const GET_DEVICE_DETAIL = 'GET_DEVICE_DETAIL'
+const GET_USER_LIST = 'GET_USER_LIST'
 
 const IS_MOCK_CURRENT_MODULE = false  // 控制当前模块的所有接口是否使用mock
 const isMock = mockClosure(IS_MOCK_CURRENT_MODULE)
@@ -88,6 +90,35 @@ const densityPicture = (previousState = {}, action) => {
   }
 }
 
+// 密度分析图片详情接口
+export function getLogList(params, cb) {
+  return post({
+    url: `/shungkon/logList`,
+    bodyData: {
+      deviceId: params.deviceId,
+      startTime: params.startTime,
+      endTime: params.endTime,
+      pageNo: params.pageNo,
+      pageSize: params.pageSize
+    },
+    actionType: GET_LOG_LIST,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: "获取日志列表失败",
+    }
+  });
+}
+
+const logList = (previousState = {}, action) => {
+  if (action.type === GET_LOG_LIST) {
+    return action.data
+  } else {
+    return previousState
+  }
+}
+
 // 密度分析图片数据集接口
 export function getDensityPictureData(params) {
   return get({
@@ -109,7 +140,7 @@ const densityPictureData = (previousState = {}, action) => {
 }
 
 
-// 获取验证码
+// 添加分组
 export function addDevice(params, cb) {
   return post({
     url: `${isMock()}/shungkon/addDevice`,
@@ -129,10 +160,10 @@ export function addDevice(params, cb) {
   })
 }
 
-// 获取验证码
+// 添加分组
 export function addGroup(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/device/addGroup?groupName=${params.groupName}`,
+    url: `${isMock()}/shungkon/device/addGroup?groupName=${params.groupName}&userId=${params.userId}`,
     actionType: ADD_GROUP,
     successConfig: {
       callback: cb
@@ -324,6 +355,59 @@ const deviceDetails = (previousState = {}, action) => {
   }
 }
 
+// 获取用户列表
+export function getUserList(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/getUserMessage`,
+    bodyData: {
+      phoneNumber: params.phoneNumber,
+      pageNo: params.pageNo,
+      pageSize: params.pageSize
+    },
+    actionType: GET_USER_LIST,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '获取用户列表失败',
+      isForceShow: false
+    }
+  })
+}
+
+
+const userList = (previousState = {}, action) => {
+  if (action.type === GET_USER_LIST) {
+    return action.data
+  } else {
+    return previousState
+  }
+}
+
+// // 获取用户详情
+// export function getDeviceDetails(params, cb) {
+//   return get({
+//     url: `${isMock()}/shungkon/device/getDeviceByDeviceId?deviceId=${params.deviceId}`,
+//     actionType: GET_DEVICE_DETAIL,
+//     successConfig: {
+//       callback: cb
+//     },
+//     failConfig: {
+//       message: '获取设备详情失败',
+//       isForceShow: false
+//     }
+//   })
+// }
+
+
+// const deviceDetails = (previousState = {}, action) => {
+//   if (action.type === GET_DEVICE_DETAIL) {
+//     return action.data
+//   } else {
+//     return previousState
+//   }
+// }
+
 // // 获取验证码
 // export function getSMSMessage(params, cb) {
 //   return post({
@@ -409,5 +493,7 @@ const manager = combineReducers({
   deviceList,
   fuzzyDeviceList,
   deviceDetails,
+  logList,
+  userList
 });
 export default manager;

@@ -1,7 +1,7 @@
 import React from 'react'
 import './component.scss'
 
-import { Button, Radio, Icon, Modal, Input ,Pagination} from 'antd';
+import { Button, Radio, Icon, Modal, Input, Pagination } from 'antd';
 
 
 const { confirm } = Modal;
@@ -15,6 +15,7 @@ class UserManager extends React.Component {
       size: 'small',
       additionVisible: false,
       additionConfirmLoading: false,
+      userList: {}
     }
   }
 
@@ -69,10 +70,23 @@ class UserManager extends React.Component {
     });
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps, prevState) {
+    if (nextProps.userManagerList !== prevState.userList) {
+      this.setState({
+        userList: nextProps.userManagerList
+      })
+    }
+    // if (nextProps.deviceDetail !== prevState.deviceDetail) {
+    //   this.setState({
+    //     deviceDetail: nextProps.deviceDetail
+    //   })
+    // }
+  }
+
 
   render() {
     const { match } = this.props
-    const { size, confirmLoading } = this.state;
+    const { size, confirmLoading,userList} = this.state;
     return (
       <div className="user-manager-component">
         <div className='user-manager-title'>用户管理</div>
@@ -92,6 +106,7 @@ class UserManager extends React.Component {
             </div>
             <div className='manager-search-list-item'>
               {
+                // userList
                 searchListIndex ? searchListIndex.map((item, index) => (
                   <div className='search-item'>
                     <span className='wd-span wd15 search-item-span'>{item}</span>

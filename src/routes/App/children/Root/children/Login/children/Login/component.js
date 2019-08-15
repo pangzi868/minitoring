@@ -150,7 +150,7 @@ class Login extends React.Component {
     }, data => {
       // 根据后端返回判断管理员还是非管理员页面
       console.log(data,'wangyinbin')
-
+      data.isRoot === '0000' ? this.props.history.push('/root/main/manager') :
       this.props.history.push('/root/main/minitoring')
       // 保存短信接口给的hash和tamp，用做校验的判断
       // this.hash = data.hash
@@ -184,9 +184,9 @@ class Login extends React.Component {
       tamp: this.tamp,
       msgNum: captcha
     }, data => {
-      this.props.history.push('/root/main/minitoring')
-
       console.log('登录成功', data)
+      data.isRoot === '0000' ? this.props.history.push('/root/main/manager') :
+      this.props.history.push('/root/main/minitoring')
     })
 
 

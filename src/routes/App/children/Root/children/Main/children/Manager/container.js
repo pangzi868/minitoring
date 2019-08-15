@@ -17,7 +17,9 @@ import {
   deleteGroupName,
   editEquipmentName,
   deleteDeviceByRelation,
-  addDevGroup
+  addDevGroup,
+  getLogList,
+  getUserList
 } from 'store/modules/manager'
 
 const mapDispatchToProps = {
@@ -37,7 +39,9 @@ const mapDispatchToProps = {
   deleteGroupName,
   editEquipmentName,
   deleteDeviceByRelation,
-  addDevGroup
+  addDevGroup,
+  getLogList,
+  getUserList
 }
 
 const mapStateToProps = (state) => ({
@@ -48,6 +52,9 @@ const mapStateToProps = (state) => ({
   deviceList: state.manager.deviceList,
   fuzzyDeviceList: state.manager.fuzzyDeviceList,
   deviceDetails: state.manager.deviceDetails,
-  deviceGroup: state.manager.deviceGroup
+  deviceGroup: state.manager.deviceGroup,
+  logList: state.manager.logList,
+  userList: state.manager.userList,
+
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Component)

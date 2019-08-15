@@ -57,11 +57,15 @@
             width: 100% !important;
             min-height: 100%;
             .ant-menu-submenu-title {
+              padding-right: 14px;
+              position: relative;
               .ant-menu-submenu-arrow {
                 display: none;
               }
               .group-right-btn {
-                float: right;
+                position: absolute;
+                right: 14px;
+                top: 0;
                 .group-right-img {
                   transform: rotate(90deg);
                   ms-transform: rotate(90deg); /* IE 9 */
@@ -156,6 +160,7 @@
         }
         .ant-select {
           margin-bottom: 5%;
+          font-size: 18px;
         }
         .product-serial-number,.product-psw  {
           display: inline-block;
@@ -302,32 +307,37 @@
           text-align: center;
           color: #fff;
           border: 0px;
+          overflow-y: hidden;
         }
         .emegency-left-list {
           width: 100%;
-          height: 100%;
+          height: 94%;
+          overflow: auto;
           padding: 0 8px;
           font-size: 22px;
-          .emegency-left-item {
-            cursor: pointer;
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            justify-content: space-between;
+          .emegency-left-list-box {
             width: 100%;
-            height: 100px;
-            border-bottom: 1px solid #BDBDBD;
-            padding: 0 4%;
-          }
-          .wd-span {
-            display: inline-block;
-            margin-right: 2%;
-          }
-          .wd33 {
-            width: 30%;
-          }
-          .wd44 {
-            width: 41%;
+            .emegency-left-item {
+              cursor: pointer;
+              display: flex;
+              flex-wrap: nowrap;
+              align-items: center;
+              justify-content: space-between;
+              width: 100%;
+              height: 100px;
+              border-bottom: 1px solid #BDBDBD;
+              padding: 0 4%;
+            }
+            .wd-span {
+              display: inline-block;
+              margin-right: 2%;
+            }
+            .wd33 {
+              width: 30%;
+            }
+            .wd44 {
+              width: 41%;
+            }
           }
         }
 
@@ -426,6 +436,7 @@
           overflow-x: auto;
           padding-right: 2px;
           .density-analysis-item {
+            cursor: pointer;
             position: relative;
             flex-shrink: 0;
             height: 85%;
@@ -434,6 +445,9 @@
             .density-analysis-item-img {
               width: 100%;
               height: 82%;
+            }
+            .density-analysis-item-date {
+              white-space: nowrap;
             }
             .density-analysis-download-img {
               position: absolute;

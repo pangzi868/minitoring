@@ -49,7 +49,7 @@ class MonitoringManage extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps, prevState) {
-    if (nextProps.clickMinitoring !== prevState.clickMinitoring) {
+    if (nextProps.clickMinitoring !== prevState.deviceList) {
       this.setState({
         deviceList: nextProps.clickMinitoring
       })
@@ -128,7 +128,7 @@ class MonitoringManage extends React.Component {
                     <span className='detail-left-message-span'><span>序列号：</span><span>{deviceDetail.device.serial ? deviceDetail.device.serial : ' -- '}</span></span>
                     <span className='detail-left-message-span'><span>验证码：</span><span>{deviceDetail.device.deviceVertifyCode ? deviceDetail.device.deviceVertifyCode : ' -- '}</span></span>
                     <span className='detail-left-message-span'><span>设备型号：</span><span>{deviceDetail.device.deviceType ? deviceDetail.device.deviceType : ' -- '}</span></span>
-                    <span className='detail-left-message-span'><span>软件型号：</span><span>{deviceDetail.device.softVersion ? deviceDetail.device.softVersion : ' -- '}</span></span>
+                    <span className='detail-left-message-span'><span>软件版本：</span><span>{deviceDetail.device.softVersion ? deviceDetail.device.softVersion : ' -- '}</span></span>
                     <span className='detail-left-message-span'><span>生产日期：</span><span>{deviceDetail.device.createTime ? deviceDetail.device.createTime : ' -- '}</span></span>
                   </div>
                   :
@@ -137,13 +137,13 @@ class MonitoringManage extends React.Component {
                       <span className='detail-left-message-span'><span>序列号：</span><span>{deviceList.data.uglyData[0].serial ? deviceList.data.uglyData[0].serial : ' -- '}</span></span>
                       <span className='detail-left-message-span'><span>验证码：</span><span>{deviceList.data.uglyData[0].deviceVertifyCode ? deviceList.data.uglyData[0].deviceVertifyCode : ' -- '}</span></span>
                       <span className='detail-left-message-span'><span>设备型号：</span><span>{deviceList.data.uglyData[0].deviceType ? deviceList.data.uglyData[0].deviceType : ' -- '}</span></span>
-                      <span className='detail-left-message-span'><span>软件型号：</span><span>{deviceList.data.uglyData[0].softVersion ? deviceList.data.uglyData[0].softVersion : ' -- '}</span></span>
+                      <span className='detail-left-message-span'><span>软件版本：</span><span>{deviceList.data.uglyData[0].softVersion ? deviceList.data.uglyData[0].softVersion : ' -- '}</span></span>
                       <span className='detail-left-message-span'><span>生产日期：</span><span>{deviceList.data.uglyData[0].createTime ? deviceList.data.uglyData[0].createTime : ' -- '}</span></span>
                     </div> : <div className='left-detail-message'>
                       <span className='detail-left-message-span'><span>序列号：</span><span> -- </span></span>
                       <span className='detail-left-message-span'><span>验证码：</span><span> -- </span></span>
                       <span className='detail-left-message-span'><span>设备型号：</span><span> -- </span></span>
-                      <span className='detail-left-message-span'><span>软件型号：</span><span> -- </span></span>
+                      <span className='detail-left-message-span'><span>软件版本：</span><span> -- </span></span>
                       <span className='detail-left-message-span'><span>生产日期：</span><span> -- </span></span>
                     </div>
               }
