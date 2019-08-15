@@ -17,33 +17,55 @@
     width: 15%;
     height: 93%;
     .left-nav-mine {
-      height: 89%;
+      height: 90%; // 调整下拉框的高度
       overflow: hidden;
       .nav-mine-title {
-        height: 6%;
+        height: 8%;
         width: 100%;
         background-color: rgb(247, 183, 101);
         font-size: 24px;
         text-align: center;
         color: #fff;
         border: 0px;
+
       }
       .nav-mine-list {
         width: 100%;
-        height: 95%;
+        height: 92%;
         overflow-y: auto;
         // padding: 0 4%;
         .nav-mine-item {
           width: 100%;
 
+          .my-group-name {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            height: 40px;
+            width: 100%;
+            padding: 0 10px;
+            font-size: 14px;
+            cursor: pointer;
+            &:hover {
+              color: #1890ff;
+            }
+          }
+          .nav-mine-group {
+          }
+
           .ant-menu {
             width: 100% !important;
             min-height: 100%;
-            border-right: 0;
             .ant-menu-submenu-title {
               padding-right: 14px;
+              position: relative;
+              .ant-menu-submenu-arrow {
+                display: none;
+              }
               .group-right-btn {
-                float: right;
+                position: absolute;
+                right: 14px;
+                top: 0;
                 .group-right-img {
                   transform: rotate(90deg);
                   ms-transform: rotate(90deg); /* IE 9 */
@@ -52,9 +74,6 @@
                   o-transform: rotate(90deg); /* Opera */
                   width: 20px;
                 }
-              }
-              .ant-menu-submenu-arrow {
-                display: none;
               }
             }
             // border-right: 0px;
@@ -69,26 +88,40 @@
         }
       }
     }
-    .left-nav-bottom-btn {
-      display: flex;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 11%;
-      width: 100%;
+    .left-bottom-nav {
+      height: 10%;
       background-color: #fff;
-      font-size: 12px;
-      .left-add-group-btn,.left-add-equipment-btn {
+      .left-nav-bottom-btn {
         display: flex;
-        flex-direction: column;
-        height: 100%;
-        width: 50%;
-        text-align: center;
-        .left-add-img {
-          width: 34px;
-          height: 34px;
-          margin: 0 auto;
+        width: 100%;
+        font-size: 12px;
+        .left-add-group-btn,.left-add-equipment-btn {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          width: 50%;
+          text-align: center;
+          .left-add-img {
+            width: 34px;
+            height: 34px;
+            margin: 0 auto;
+            cursor: pointer;
+          }
+        }
+      }
+      .manager-left-btn {
+        width: 100%;
+        .nav-manager-title {
           cursor: pointer;
+          background-color: rgb(247, 183, 101);
+          font-size: 24px;
+          text-align: center;
+          color: #fff;
+          border: 0px;
+          margin-top: 2px;
+        }
+        .nav-manager-title-active {
+          color: #666;
         }
       }
     }
@@ -114,7 +147,7 @@
         left: 35%;
         top: 30%;
         width: 35%;
-        height: 36%;
+        min-height: 36%;
         padding: 1%;
         font-size: 24px;
         font-family: 'Times New Roman', Times, serif;
@@ -124,6 +157,10 @@
           width: 100%;
           height: 15%;
           margin-bottom: 3%;
+        }
+        .ant-select {
+          margin-bottom: 5%;
+          font-size: 18px;
         }
         .product-serial-number,.product-psw  {
           display: inline-block;
@@ -153,6 +190,7 @@
       width: 65%;
       height: 93%;
     }
+
     .real-time-content {
       .minitoring-real-time-videos {
         width: 100%;
@@ -269,32 +307,37 @@
           text-align: center;
           color: #fff;
           border: 0px;
+          overflow-y: hidden;
         }
         .emegency-left-list {
           width: 100%;
-          height: 100%;
+          height: 94%;
+          overflow: auto;
           padding: 0 8px;
           font-size: 22px;
-          .emegency-left-item {
-            cursor: pointer;
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            justify-content: space-between;
+          .emegency-left-list-box {
             width: 100%;
-            height: 100px;
-            border-bottom: 1px solid #BDBDBD;
-            padding: 0 4%;
-          }
-          .wd-span {
-            display: inline-block;
-            margin-right: 2%;
-          }
-          .wd33 {
-            width: 30%;
-          }
-          .wd44 {
-            width: 41%;
+            .emegency-left-item {
+              cursor: pointer;
+              display: flex;
+              flex-wrap: nowrap;
+              align-items: center;
+              justify-content: space-between;
+              width: 100%;
+              height: 100px;
+              border-bottom: 1px solid #BDBDBD;
+              padding: 0 4%;
+            }
+            .wd-span {
+              display: inline-block;
+              margin-right: 2%;
+            }
+            .wd33 {
+              width: 30%;
+            }
+            .wd44 {
+              width: 41%;
+            }
           }
         }
 
@@ -305,8 +348,8 @@
         }
       }
       .emegency-right-top-videos {
-        height: 300px;
-        width: 430px;
+        height: 48%;
+        width: 48%;
         position: absolute;
         right: 0;
         top: 0;
@@ -393,6 +436,7 @@
           overflow-x: auto;
           padding-right: 2px;
           .density-analysis-item {
+            cursor: pointer;
             position: relative;
             flex-shrink: 0;
             height: 85%;
@@ -401,6 +445,9 @@
             .density-analysis-item-img {
               width: 100%;
               height: 82%;
+            }
+            .density-analysis-item-date {
+              white-space: nowrap;
             }
             .density-analysis-download-img {
               position: absolute;
@@ -420,6 +467,15 @@
           height: 100%;
         }
       }
+    }
+  }
+}
+.ant-modal-wrap {
+  .ant-modal-body {
+    .ant-modal-input {
+      width: 180px;
+      height: 34px;
+      font-size: 18px;
     }
   }
 }

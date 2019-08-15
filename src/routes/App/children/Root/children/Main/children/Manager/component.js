@@ -187,6 +187,7 @@ class Minitoring extends React.Component {
         data => {
           // userid 后期维护删除
           this.props.getDeviceGroup({ userId: '3' })
+          addGroupId = -1
         }
       )
     }
@@ -798,7 +799,7 @@ class Minitoring extends React.Component {
                 okText="确认"
                 cancelText="取消"
               >
-                <input placeholder='请输入分组名称' id='edit-group-name'></input>
+                <input placeholder='请输入分组名称' id='edit-group-name' className='ant-modal-input'></input>
               </Modal>
               <Modal
                 title="删除分组"
@@ -818,7 +819,7 @@ class Minitoring extends React.Component {
                 okText="确认"
                 cancelText="取消"
               >
-                <input placeholder='请输入设备名称' id='edit-equipment-name'></input>
+                <input placeholder='请输入设备名称' id='edit-equipment-name' className='ant-modal-input'></input>
               </Modal>
               <Modal
                 title="删除设备"
@@ -1025,12 +1026,15 @@ class Minitoring extends React.Component {
 
             <div className='minitoring-density-analysis-videos'>
               <div className='minitoring-density-analysis-videos-title'>
-                <span className='density-analysis-title left-title'>设备1</span>
+                <span className='density-analysis-title left-title'></span>
                 <span className='density-analysis-title center-title'>密度分析</span>
                 <span className='density-analysis-title right-title'></span>
               </div>
-
-              <img className='density-analysis-videos-img' src={densityList.length !== 0 ? SRC_PATH + densityList[densityDetailIndex].path : ''} alt='density-analysis-videos-img'></img>
+              {
+                densityList.length !== 0 ?
+                  <img className='density-analysis-videos-img' src={SRC_PATH + densityList[densityDetailIndex].path} alt='density-analysis-videos-img'></img>
+                  : null
+              }
             </div>
             <div className='minitoring-density-analysis-list'>
               <div className='mimitoring-density-list'>
