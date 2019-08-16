@@ -135,31 +135,27 @@ class Login extends React.Component {
   // 密码登录按钮点击
   pswLoginHandleSubmit = e => {
     e.preventDefault();
-
-    var phoneNum = document.getElementById('login_username').value
-    var password = document.getElementById('login_password').value
-    var phoneNumberReg = /^[1][34578][0-9]{9}$/
-
-    if (!phoneNumberReg.test(phoneNum)) {
-      alert('请输入正确的手机号码')
-      return
-    }
-    this.props.passWordLogin({
-      phoneNumber: phoneNum,
-      pwd: password
-    }, data => {
-      // 根据后端返回判断管理员还是非管理员页面
-      console.log(data,'wangyinbin')
-      data.isRoot === '0000' ? this.props.history.push('/root/main/manager') :
-      this.props.history.push('/root/main/minitoring')
-      // 保存短信接口给的hash和tamp，用做校验的判断
-      // this.hash = data.hash
-      // this.tamp = data.tamp
-    })
-
-
-
     this.props.form.validateFieldsAndScroll((err, values) => {
+      var phoneNum = document.getElementById('login_username').value
+      var password = document.getElementById('login_password').value
+      var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+      if (!phoneNumberReg.test(phoneNum)) {
+        alert('请输入正确的手机号码')
+        return
+      }
+      this.props.passWordLogin({
+        phoneNumber: phoneNum,
+        pwd: password
+      }, data => {
+        // 根据后端返回判断管理员还是非管理员页面
+        console.log(data, 'wangyinbin')
+        data.isRoot === '0000' ? this.props.history.push('/root/main/manager') :
+          this.props.history.push('/root/main/minitoring')
+        // 保存短信接口给的hash和tamp，用做校验的判断
+        // this.hash = data.hash
+        // this.tamp = data.tamp
+      })
       if (!err) {
         console.log('Received values of form: ', values);
       }
@@ -169,28 +165,25 @@ class Login extends React.Component {
   // 短信登录按钮点击
   smsLoginHandleSubmit = e => {
     e.preventDefault();
-
-    var phoneNum = document.getElementById('login_phone').value
-    var captcha = document.getElementById('login_captcha').value
-    var phoneNumberReg = /^[1][34578][0-9]{9}$/
-
-    if (!phoneNumberReg.test(phoneNum)) {
-      alert('请输入正确的手机号码')
-      return
-    }
-    this.props.SMSLogin({
-      phoneNumber: phoneNum,
-      hash: this.hash,
-      tamp: this.tamp,
-      msgNum: captcha
-    }, data => {
-      console.log('登录成功', data)
-      data.isRoot === '0000' ? this.props.history.push('/root/main/manager') :
-      this.props.history.push('/root/main/minitoring')
-    })
-
-
     this.props.form.validateFieldsAndScroll((err, values) => {
+      var phoneNum = document.getElementById('login_phone').value
+      var captcha = document.getElementById('login_captcha').value
+      var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+      if (!phoneNumberReg.test(phoneNum)) {
+        alert('请输入正确的手机号码')
+        return
+      }
+      this.props.SMSLogin({
+        phoneNumber: phoneNum,
+        hash: this.hash,
+        tamp: this.tamp,
+        msgNum: captcha
+      }, data => {
+        console.log('登录成功', data)
+        data.isRoot === '0000' ? this.props.history.push('/root/main/manager') :
+          this.props.history.push('/root/main/minitoring')
+      })
       if (!err) {
         console.log('Received values of form: ', values);
       }

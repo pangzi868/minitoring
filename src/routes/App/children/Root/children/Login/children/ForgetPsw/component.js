@@ -22,6 +22,8 @@ class ForgetPsw extends React.Component {
       }
     }
 
+    this.hash = null
+    this.tamp = null
     this.inputPhoneNumHandle = this.inputPhoneNumHandle.bind(this)
   }
 
@@ -75,8 +77,10 @@ class ForgetPsw extends React.Component {
         // 验证成功后登录
         this.props.retrievePassword({
           phoneNumber: phoneNum,
-          messageCode: code,
-          newPassword: password
+          msgNum: code,
+          newPassword: password,
+          hash: this.hash,
+          tamp: this.tamp
         }, data => {
           alert('修改密码成功')
           setInterval(() => {

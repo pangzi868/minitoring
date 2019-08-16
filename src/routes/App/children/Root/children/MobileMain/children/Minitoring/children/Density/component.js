@@ -8,6 +8,7 @@ import { Popover } from 'antd-mobile';
 
 const Item = Popover.Item;
 
+const SRC_PATH = 'http://112.74.77.11:2019/shungkon'
 
 class Density extends React.Component {
 
@@ -16,9 +17,21 @@ class Density extends React.Component {
     this.state = {
       visible: false,
       selected: '',
+      densityList: [],
+      densityDetailIndex: 0
     }
-
+    this.densityDetailHandle = this.densityDetailHandle.bind(this)
   }
+
+  // 密度分析详细信息切换
+  densityDetailHandle = index => {
+    if (this.setState.densityDetailIndex !== index) {
+      this.setState({
+        densityDetailIndex: index
+      })
+    }
+  }
+
 
   onSelect = (opt) => {
     // console.log(opt.props.value);
@@ -33,10 +46,19 @@ class Density extends React.Component {
     });
   };
 
+  UNSAFE_componentWillReceiveProps({ densityList }) {
+    if (densityList !== this.state.densityList) {
+      this.setState({
+        densityList: densityList
+      })
+    }
+  }
+
   render() {
+    const { densityList, densityDetailIndex } = this.state
     return (
       <div className="density-mobile-component">
-        <div className='videos-top-div'>
+        {/* <div className='videos-top-div'>
           <div className='left-icon-div'>
             <img className='left-icon' alt='left-icon' src={LeftIcon}></img>
           </div>
@@ -73,47 +95,43 @@ class Density extends React.Component {
             </Popover>
 
           </div>
-        </div>
+        </div> */}
 
-        <div className='videos-content'>
-          <div className='real-time-videos'>
-            <img className='real-time-videos-img' alt='real-time-videos-img' src={VideosIcon}></img>
-          </div>
+        {
+          densityList && densityList.length > 0 ?
+            <div className='videos-content'>
+              <div className='real-time-videos'>
+                <img className='real-time-videos-img' alt='real-time-videos-img' src={SRC_PATH + densityList[densityDetailIndex].path}></img>
+              </div>
 
-          <div className='videos-list-div'>
-            <div className='minitoring-real-time-list'>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={VideosIcon}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+              <div className='videos-list-div'>
+                <div className='minitoring-real-time-list'>
+                  {
+                    densityList.map((item, index) => {
+                      return (
+                        <div className='real-time-item' key={index} onClick={this.densityDetailHandle.bind(this, index)}>
+                          <img className='real-time-item-img' alt='real-time-item-img' src={SRC_PATH + item.path}></img>
+                          <span className='real-time-item-date'>{item.validDate}</span>
+                          {/* <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img> */}
+                        </div>
+                      )
+                    })
+                  }
+                </div>
               </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={VideosIcon}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
+            </div> :
+            <div className='videos-content'>
+              <div className='real-time-videos'>
+                <img className='real-time-videos-img' alt='real-time-videos-img' src={VideosIcon}></img>
+              </div>
 
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
+              <div className='videos-list-div'>
+                <div className='minitoring-real-time-list'>
+                </div>
+              </div>
 
-              </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={VideosIcon}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={VideosIcon}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
-              <div className='real-time-item'>
-                <img className='real-time-item-img' alt='real-time-item-img' src={VideosIcon}></img>
-                <span className='real-time-item-date'>2019-0730-17:30:00</span>
-                <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img>
-              </div>
             </div>
-          </div>
-
-        </div>
-
+        }
       </div >
     )
 

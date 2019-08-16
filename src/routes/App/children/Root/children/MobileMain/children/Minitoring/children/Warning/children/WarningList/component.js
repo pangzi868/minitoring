@@ -5,6 +5,11 @@ import MenuIcon from './images/1.1.png'
 import DownloadBtn from './images/3.4.png'
 import VideosIcon from './images/videos.png'
 import { Popover } from 'antd-mobile';
+import { getQueryString } from 'utils/url'
+
+import InnerPage from 'components/hz/InnerPage'
+import { PullToRefresh, ListView } from 'antd-mobile';
+import WarningDetail from '../WarningDetail/component'
 
 const Item = Popover.Item;
 
@@ -13,16 +18,41 @@ class List extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      warningVideos: {},
+      warningMessageDetails: [],
     }
 
+
+    this.getBusinessInfoPage = React.createRef()
+    this.serial = null
+    this.warningVideosDetail = null
+    this.warningDetailChangeHandle = this.warningDetailChangeHandle.bind(this)
+  }
+  warningDetailChangeHandle = (index, e) => {
+    this.warningVideosDetail = this.state.warningVideos[index]
+    this.setState({})
+    this.getBusinessInfoPage.current.show()
+  }
+
+  UNSAFE_componentWillMount() {
+  }
+
+  UNSAFE_componentWillReceiveProps({ warningVideos }) {
+    if (warningVideos !== this.state.warningVideos) {
+      this.setState({
+        warningVideos: warningVideos
+      })
+    }
   }
 
   render() {
+    const { warningMessageDetails, warningVideos } = this.state
+    console.log(warningVideos, 'wangwarningVideos')
     return (
       <div className="warning-mobile-component">
-        <div className='warning-top-div'>
+        {/* <div className='warning-top-div'>
           <div className='left-icon-div'>
-            <img className='left-icon' alt='left-icon' src={LeftIcon}></img>
+            <img onClick={this.goBackToList} className='left-icon' alt='left-icon' src={LeftIcon}></img>
           </div>
           <div className='center-title'>告警信息</div>
           <div className='right-icon-div'>
@@ -57,7 +87,7 @@ class List extends React.Component {
             </Popover>
 
           </div>
-        </div>
+        </div> */}
 
         <div className='space-box'></div>
         <div className='warning-message-title'>
@@ -67,80 +97,26 @@ class List extends React.Component {
         </div>
 
         <div className='warning-message-list-div'>
-
           <div className='warning-message-list'>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
-            <div className='warning-message-item'>
-              <span className='item-wd-span wd33'>设备1</span>
-              <span className='item-wd-span wd33'>2019-0807 01:08:09</span>
-              <span className='item-wd-span wd33'>
-                <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
-              </span>
-            </div>
+            {
+              warningVideos && warningVideos && warningVideos.length > 0 ? warningVideos.map((item, index) => (
+                <div className='warning-message-item' key={index} onClick={this.warningDetailChangeHandle.bind(this, index)}>
+                  <span className='item-wd-span wd33'>{item.serial}</span>
+                  <span className='item-wd-span wd33'>{item.warningTime}</span>
+                  <span className='item-wd-span wd33'>
+                    <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
+                  </span>
+                </div>
+              ))
+                : ''
+            }
           </div>
+
+
         </div>
+        <InnerPage from="right" ref={this.getBusinessInfoPage} title='告警信息详情'>
+          <WarningDetail getBusinessInfoPage={this.getBusinessInfoPage} warningVideosDetail={this.warningVideosDetail} />
+        </InnerPage>
       </div >
     )
 

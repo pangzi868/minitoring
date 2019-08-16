@@ -95,8 +95,10 @@ export function retrievePassword(params,cb) {
     url: `${isMock()}/shungkon/forgetPwd`,
     bodyData: {
       phoneNumber: params.phoneNumber,
-      messageCode: params.messageCode,
-      newPassword: params.newPassword
+      msgNum: params.msgNum,
+      newPassword: params.newPassword,
+      hash: params.hash,
+      tamp: params.tamp
     },
     actionType: PASSWORD_LOGIN,
     successConfig : {

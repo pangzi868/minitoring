@@ -15,6 +15,7 @@ const GET_DEVICE_GROUP = 'GET_DEVICE_GROUP'
 const EDIT_GROUP_NAME = 'EDIT_GROUP_NAME'
 const DELETE_GROUP_NAME = 'DELETE_GROUP_NAME'
 const EDIT_EQUIPMENT_NAME = 'EDIT_EQUIPMENT_NAME'
+const MOVE_EQUIPMENT_NAME = 'MOVE_EQUIPMENT_NAME'
 const DELETE_EQUIPMENT_NAME = 'DELETE_EQUIPMENT_NAME'
 const ADD_DEV_GROUP = 'ADD_DEV_GROUP'
 const GET_FUZZY_DEVICE_LIST = 'GET_FUZZY_DEVICE_LIST'
@@ -253,6 +254,28 @@ export function editEquipmentName(params, cb) {
   })
 }
 
+
+// 移动设备
+export function moveEquipmentName(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/device/moveDeviceGroup`,
+    bodyData: {
+      deviceId: params.deviceId,
+      groupId: params.groupId,
+      newGroupId: params.newGroupId,
+    },
+    actionType: MOVE_EQUIPMENT_NAME,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '修改设备分组失败',
+      isForceShow: false
+    }
+  })
+}
+
+
 // 删除分组中的设备
 export function deleteDeviceByRelation(params, cb) {
   return post({
@@ -357,13 +380,8 @@ const deviceDetails = (previousState = {}, action) => {
 
 // 获取用户列表
 export function getUserList(params, cb) {
-  return post({
-    url: `${isMock()}/shungkon/getUserMessage`,
-    bodyData: {
-      phoneNumber: params.phoneNumber,
-      pageNo: params.pageNo,
-      pageSize: params.pageSize
-    },
+  return get({
+    url: `${isMock()}/shungkon/getUserInfo?pageNo=${params.pageNo}&pageSize=${params.pageSize}&vuser=${JSON.parse({ 'phoneNumber': params.phoneNumber })}`,
     actionType: GET_USER_LIST,
     successConfig: {
       callback: cb

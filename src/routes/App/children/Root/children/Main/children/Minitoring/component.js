@@ -49,6 +49,7 @@ function formatTime(number, format) {
 
 
 let addGroupId = -1;
+let moveGroupId = -1;
 class Minitoring extends React.Component {
 
   constructor(props) {
@@ -77,6 +78,8 @@ class Minitoring extends React.Component {
       editEquipmentItem: null,
       deleteEquipmentVisibled: false,
       deleteEquipmentItem: null,
+      moveEquipmentVisibled: false,
+      moveEquipmentItem: null,
 
 
       // 告警信息
@@ -117,19 +120,14 @@ class Minitoring extends React.Component {
     }
   };
   // 设备菜单按钮
-  onEquipmentMenuClick = (item, e) => {
+  onEquipmentMenuClick = (item, group, e) => {
     e.domEvent.stopPropagation();
     switch (e.key) {
       case '0':
         this.showEditEquipmentModal(item);
         break;
       case '1':
-        Modal.confirm({
-          title: '删除分组',
-          content: '是否删除该分组？',
-          okText: '确认',
-          cancelText: '取消',
-        });
+        this.showMoveEquipmentModal(item, group)
         break;
       case '2':
         this.showDeleteEquipmentModal(item)
@@ -219,6 +217,38 @@ class Minitoring extends React.Component {
     });
   };
 
+  // 移动分组弹窗
+  showMoveEquipmentModal = (item, group, e) => {
+    var deviceId = item.deviceId
+    var groupId = group.groupId
+    this.setState({
+      moveEquipmentVisibled: true,
+      moveEquipmentItem: { deviceId: deviceId, groupId: groupId }
+    });
+  };
+
+  // 隐藏移动分组弹窗
+  hideMoveEquipmentModal = (item, bool, e) => {
+    e.preventDefault();
+    if (bool) {
+      if (item.deviceId !== moveGroupId) {
+        this.props.moveEquipmentName({ deviceId: item.deviceId, groupId: item.groupId, newGroupId: moveGroupId },
+          data => {
+            // userid 后期维护删除
+            moveGroupId = -1
+            this.props.getDeviceGroup({ userId: '3' })
+          }
+        )
+      } else {
+        alert('请选择不同分组')
+      }
+    }
+    this.setState({
+      moveEquipmentVisibled: false,
+      moveEquipmentItem: null
+    });
+  };
+
   // 删除设备弹窗
   showDeleteEquipmentModal = (item, e) => {
     var deviceId = item.deviceId
@@ -274,6 +304,27 @@ class Minitoring extends React.Component {
     console.log('search:', val);
   }
   /** 添加分组列表下拉操作end */
+
+  /** 移动设备分组列表下拉操作start */
+  onMoveDeviceChange(value) {
+    if (value) {
+      moveGroupId = JSON.parse(JSON.stringify(value))
+    }
+    console.log(`selected ${value}`);
+  }
+
+  onMoveDeviceBlur() {
+    console.log('blur');
+  }
+
+  onMoveDeviceFocus() {
+    console.log('focus');
+  }
+
+  onMoveDeviceSearch(val) {
+    console.log('search:', val);
+  }
+  /** 移动设备分组列表下拉操作end */
 
   // 添加分组确定按钮
   addGroupHandle = e => {
@@ -516,7 +567,7 @@ class Minitoring extends React.Component {
                                           {/* <Icon type="appstore" /> */}
                                           <span title={items.deviceName}>{` + ` + items.deviceName}</span>
                                           <Dropdown overlay={
-                                            <Menu onClick={this.onEquipmentMenuClick.bind(this, items)}>
+                                            <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.devGroup)}>
                                               <Menu.Item key="0">修改设备名称</Menu.Item>
                                               <Menu.Item key="1">移动分组</Menu.Item>
                                               <Menu.Item key="2">删除</Menu.Item>
@@ -570,6 +621,38 @@ class Minitoring extends React.Component {
                 cancelText="取消"
               >
                 <input placeholder='请输入设备名称' id='edit-equipment-name' className='ant-modal-input'></input>
+              </Modal>
+              <Modal
+                title="移动分组"
+                visible={this.state.moveEquipmentVisibled}
+                onOk={this.hideMoveEquipmentModal.bind(this, this.state.moveEquipmentItem, true)}
+                onCancel={this.hideMoveEquipmentModal.bind(this, this.state.moveEquipmentItem, false)}
+                okText="确认"
+                cancelText="取消"
+              >
+                <Select
+                  showSearch
+                  style={{ width: '100%' }}
+                  placeholder="请选择分组"
+                  optionFilterProp="children"
+                  onChange={this.onMoveDeviceChange}
+                  onFocus={this.onMoveDeviceFocus}
+                  onBlur={this.onMoveDeviceBlur}
+                  onSearch={this.onMoveDeviceSearch}
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {
+                    myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
+                      return (
+                        item.devGroup !== undefined ?
+                          <Option value={item.devGroup.groupId} key={index}>{item.devGroup.groupName}</Option>
+                          : null
+                      )
+                    }) : ''
+                  }
+                </Select>
               </Modal>
               <Modal
                 title="删除设备"

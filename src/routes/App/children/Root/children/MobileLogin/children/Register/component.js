@@ -13,6 +13,7 @@ import {
   Button,
   Tabs
 } from 'antd';
+import { Toast } from 'antd-mobile';
 
 const { Option } = Select;
 
@@ -24,12 +25,19 @@ class Register extends React.Component {
     super(props)
 
     this.state = {
+      registerSendSMSBtn: true,
+      registerPermission: true,
     }
+
+    this.CheckboxHandle = this.CheckboxHandle.bind(this)
+
   }
 
-  // 按钮回退
-  backToRegister = e => {
-    this.props.history.push('/root/login')
+  // 同意checkbox事件
+  CheckboxHandle = e => {
+    this.setState({
+      registerPermission: !this.state.registerPermission
+    })
   }
 
   // 手机号码输入事件
@@ -49,34 +57,63 @@ class Register extends React.Component {
   // 发送验证码
   sendCheckNum = e => {
     e.preventDefault();
-    alert('已发送短信')
-    this.props.getSMSMessage({ phoneNumber: '17875769971' }, data => {
+    var phoneNum = document.getElementById('register_phone').value
+    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+    if (!phoneNumberReg.test(phoneNum)) {
+      Toast.fail('请输入正确的手机号码', 1, {})
+      return
+    }
+    this.props.getSMSMessage({ phoneNumber: phoneNum }, data => {
       // 保存短信接口给的hash和tamp，用做校验的判断
       this.hash = data.hash
       this.tamp = data.tamp
-      console.log(data, 'wangyinbin')
     })
   }
 
   // 注册按钮点击
   registerHandleSubmit = e => {
     e.preventDefault();
-    var msgNum = document.getElementById('register_captcha').value
-    this.props.ValidateCode({ msgNum: msgNum, hash: this.hash, tamp: this.tamp })
+    // this.props.ValidateCode({ msgNum: 'msgNum', hash: this.hash, tamp: this.tamp })
     // console.log(this.props.form)
     this.props.form.validateFieldsAndScroll((err, values) => {
       console.log('Received values of form: ', values);
       if (!err) {
+        var msgNum = document.getElementById('register_captcha').value
+        var phoneNumber = document.getElementById('register_phone').value
+        var password = document.getElementById('register_password').value
+        var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
+        var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+        if (!phoneNumberReg.test(phoneNumber)) {
+          Toast.fail('请输入正确的手机号码', 1, {})
+          return
+        }
+
+        if (!passwordReg.test(password)) {
+          Toast.fail('请输入8-20位密码，字母/数字/符号至少2种', 1, {})
+          return
+        }
+
+        this.props.phoneNumRegister({
+          tamp: this.tamp,
+          hash: this.hash,
+          msgNum: msgNum,
+          phoneNumber: phoneNumber,
+          password: password
+        }, data => {
+          Toast.success('注册成功', 1, this.props.history.push('/root/login'))
+        })
       }
     });
   };
 
   // 登录跳转链接
-  registerGoToLogin = e => {
-    e.preventDefault();
-    // 访问父组件的方法，改变视图层显示
-    this.props.goToLogin && this.props.goToLogin()
-  }
+  // registerGoToLogin = e => {
+  //   e.preventDefault();
+  //   // 访问父组件的方法，改变视图层显示
+  //   this.props.goToLogin && this.props.goToLogin()
+  // }
 
   validateToNextPassword = (rule, value, callback) => {
     const { form } = this.props;
@@ -87,6 +124,10 @@ class Register extends React.Component {
   };
 
 
+  // 按钮回退
+  backToRegister = e => {
+    this.props.history.push('/root/login')
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
 
@@ -142,7 +183,7 @@ class Register extends React.Component {
                 addonBefore={prefixSelector}
                 style={{ width: '100%' }}
                 placeholder="手机号"
-                onKeyUp={this.inputPhoneNumHandle.bind(this)} />)}
+                onChange={this.inputPhoneNumHandle.bind(this)} />)}
             </Form.Item>
 
             <Form.Item label="">
@@ -169,20 +210,20 @@ class Register extends React.Component {
                     validator: this.validateToNextPassword,
                   },
                 ],
-              })(<Input.Password placeholder="8-20位密码，字母/数字/符号至少2种" />)}
+              })(<Input.Password placeholder="8-20位密码，字母/数字/符号至少2种" autocomplete="off" />)}
             </Form.Item>
 
             <Form.Item {...tailFormItemLayout}>
               {getFieldDecorator('agreement', {
                 valuePropName: 'checked',
               })(
-                <Checkbox>
+                <Checkbox onChange={this.CheckboxHandle.bind(this)}>
                   我已阅读并接受<a href=""> 用户协议 </a>和<a href=""> 隐私政策 </a>
                 </Checkbox>,
               )}
             </Form.Item>
             <Form.Item {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" disabled={this.state.registerPermission}>
                 注册
                 </Button>
             </Form.Item>

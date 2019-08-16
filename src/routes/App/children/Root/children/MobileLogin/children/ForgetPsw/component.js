@@ -2,7 +2,6 @@ import React from "react";
 import "./component.scss";
 
 import LeftIcon from './images/1.4.png'
-
 import {
   Form,
   Input,
@@ -11,6 +10,7 @@ import {
   Col,
   Button,
 } from 'antd';
+import { Toast } from 'antd-mobile'
 
 const { Option } = Select;
 
@@ -19,21 +19,31 @@ class ForgetPsw extends React.Component {
     super(props)
 
     this.state = {
+      permission: {
+        pswPhoneNum: true
+      }
     }
 
+    this.hash = null
+    this.tamp = null
     this.inputPhoneNumHandle = this.inputPhoneNumHandle.bind(this)
   }
 
+
+
   // 手机号码输入事件
   inputPhoneNumHandle = e => {
-    var phoneNum = document.getElementById('register_phone').value
+    var phoneNum = document.getElementById('forgetPsw_phone').value
+
+    var temp = this.state.permission
     if (phoneNum.length === 11) {
+      temp.pswPhoneNum = false
       this.setState({
-        registerSendSMSBtn: false
+        permission: temp
       })
     } else {
       this.setState({
-        registerSendSMSBtn: true
+        permission: temp
       })
     }
   }
@@ -43,12 +53,63 @@ class ForgetPsw extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        var phoneNum = document.getElementById('forgetPsw_phone').value
+        var code = document.getElementById('forgetPsw_captcha').value
+        var password = document.getElementById('forgetPsw_password').value
+        var passwordAgain = document.getElementById('forgetPsw_password-confirm').value
+
+        var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+        var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
+
+
+        if (!phoneNumberReg.test(phoneNum)) {
+          Toast.fail('请输入正确的手机号码', 1)
+          return
+        }
+        if (!passwordReg.test(password)) {
+          Toast.fail('请输入8-20位密码，字母/数字/符号至少2种', 1)
+          return
+        }
+        if (password !== passwordAgain) {
+          Toast.fail('请输入两次相同的密码', 1)
+          return
+        }
+
+        // 验证成功后登录
+        this.props.retrievePassword({
+          phoneNumber: phoneNum,
+          msgNum: code,
+          newPassword: password,
+          hash: this.hash,
+          tamp: this.tamp
+        }, data => {
+          Toast.success('密码修改成功', 1, this.props.history.push('/root/login'))
+        })
       }
     });
-    this.props.modifierHandleSubmit && this.props.modifierHandleSubmit()
   }
 
+  // 发送验证码
+  sendCheckNum = e => {
+    e.preventDefault();
+    var phoneNum = document.getElementById('forgetPsw_phone').value
+    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+
+    if (!phoneNumberReg.test(phoneNum)) {
+      alert('请输入正确的手机号码')
+      return
+    }
+    this.props.getSMSMessage({ phoneNumber: phoneNum }, data => {
+      // 保存短信接口给的hash和tamp，用做校验的判断
+      this.hash = data.hash
+      this.tamp = data.tamp
+    })
+  }
+
+  backToLogin = e => {
+    this.props.history.push('/root/login')
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -86,7 +147,7 @@ class ForgetPsw extends React.Component {
       < div className="forget-psw-component" >
         <div className='forget-div-top'>
           <div className='forget-top-left'>
-            <img src={LeftIcon} alt='forget-left-icon' className='forget-left-icon'></img>
+            <img onClick={this.backToLogin} src={LeftIcon} alt='forget-left-icon' className='forget-left-icon'></img>
           </div>
           <div className='forget-top-center'>
             <span>忘记密码</span>
@@ -104,7 +165,8 @@ class ForgetPsw extends React.Component {
               })(<Input
                 addonBefore={prefixSelector}
                 style={{ width: '100%' }}
-                placeholder="手机号/邮箱" />)}
+                placeholder="手机号/邮箱"
+                onChange={this.inputPhoneNumHandle.bind(this)} />)}
             </Form.Item>
 
             <Form.Item label="">
@@ -115,7 +177,9 @@ class ForgetPsw extends React.Component {
                   })(<Input placeholder="验证码" />)}
                 </Col>
                 <Col span={12}>
-                  <Button>发送验证码</Button>
+                  <Button
+                    disabled={this.state.permission.pswPhoneNum}
+                    onClick={this.sendCheckNum}>发送验证码</Button>
                 </Col>
               </Row>
             </Form.Item>
