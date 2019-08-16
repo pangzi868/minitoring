@@ -23,6 +23,8 @@ import {
   getUserList
 } from 'store/modules/manager'
 
+import {modifyPassword} from 'store/modules/login'
+
 const mapDispatchToProps = {
   getWarningVideos,
   getWarningVideosDetail,
@@ -43,7 +45,8 @@ const mapDispatchToProps = {
   deleteDeviceByRelation,
   addDevGroup,
   getLogList,
-  getUserList
+  getUserList,
+  modifyPassword
 }
 
 const mapStateToProps = (state) => ({

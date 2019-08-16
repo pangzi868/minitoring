@@ -13,6 +13,9 @@ import {
 } from 'antd';
 import { Toast } from 'antd-mobile';
 
+import history from 'history.js'
+
+
 import Logo from './images/logo.png'
 
 const { Option } = Select;
@@ -164,7 +167,7 @@ class Login extends React.Component {
         phoneNumber: phoneNum,
         pwd: password
       }, data => {
-        Toast.success('登录成功', 1, this.props.history.push('/root/main/minitoring'))
+        Toast.success('登录成功', 1, history.push('/root/main/minitoring'))
       })
       // if (!err) {
 
@@ -189,7 +192,7 @@ class Login extends React.Component {
         tamp: this.tamp,
         msgNum: captcha
       }, data => {
-        Toast.success('登录成功', 1, this.props.history.push('/root/main/minitoring'))
+        Toast.success('登录成功', 1, history.push('/root/main/minitoring'))
       })
     });
   };

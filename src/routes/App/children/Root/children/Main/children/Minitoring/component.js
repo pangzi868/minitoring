@@ -14,6 +14,7 @@ import EquipmentAddition from './images/yellow_add.png'
 import DownloadBtn from './images/3.4.png'
 import ViewMore from './images/sidebar-viewmore.svg'
 import WarningPicture from './images/warning.png'
+import Setting from './images/setting.png'
 
 const { SubMenu } = Menu;
 
@@ -64,7 +65,8 @@ class Minitoring extends React.Component {
         isAdditionShow: true,
 
         isAdditionEquipmentShow: true,
-        isAdditionGroupShow: false
+        isAdditionGroupShow: false,
+        isSettingPswShow: false
       },
 
       // 分组操作数据
@@ -92,7 +94,8 @@ class Minitoring extends React.Component {
 
       myMinitoringGroup: [],
     }
-
+    this.phoneNumber = null
+    this.password = null
 
     this.secondMenuHandle = this.secondMenuHandle.bind(this)
     this.handleClick = this.handleClick.bind(this)
@@ -101,6 +104,7 @@ class Minitoring extends React.Component {
     this.addEquipmentHandle = this.addEquipmentHandle.bind(this)
     this.densityDetailHandle = this.densityDetailHandle.bind(this)
     this.onGroupMenuClick = this.onGroupMenuClick.bind(this)
+    this.checkSettingPsw = this.checkSettingPsw.bind(this)
     this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
   }
 
@@ -326,6 +330,43 @@ class Minitoring extends React.Component {
   }
   /** 移动设备分组列表下拉操作end */
 
+  // 修改密码确定按钮
+  checkSettingPsw = e => {
+    var oldPassword = document.getElementById('setting-old-psw').value
+    var newPassword = document.getElementById('setting-new-psw').value
+    var phoneNumber = this.phoneNumber
+
+    var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
+
+    if (oldPassword !== this.password) {
+      alert('请输入正确的旧密码')
+      return
+    }
+    if (oldPassword === newPassword) {
+      alert('请勿输入与旧密码相同的密码')
+      return
+    }
+    if (!passwordReg.test(newPassword)) {
+      alert('请输入8-20位密码，字母/数字/符号至少2种')
+      return
+    }
+
+    // 验证成功后登录
+    this.props.modifyPassword({
+      phoneNumber: phoneNumber,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    }, data => {
+      alert('修改密码成功')
+
+      var temp = this.state.isWindowShow
+      temp.isSettingPswShow = !temp.isSettingPswShow
+      this.setState({
+        isWindowShow: temp
+      })
+    })
+  }
+
   // 添加分组确定按钮
   addGroupHandle = e => {
     var groupName = document.getElementById('add-group-input').value
@@ -368,13 +409,14 @@ class Minitoring extends React.Component {
 
   }
 
-  // 控制添加设备/分组显示
+  // 控制添加设备/分组显示;修改密码显示
   additionShowHandle = (type, e) => {
     var temp = this.state.isWindowShow
     switch (type) {
       case 'group':
         temp.isAdditionGroupShow = !temp.isAdditionGroupShow;
         temp.isAdditionEquipmentShow = false;
+        temp.isSettingPswShow = false;
         this.setState({
           isWindowShow: temp
         })
@@ -382,6 +424,15 @@ class Minitoring extends React.Component {
       case 'equipment':
         temp.isAdditionEquipmentShow = !temp.isAdditionEquipmentShow;
         temp.isAdditionGroupShow = false;
+        temp.isSettingPswShow = false;
+        this.setState({
+          isWindowShow: temp
+        })
+        break;
+      case 'setting':
+        temp.isSettingPswShow = !temp.isSettingPswShow
+        temp.isAdditionGroupShow = false;
+        temp.isAdditionEquipmentShow = false;
         this.setState({
           isWindowShow: temp
         })
@@ -429,6 +480,7 @@ class Minitoring extends React.Component {
         })
         isWindowShowCopy.isAdditionGroupShow = false
         isWindowShowCopy.isAdditionEquipmentShow = false
+        isWindowShowCopy.isSettingPswShow = false
         this.setState({
           isWindowShow: isWindowShowCopy
         })
@@ -459,6 +511,7 @@ class Minitoring extends React.Component {
           }
         })
         isWindowShowCopy.isAdditionGroupShow = false
+        isWindowShowCopy.isSettingPswShow = false
         isWindowShowCopy.isAdditionEquipmentShow = false
         this.setState({
           isWindowShow: isWindowShowCopy
@@ -489,6 +542,7 @@ class Minitoring extends React.Component {
           }
         })
         isWindowShowCopy.isAdditionGroupShow = false
+        isWindowShowCopy.isSettingPswShow = false
         isWindowShowCopy.isAdditionEquipmentShow = false
         this.setState({
           isWindowShow: isWindowShowCopy
@@ -507,6 +561,8 @@ class Minitoring extends React.Component {
 
   UNSAFE_componentWillReceiveProps(props, state) {
     if (props.deviceGroup.devGroupList !== state.myMinitoringGroup) {
+      this.phoneNumber = props.deviceGroup.user.phoneNumber
+      this.password = props.deviceGroup.user.password
       this.setState({
         myMinitoringGroup: props.deviceGroup.devGroupList
       })
@@ -538,7 +594,7 @@ class Minitoring extends React.Component {
                   {
                     myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
                       return (
-                        item.devGroup !== undefined ?
+                        item.devGroup !== null && item.devGroup !== undefined ?
                           <SubMenu
                             key={index}
                             title={
@@ -559,7 +615,7 @@ class Minitoring extends React.Component {
                             {
                               item.deviceList && item.deviceList.length !== 0 ? item.deviceList.map((items, indexs) => {
                                 return (
-                                  items !== null ?
+                                  items !== null && item.devGroup !== null && item.devGroup !== undefined ?
                                     <SubMenu
                                       key={item.devGroup.groupName + items.deviceName}
                                       title={
@@ -646,7 +702,7 @@ class Minitoring extends React.Component {
                   {
                     myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
                       return (
-                        item.devGroup !== undefined ?
+                        item.devGroup !== null && item.devGroup !== undefined ?
                           <Option value={item.devGroup.groupId} key={index}>{item.devGroup.groupName}</Option>
                           : null
                       )
@@ -668,16 +724,17 @@ class Minitoring extends React.Component {
           </div>
           <div className='left-bottom-nav'>
             <div className='left-nav-bottom-btn'>
-              <div className='left-add-group-btn' onClick={this.additionShowHandle.bind(this, 'group')}>
-                <img className='left-add-img' src={GroupAddition} alt='left-add-img'></img>
+              <div className='left-add-group-btn'>
+                <img className='left-add-img' src={GroupAddition} alt='left-add-img' onClick={this.additionShowHandle.bind(this, 'group')}></img>
                 <span className='left-add-group-title'>添加分组</span>
               </div>
-              <div className='left-add-equipment-btn' onClick={this.additionShowHandle.bind(this, 'equipment')}>
-                <img className='left-add-img' src={EquipmentAddition} alt='left-add-img'></img>
+              <div className='left-add-equipment-btn'>
+                <img className='left-add-img' src={EquipmentAddition} alt='left-add-img' onClick={this.additionShowHandle.bind(this, 'equipment')}></img>
                 <span className='left-add-equipment-title'>添加设备</span>
               </div>
             </div>
           </div>
+          <img className='user-setting' alt='user-setting' src={Setting} onClick={this.additionShowHandle.bind(this, 'setting')}></img>
         </div>
 
         <div className='minitoring-right-content'>
@@ -709,7 +766,7 @@ class Minitoring extends React.Component {
                   {
                     myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
                       return (
-                        item.devGroup !== undefined ?
+                        item.devGroup !== null && item.devGroup !== undefined ?
                           <Option value={item.devGroup.groupId} key={index}>{item.devGroup.groupName}</Option>
                           : null
                       )
@@ -725,6 +782,14 @@ class Minitoring extends React.Component {
                 <span className='add-equipment-title'>添加分组</span>
                 <input id='add-group-input' className='product-serial-number' placeholder='请输入分组名称'></input>
                 <span className='add-equipment-sure-btn' onClick={this.addGroupHandle.bind(this)}>确认</span>
+              </div>
+            </div>
+            <div className={`add-equipment-comfirm ${this.state.isWindowShow.isSettingPswShow ? '' : 'hide'}`}>
+              <div className='add-equipment-form'>
+                <span className='add-equipment-title'>修改密码</span>
+                <input id='setting-old-psw' className='product-serial-number' placeholder='请输入旧密码'></input>
+                <input id='setting-new-psw' className='product-serial-number' placeholder='请输入新密码'></input>
+                <span className='add-equipment-sure-btn' onClick={this.checkSettingPsw.bind(this)}>确认</span>
               </div>
             </div>
           </div>

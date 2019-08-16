@@ -94,7 +94,7 @@ const responseHandler = (dispatch, config) => {
         config.successConfig.callback(
           config.responseData.pageSize
             ? config.responseData
-            : config.responseData.data || config.responseData
+            : config.responseData.data
         );
       }
     }

@@ -6,6 +6,7 @@ const GET_SMS = 'GET_SMS'
 const VALIDATE_SMS = 'VALIDATE_SMS'
 const PHONENUMBER_REGISTER = 'PHONENUMBER_REGISTER'
 const PASSWORD_LOGIN = 'PASSWORD_LOGIN'
+const MODIFY_PASSWORD = 'MODIFY_PASSWORD'
 const SMS_LOGIN = 'SMS_LOGIN'
 
 const IS_MOCK_CURRENT_MODULE = false  // 控制当前模块的所有接口是否使用mock
@@ -74,7 +75,7 @@ export function phoneNumRegister(params, cb) {
 }
 
 // 账号密码登录
-export function passWordLogin(params) {
+export function passWordLogin(params,cb) {
   return post({
     url: `${isMock()}/shungkon/login/logOnByPwd`,
     bodyData: {
@@ -82,6 +83,9 @@ export function passWordLogin(params) {
       pwd: params.pwd,
     },
     actionType: PASSWORD_LOGIN,
+    successConfig: {
+      callback: cb
+    },
     failConfig: {
       message: '账号/密码错误，登录失败',
       isForceShow: false
@@ -101,6 +105,26 @@ export function retrievePassword(params,cb) {
       tamp: params.tamp
     },
     actionType: PASSWORD_LOGIN,
+    successConfig : {
+      callback: cb
+    },
+    failConfig: {
+      message: '修改密码失败',
+      isForceShow: false
+    }
+  })
+}
+
+// 账号密码登录
+export function modifyPassword(params,cb) {
+  return post({
+    url: `${isMock()}/shungkon/forgetPwd`,
+    bodyData: {
+      phoneNumber: params.phoneNumber,
+      newPassword: params.newPassword,
+      oldPassword: params.oldPassword,
+    },
+    actionType: MODIFY_PASSWORD,
     successConfig : {
       callback: cb
     },

@@ -25,6 +25,7 @@ class Main extends React.Component {
                 component={Manager}
                 permissionPath={[]}
               />
+
             </Switch>
           </HashRouter>
         </div>

@@ -23,6 +23,7 @@ import DownloadBtn from './images/3.4.png'
 import ViewMore from './images/sidebar-viewmore.svg'
 import File from './images/4.1.png'
 import UploadFile from './images/4.2.png'
+import Setting from './images/setting.png'
 import WarningPicture from './images/warning.png'
 
 const { SubMenu } = Menu;
@@ -127,8 +128,11 @@ class Minitoring extends React.Component {
     this.enterDeviceToSystem = this.enterDeviceToSystem.bind(this)
     this.getDeviceListByCondition = this.getDeviceListByCondition.bind(this)
     this.getDeviceDetail = this.getDeviceDetail.bind(this)
+    this.checkSettingPsw = this.checkSettingPsw.bind(this)
     this.densityDetailHandle = this.densityDetailHandle.bind(this)
     this.getUserListByPhoneNum = this.getUserListByPhoneNum.bind(this)
+    this.addUserInfo = this.addUserInfo.bind(this)
+    this.deleteUserInfo = this.deleteUserInfo.bind(this)
     this.onGroupMenuClick = this.onGroupMenuClick.bind(this)
     this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
   }
@@ -166,6 +170,42 @@ class Minitoring extends React.Component {
     }
   };
 
+  // 修改密码确定按钮
+  checkSettingPsw = e => {
+    var oldPassword = document.getElementById('setting-old-psw').value
+    var newPassword = document.getElementById('setting-new-psw').value
+    var phoneNumber = this.phoneNumber
+
+    var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
+
+    if (oldPassword !== this.password) {
+      alert('请输入正确的旧密码')
+      return
+    }
+    if (oldPassword === newPassword) {
+      alert('请勿输入与旧密码相同的密码')
+      return
+    }
+    if (!passwordReg.test(newPassword)) {
+      alert('请输入8-20位密码，字母/数字/符号至少2种')
+      return
+    }
+
+    // 验证成功后登录
+    this.props.modifyPassword({
+      phoneNumber: phoneNumber,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    }, data => {
+      alert('修改密码成功')
+
+      var temp = this.state.isWindowShow
+      temp.isSettingPswShow = !temp.isSettingPswShow
+      this.setState({
+        isWindowShow: temp
+      })
+    })
+  }
   // 修改分组名称弹窗
   showEditGroupModal = (item, e) => {
     var groupId = item.groupId
@@ -352,6 +392,49 @@ class Minitoring extends React.Component {
     })
   }
 
+  // 用户管理添加设备
+  addUserInfo = (params) => {
+    this.props.addUserDevice({
+      phoneNumber: params.phoneNumber,
+      serial: params.serial,
+      deviceVerifyCode: params.deviceVerifyCode
+    }, data => {
+      console.log(data, 'wangyinbin')
+      this.props.getUserList({
+        phoneNumber: {
+          phoneNumber: params.phoneNumber || '',
+        },
+        pageNo: params.pageNo,
+        pageSize: params.pageSize
+      }, data => {
+        console.log(data, 'wangyinbin')
+        this.tempUserList = JSON.parse(JSON.stringify(data))
+        this.setState({})
+      })
+    })
+  }
+
+  // 用户管理删除设备
+  deleteUserInfo = (params) => {
+    this.props.deleteUserDevice({
+      phoneNumber: params.phoneNumber,
+      serial: params.serial,
+    }, data => {
+      console.log(data, 'wangyinbin')
+      this.props.getUserList({
+        phoneNumber: {
+          phoneNumber: params.phoneNumber || '',
+        },
+        pageNo: params.pageNo,
+        pageSize: params.pageSize
+      }, data => {
+        console.log(data, 'wangyinbin')
+        this.tempUserList = JSON.parse(JSON.stringify(data))
+        this.setState({})
+      })
+    })
+  }
+
   getDeviceDetail = (deviceId) => {
     this.props.getDeviceDetails({ deviceId: deviceId }, data => {
       this.deviceDetail = JSON.parse(JSON.stringify(data))
@@ -451,13 +534,14 @@ class Minitoring extends React.Component {
 
   }
 
-  // 控制添加设备/分组显示
+  // 控制添加设备/分组显示;修改密码显示
   additionShowHandle = (type, e) => {
     var temp = this.state.isWindowShow
     switch (type) {
       case 'group':
         temp.isAdditionGroupShow = !temp.isAdditionGroupShow;
         temp.isAdditionEquipmentShow = false;
+        temp.isSettingPswShow = false;
         this.setState({
           isWindowShow: temp
         })
@@ -465,6 +549,15 @@ class Minitoring extends React.Component {
       case 'equipment':
         temp.isAdditionEquipmentShow = !temp.isAdditionEquipmentShow;
         temp.isAdditionGroupShow = false;
+        temp.isSettingPswShow = false;
+        this.setState({
+          isWindowShow: temp
+        })
+        break;
+      case 'setting':
+        temp.isSettingPswShow = !temp.isSettingPswShow
+        temp.isAdditionGroupShow = false;
+        temp.isAdditionEquipmentShow = false;
         this.setState({
           isWindowShow: temp
         })
@@ -512,6 +605,7 @@ class Minitoring extends React.Component {
         })
         isWindowShowCopy.isAdditionGroupShow = false
         isWindowShowCopy.isAdditionEquipmentShow = false
+        isWindowShowCopy.isSettingPswShow = false
         this.setState({
           isWindowShow: isWindowShowCopy
         })
@@ -541,6 +635,7 @@ class Minitoring extends React.Component {
               break;
           }
         })
+        isWindowShowCopy.isSettingPswShow = false
         isWindowShowCopy.isAdditionGroupShow = false
         isWindowShowCopy.isAdditionEquipmentShow = false
         this.setState({
@@ -572,6 +667,7 @@ class Minitoring extends React.Component {
           }
         })
         isWindowShowCopy.isAdditionGroupShow = false
+        isWindowShowCopy.isSettingPswShow = false
         isWindowShowCopy.isAdditionEquipmentShow = false
         this.setState({
           isWindowShow: isWindowShowCopy
@@ -779,7 +875,7 @@ class Minitoring extends React.Component {
                   {
                     myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
                       return (
-                        item.devGroup !== undefined ?
+                        item.devGroup !== null && item.devGroup !== undefined ?
                           <SubMenu
                             key={index}
                             title={
@@ -800,7 +896,7 @@ class Minitoring extends React.Component {
                             {
                               item.deviceList && item.deviceList.length !== 0 ? item.deviceList.map((items, indexs) => {
                                 return (
-                                  items !== null ?
+                                  items !== null && item.devGroup !== null && item.devGroup !== undefined ?
                                     <SubMenu
                                       key={item.devGroup.groupName + items.deviceName}
                                       title={
@@ -888,7 +984,7 @@ class Minitoring extends React.Component {
                   {
                     myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
                       return (
-                        item.devGroup !== undefined ?
+                        item.devGroup !== null && item.devGroup !== undefined ?
                           <Option value={item.devGroup.groupId} key={index}>{item.devGroup.groupName}</Option>
                           : null
                       )
@@ -910,14 +1006,15 @@ class Minitoring extends React.Component {
           </div>
           <div className='left-bottom-nav'>
             <div className='left-nav-bottom-btn'>
-              <div className='left-add-group-btn' onClick={this.additionShowHandle.bind(this, 'group')}>
-                <img className='left-add-img' src={GroupAddition} alt='left-add-img'></img>
+              <div className='left-add-group-btn'>
+                <img className='left-add-img' src={GroupAddition} alt='left-add-img' onClick={this.additionShowHandle.bind(this, 'group')}></img>
                 <span className='left-add-group-title'>添加分组</span>
               </div>
-              <div className='left-add-equipment-btn' onClick={this.additionShowHandle.bind(this, 'equipment')}>
-                <img className='left-add-img' src={EquipmentAddition} alt='left-add-img'></img>
+              <div className='left-add-equipment-btn'>
+                <img className='left-add-img' src={EquipmentAddition} alt='left-add-img' onClick={this.additionShowHandle.bind(this, 'equipment')}></img>
                 <span className='left-add-equipment-title'>添加设备</span>
               </div>
+              <img className='user-setting' alt='user-setting' src={Setting} onClick={this.additionShowHandle.bind(this, 'setting')}></img>
             </div>
 
             <div className='manager-left-btn'>
@@ -957,7 +1054,7 @@ class Minitoring extends React.Component {
                   {
                     myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
                       return (
-                        item.devGroup !== undefined ?
+                        item.devGroup !== null && item.devGroup !== undefined ?
                           <Option value={item.devGroup.groupId} key={index}>{item.devGroup.groupName}</Option>
                           : null
                       )
@@ -973,6 +1070,14 @@ class Minitoring extends React.Component {
                 <span className='add-equipment-title'>添加分组</span>
                 <input id='add-group-input' className='product-serial-number' placeholder='请输入分组名称'></input>
                 <span className='add-equipment-sure-btn' onClick={this.addGroupHandle.bind(this)}>确认</span>
+              </div>
+            </div>
+            <div className={`add-equipment-comfirm ${this.state.isWindowShow.isSettingPswShow ? '' : 'hide'}`}>
+              <div className='add-equipment-form'>
+                <span className='add-equipment-title'>修改密码</span>
+                <input id='setting-old-psw' className='product-serial-number' placeholder='请输入旧密码'></input>
+                <input id='setting-new-psw' className='product-serial-number' placeholder='请输入新密码'></input>
+                <span className='add-equipment-sure-btn' onClick={this.checkSettingPsw.bind(this)}>确认</span>
               </div>
             </div>
           </div>
@@ -1157,6 +1262,8 @@ class Minitoring extends React.Component {
             <UserManager
               userManagerList={this.tempUserList}
               getUserListByPhoneNum={this.getUserListByPhoneNum.bind(this)}
+              addUserInfo={this.addUserInfo.bind(this)}
+              deleteUserInfo={this.deleteUserInfo.bind(this)}
             />
           </div>
 

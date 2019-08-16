@@ -68,6 +68,19 @@
             .ant-menu-submenu {
               .ant-menu-submenu-title {
                 font-size: 0.4rem;
+                .group-right-btn {
+                  position: absolute;
+                  right: 0.2rem;
+                  top: 0;
+                  .group-right-img {
+                    transform: rotate(90deg);
+                    ms-transform: rotate(90deg); /* IE 9 */
+                    moz-transform: rotate(90deg); /* Firefox */
+                    webkit-transform: rotate(90deg); /* Safari and Chrome */
+                    o-transform: rotate(90deg); /* Opera */
+                    width: 0.6rem;
+                  }
+                }
                 .ant-menu-submenu-arrow {
                   display: none;
                 }

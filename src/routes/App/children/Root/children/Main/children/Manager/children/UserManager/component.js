@@ -17,7 +17,20 @@ class UserManager extends React.Component {
       additionConfirmLoading: false,
       userList: {}
     }
+    this.userInfo = null
+    this.getPhoneNumberSearch = this.getPhoneNumberSearch.bind(this)
   }
+
+  // 通过手机号模糊搜索
+  getPhoneNumberSearch = e => {
+    var phoneNumber = document.getElementById('user-manager-phone-number').value
+    this.props.getUserListByPhoneNum && this.props.getUserListByPhoneNum({
+      phoneNumber: phoneNumber,
+      pageSize: 10,
+      pageNo: 1
+    })
+  }
+
 
   showAdditionModal = (e) => {
     // var productSerialInput = document.getElementById('productSerialInput')
@@ -32,6 +45,17 @@ class UserManager extends React.Component {
 
   handleAdditionOk = e => {
     console.log(e);
+    var serial = this.refs.productSerialInput.value
+    var vertifyCode = this.refs.verificationInput.value
+    // 写死的参数，该参数需修改成访问用户详情的手机好吗
+    var phoneNumber = this.phoneNumber
+
+    this.props.addUserInfo && this.props.addUserInfo({
+      serial: serial,
+      deviceVertifyCode: vertifyCode,
+      phoneNumber: phoneNumber
+    })
+
     this.setState({
       confirmLoading: true,
     });
@@ -54,7 +78,9 @@ class UserManager extends React.Component {
     });
   };
 
-  showDeleteConfirm() {
+  showDeleteConfirm(serial) {
+    // 写死的参数，该参数需修改成访问用户详情的手机号码
+    var phoneNumber = this.phoneNumber
     confirm({
       title: '确定删除该设备？',
       content: '设备删除后无法从列表中获取',
@@ -62,7 +88,11 @@ class UserManager extends React.Component {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        console.log('OK');
+        // this.props.deleteUserInfo && this.props.deleteUserInfo({
+        //   serial: serial,
+        //   phoneNumber: phoneNumber
+        // })
+        console.log(serial, phoneNumber);
       },
       onCancel() {
         console.log('Cancel');
@@ -86,7 +116,7 @@ class UserManager extends React.Component {
 
   render() {
     const { match } = this.props
-    const { size, confirmLoading,userList} = this.state;
+    const { size, confirmLoading, userList } = this.state;
     return (
       <div className="user-manager-component">
         <div className='user-manager-title'>用户管理</div>
@@ -94,8 +124,8 @@ class UserManager extends React.Component {
         <div className='user-manager-middle'>
           <div className='user-manager-search'>
             <span className='user-manager-search-title'>用户查询</span>
-            <input className='user-manager-search-input' placeholder='手机号码' ></input>
-            <button className='user-manager-search-btn'>查询</button>
+            <input id='user-manager-phone-number' className='user-manager-search-input' placeholder='手机号码' ></input>
+            <button className='user-manager-search-btn' onClick={this.getPhoneNumberSearch.bind(this)}>查询</button>
           </div>
           <div className='user-manager-search-list'>
             <div className='manager-search-list-title'>
@@ -146,10 +176,10 @@ class UserManager extends React.Component {
                   title="添加设备"
                   visible={this.state.additionVisible}
                   footer={[
-                    <Button key="back" onClick={this.handleAdditionCancel}>
+                    <Button key="back" onClick={this.handleAdditionCancel.bind(this, this.userInfo)}>
                       取消
                     </Button>,
-                    <Button key="submit" type="primary" loading={confirmLoading} onClick={this.handleAdditionOk}>
+                    <Button key="submit" type="primary" loading={confirmLoading} onClick={this.handleAdditionOk.bind(this, this.userInfo)}>
                       添加
                     </Button>,
                   ]}
@@ -162,7 +192,7 @@ class UserManager extends React.Component {
               <div className='monitoring-list'>
                 <span className='detail-right-item'>
                   <span className='monitoring-name'>q161</span>
-                  <Button type="link" size={size} onClick={this.showDeleteConfirm} className='monitoring-edit-btn detail-monitoring-delete'>
+                  <Button type="link" size={size} onClick={this.showDeleteConfirm.bind(this, '123')} className='monitoring-edit-btn detail-monitoring-delete'>
                     删除
                   </Button>
                 </span>

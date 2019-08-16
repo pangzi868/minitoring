@@ -23,6 +23,8 @@ const GET_DEVICE_LIST = 'GET_DEVICE_LIST'
 const ADD_DEVICE_TO_SYSTEM = 'ADD_DEVICE_TO_SYSTEM'
 const GET_DEVICE_DETAIL = 'GET_DEVICE_DETAIL'
 const GET_USER_LIST = 'GET_USER_LIST'
+const ADD_USER_DEVICE = 'ADD_USER_DEVICE'
+const DEL_USER_DEVICE = 'DEL_USER_DEVICE'
 
 const IS_MOCK_CURRENT_MODULE = false  // 控制当前模块的所有接口是否使用mock
 const isMock = mockClosure(IS_MOCK_CURRENT_MODULE)
@@ -380,8 +382,15 @@ const deviceDetails = (previousState = {}, action) => {
 
 // 获取用户列表
 export function getUserList(params, cb) {
-  return get({
-    url: `${isMock()}/shungkon/getUserInfo?pageNo=${params.pageNo}&pageSize=${params.pageSize}&vuser=${JSON.parse({ 'phoneNumber': params.phoneNumber })}`,
+  return post({
+    url: `${isMock()}/shungkon/getUserInfo`,
+    bodyData: {
+      vuser: {
+        "phoneNumber": params.phoneNumber
+      },
+      pageNo: params.pageNo,
+      pageSize: params.pageSize
+    },
     actionType: GET_USER_LIST,
     successConfig: {
       callback: cb
@@ -400,6 +409,45 @@ const userList = (previousState = {}, action) => {
   } else {
     return previousState
   }
+}
+
+// 添加用户设备
+export function addUserDevice(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/addUserDevice`,
+    bodyData: {
+      phoneNumber: params.phoneNumber,
+      serial: params.serial,
+      deviceVerifyCode: params.deviceVerifyCode
+    },
+    actionType: ADD_USER_DEVICE,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '添加用户设备失败',
+      isForceShow: false
+    }
+  })
+}
+
+// 删除用户设备
+export function deleteUserDevice(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/delUserInfo`,
+    bodyData: {
+      phoneNumber: params.phoneNumber,
+      serial: params.serial
+    },
+    actionType: DEL_USER_DEVICE,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '删除用户设备失败',
+      isForceShow: false
+    }
+  })
 }
 
 // // 获取用户详情
