@@ -10,6 +10,7 @@ import { getQueryString } from 'utils/url'
 import InnerPage from 'components/hz/InnerPage'
 import { PullToRefresh, ListView } from 'antd-mobile';
 import WarningDetail from '../WarningDetail/component'
+import Company from './images/company.png'
 
 const Item = Popover.Item;
 
@@ -104,7 +105,7 @@ class List extends React.Component {
                   <span className='item-wd-span wd33'>{item.serial}</span>
                   <span className='item-wd-span wd33'>{item.warningTime}</span>
                   <span className='item-wd-span wd33'>
-                    <img src={VideosIcon} className='warning-message-item-img' alt='warning-message-item-img'></img>
+                    <img src={Company} className='warning-message-item-img' alt='warning-message-item-img'></img>
                   </span>
                 </div>
               ))

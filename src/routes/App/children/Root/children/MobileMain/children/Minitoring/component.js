@@ -87,6 +87,7 @@ class Minitoring extends React.Component {
       myMinitoringGroup: [],
 
     }
+    this.userId = null;
 
     this.phoneNumber = null
     this.password = null
@@ -94,6 +95,7 @@ class Minitoring extends React.Component {
     this.densityList = null
     this.getBusinessInfoPage = React.createRef()
     this.getDensityInfoPage = React.createRef()
+    this.logOut = this.logOut.bind(this)
     this.secondMenuHandle = this.secondMenuHandle.bind(this)
     this.addEquipmentHandle = this.addEquipmentHandle.bind(this)
     this.handleClick = this.handleClick.bind(this)
@@ -105,6 +107,10 @@ class Minitoring extends React.Component {
 
   }
 
+  logOut = e => {
+    localStorage.setItem('userId', '')
+    this.props.history.push('/root/login')
+  }
 
   // 修改密码确定按钮
   checkSettingPsw = e => {
@@ -115,15 +121,15 @@ class Minitoring extends React.Component {
     var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
 
     if (oldPassword !== this.password) {
-      Toast.fail('请输入正确的旧密码',1)
+      Toast.fail('请输入正确的旧密码', 1)
       return
     }
     if (oldPassword === newPassword) {
-      Toast.fail('请勿输入与旧密码相同的密码',1)
+      Toast.fail('请勿输入与旧密码相同的密码', 1)
       return
     }
     if (!passwordReg.test(newPassword)) {
-      Toast.fail('请输入8-20位密码，字母/数字/符号至少2种',1)
+      Toast.fail('请输入8-20位密码，字母/数字/符号至少2种', 1)
       return
     }
 
@@ -193,8 +199,7 @@ class Minitoring extends React.Component {
       var groupName = document.getElementById('edit-group-name').value
       this.props.editGroupName({ groupId: item.groupId, groupName: groupName },
         data => {
-          // userid 后期维护删除
-          this.props.getDeviceGroup({ userId: '3' })
+          this.props.getDeviceGroup({ userId: this.userId })
         }
       )
     }
@@ -219,8 +224,7 @@ class Minitoring extends React.Component {
     if (bool) {
       this.props.deleteGroupName({ groupId: item.groupId },
         data => {
-          // userid 后期维护删除
-          this.props.getDeviceGroup({ userId: '3' })
+          this.props.getDeviceGroup({ userId: this.userId })
         }
       )
     }
@@ -247,8 +251,7 @@ class Minitoring extends React.Component {
       var deviceName = document.getElementById('edit-equipment-name').value
       this.props.editEquipmentName({ deviceId: item.deviceId, deviceName: deviceName },
         data => {
-          // userid 后期维护删除
-          this.props.getDeviceGroup({ userId: '3' })
+          this.props.getDeviceGroup({ userId: this.userId })
         }
       )
     }
@@ -275,13 +278,12 @@ class Minitoring extends React.Component {
       if (item.deviceId !== moveGroupId) {
         this.props.moveEquipmentName({ deviceId: item.deviceId, groupId: item.groupId, newGroupId: moveGroupId },
           data => {
-            // userid 后期维护删除
             moveGroupId = -1
-            this.props.getDeviceGroup({ userId: '3' })
+            this.props.getDeviceGroup({ userId: this.userId })
           }
         )
       } else {
-        Toast.fail('请选择不同分组',1)
+        Toast.fail('请选择不同分组', 1)
       }
     }
     this.setState({
@@ -305,8 +307,7 @@ class Minitoring extends React.Component {
     if (bool) {
       this.props.deleteDeviceByRelation({ deviceId: item.deviceId },
         data => {
-          // userid 后期维护删除
-          this.props.getDeviceGroup({ userId: '3' })
+          this.props.getDeviceGroup({ userId: this.userId })
         }
       )
     }
@@ -351,8 +352,7 @@ class Minitoring extends React.Component {
         deviceVerifyCode: code,
         groupId: groupId
       }, data => {
-        // userid 后期维护删除
-        this.props.getDeviceGroup({ userId: '3' })
+        this.props.getDeviceGroup({ userId: this.userId })
         addGroupId = -1
       })
     } else {
@@ -406,10 +406,9 @@ class Minitoring extends React.Component {
   // 添加分组确定按钮
   addGroupHandle = e => {
     var groupName = document.getElementById('add-group-input').value
-    // userId 后期维护删除
-    this.props.addGroup({ groupName: groupName, userId: '3' }, data => {
+    this.props.addGroup({ groupName: groupName, userId: this.userId }, data => {
       Toast.success('添加分组成功', 1)
-      this.props.getDeviceGroup({ userId: '3' })
+      this.props.getDeviceGroup({ userId: this.userId })
     })
     var temp = this.state.isShowHandle
     temp.isAdditionGroupShow = false
@@ -441,8 +440,8 @@ class Minitoring extends React.Component {
         break;
       case '告警信息':
         this.props.getWarningVideos({ serial: serial }, data => {
-          if (data.uglyData) {
-            var temp = data.uglyData
+          if (data.data.uglyData) {
+            var temp = data.data.uglyData
             var detailsTemp = []
             temp.map((item, index) => {
               detailsTemp.push(Object.assign({}, item, { 'validDate': '一个月' }))
@@ -460,8 +459,8 @@ class Minitoring extends React.Component {
       case '密度分析':
         // 请求密度分析数据
         this.props.getDensityPicture({ serial: serial }, data => {
-          if (data.uglyData) {
-            var temp = data.uglyData
+          if (data.data.uglyData) {
+            var temp = data.data.uglyData
             var densityListTemp = []
             temp.map((item, index) => {
               densityListTemp.push({ 'path': item.densityPicturePath, 'validDate': formatTime(item.createTime, 'Y-M-D h:m:s') })
@@ -503,8 +502,12 @@ class Minitoring extends React.Component {
   }
   /** 添加分组列表下拉操作end */
   UNSAFE_componentWillMount() {
-    // userid 后期维护删除
-    this.props.getDeviceGroup({ userId: '3' })
+    this.userId = localStorage.getItem('userId')
+    if (this.userId === '' || this.userId === null) {
+      Toast.success('添加分组成功', 1)
+      this.props.history.push('/root/login')
+    }
+    this.props.getDeviceGroup({ userId: this.userId })
   }
 
   UNSAFE_componentWillReceiveProps(props, state) {
@@ -529,7 +532,7 @@ class Minitoring extends React.Component {
             <div className='nav-mine-title'>
               <div className='left-icon'><img onClick={this.additionShow.bind(this, 'setting')} className='setting-icon' alt='setting-icon' src={Setting}></img></div>
               <span className='center-title'>我的设备</span>
-              <div className='right-icon'></div>
+              <div className='right-icon'><span className='log-out' onClick={this.logOut.bind(this)}>退出</span></div>
             </div>
             <div className='nav-mine-list'>
               <div className='nav-mine-item'>

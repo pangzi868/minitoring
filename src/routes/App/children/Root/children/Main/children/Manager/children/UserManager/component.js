@@ -11,10 +11,11 @@ class UserManager extends React.Component {
     this.state = {
       size: 'small',
       additionVisible: false,
+      deleteVisible: false,
       additionConfirmLoading: false,
       userList: {}
     }
-
+    this.delSerial = null
     this.params = {
       pageNo: 1,
       pageSize: 10
@@ -53,6 +54,16 @@ class UserManager extends React.Component {
     });
   };
 
+  showDeleteModal = (serial) => {
+    // var productSerialInput = document.getElementById('productSerialInput')
+    // productSerialInput.value = ''
+    // var verificationInput = document.getElementById('verificationInput')
+    // verificationInput.nodeValue = ''
+    this.delSerial = serial
+    this.setState({
+      deleteVisible: true,
+    });
+  };
 
   handleAdditionOk = e => {
     console.log(e);
@@ -94,27 +105,63 @@ class UserManager extends React.Component {
     });
   };
 
-  showDeleteConfirm(serial) {
-    // 写死的参数，该参数需修改成访问用户详情的手机号码
-    var phoneNumber = this.phoneNumber
-    confirm({
-      title: '确定删除该设备？',
-      content: '设备删除后无法从列表中获取',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        // this.props.deleteUserInfo && this.props.deleteUserInfo({
-        //   serial: serial,
-        //   phoneNumber: phoneNumber
-        // })
-        console.log(serial, phoneNumber);
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
+  handleDeleteOk = e => {
+    console.log(e);
+
+    var serial = this.delSerial ? this.delSerial : ''
+    var phoneNumber = this.state.userList.data.uglyData[this.userIndex].phoneNumber
+
+    if (serial === '') {
+      alert('选择设备出错')
+      return
+    }
+    this.props.deleteUserInfo && this.props.deleteUserInfo({
+      serial: serial,
+      phoneNumber: phoneNumber,
+      pageNo: this.params.pageNo,
+      pageSize: this.params.pageSize,
+    })
+
+    this.setState({
+      confirmLoading: true,
     });
-  }
+
+    setTimeout(() => {
+      this.setState({
+        deleteVisible: false,
+        confirmLoading: false,
+      });
+    }, 1000);
+  };
+
+  handleDeleteCancel = e => {
+    console.log(e);
+    this.setState({
+      deleteVisible: false,
+    });
+  };
+
+  // showDeleteConfirm(serial) {
+  //   var phoneNumber = this.state.userList.data.uglyData[this.userIndex].phoneNumber
+  //   confirm({
+  //     title: '确定删除该设备？',
+  //     content: '设备删除后无法从列表中获取',
+  //     okText: '确定',
+  //     okType: 'danger',
+  //     cancelText: '取消',
+  //     onOk() {
+  //       ondelete()
+  //       this.props.deleteUserInfo && this.props.deleteUserInfo({
+  //         serial: serial,
+  //         phoneNumber: phoneNumber
+  //       })
+  //       console.log(serial, phoneNumber);
+  //     },
+  //     onCancel() {
+  //       console.log('Cancel');
+  //     },
+  //   });
+  // }
 
   UNSAFE_componentWillReceiveProps(nextProps, prevState) {
     if (nextProps.userManagerList !== prevState.userList) {
@@ -155,12 +202,12 @@ class UserManager extends React.Component {
               {
                 userList && userList.total !== 0 && userList.data !== undefined ? userList.data.uglyData.map((item, index) => (
                   <div className='search-item' key={index} onClick={this.changeUserIndex.bind(this, index)}>
-                    <span className='wd-span wd15 search-item-span'>{index}</span>
+                    <span className='wd-span wd15 search-item-span'>{index + 1}</span>
                     <span className='wd-span wd25 search-item-span'>{item.phoneNumber}</span>
                     <span className='wd-span wd30 search-item-span'>{item.password}</span>
                     <span className='wd-span wd30 search-item-span'>{
-                      item.serialList.map((items, indexs) => (
-                        <span>{items}、</span>
+                      item.deviceList.map((items, indexs) => (
+                        <span>{items.deviceName}、</span>
                       ))
                     }</span>
                   </div>
@@ -174,8 +221,8 @@ class UserManager extends React.Component {
         <Pagination
           total={userList ? userList.total : 0}
           showTotal={total => `总共 ${total} 条数据`}
-          pageSize={userList ? userList.pageSize : 0}
-          defaultCurrent={userList ? userList.pageNo : 0}
+          pageSize={userList ? userList.pageSize : 10}
+          defaultCurrent={1}
           size='small'
           className='pagination-div'
           onChange={(pageNo, pageSize) => {
@@ -190,7 +237,7 @@ class UserManager extends React.Component {
             {
               userList && userList.total !== 0 && userList.data !== undefined ?
                 <div className='detail-left-message'>
-                  <span className='detail-left-message-span'><span>用户名：</span><span>{userList.data.uglyData[this.userIndex].userId}</span></span>
+                  <span className='detail-left-message-span'><span>用户名：</span><span>{userList.data.uglyData[this.userIndex].nickName}</span></span>
                   <span className='detail-left-message-span'><span>手机号：</span><span>{userList.data.uglyData[this.userIndex].phoneNumber}</span></span>
                   <span className='detail-left-message-span'><span>登录密码：</span><span>{userList.data.uglyData[this.userIndex].password}</span></span>
                 </div> :
@@ -203,7 +250,7 @@ class UserManager extends React.Component {
             <div className='detail-right-list'>
               <div className='detail-right-list-title'>
                 <span className='detail-title'>已绑定的设备</span>
-                <Button type="link" size={size} onClick={this.showAdditionModal.bind(this)} className='monitoring-edit-btn detail-monitoring-addition' ghost>添加</Button>
+                {/* <Button type="link" size={size} onClick={this.showAdditionModal.bind(this)} className='monitoring-edit-btn detail-monitoring-addition' ghost>添加</Button> */}
                 <Modal
                   title="添加设备"
                   visible={this.state.additionVisible}
@@ -222,25 +269,33 @@ class UserManager extends React.Component {
               </div>
 
               <div className='monitoring-list'>
-                <span className='detail-right-item'>
-                  <span className='monitoring-name'>q161</span>
-                  <Button type="link" size={size} onClick={this.showDeleteConfirm.bind(this, '123')} className='monitoring-edit-btn detail-monitoring-delete'>
-                    删除
-                  </Button>
-                </span>
-                <span className='detail-right-item'>
-                  <span className='monitoring-name'>q161</span>
-                  <Button type="link" size={size} onClick={this.showDeleteConfirm} className='monitoring-edit-btn detail-monitoring-delete'>
-                    删除
-                  </Button>
-                </span>
-                <span className='detail-right-item'>
-                  <span className='monitoring-name'>q161</span>
-                  <Button type="link" size={size} onClick={this.showDeleteConfirm} className='monitoring-edit-btn detail-monitoring-delete'>
-                    删除
-                  </Button>
-                </span>
 
+                {
+                  userList && userList.total !== 0 && userList.data !== undefined ? userList.data.uglyData[this.userIndex].deviceList.map((item, index) => {
+                    return (
+                      <span className='detail-right-item'>
+                        <span className='monitoring-name'>{item.deviceName}</span>
+                        <Button type="link" size={size} onClick={this.showDeleteModal.bind(this, item.serial)} className='monitoring-edit-btn detail-monitoring-delete'>
+                          删除
+                        </Button>
+                      </span>
+                    )
+                  }) : null
+                }
+                <Modal
+                  title="删除设备设备"
+                  visible={this.state.deleteVisible}
+                  footer={[
+                    <Button key="back" onClick={this.handleDeleteCancel.bind(this, this.userInfo)}>
+                      取消
+                    </Button>,
+                    <Button key="submit" type="primary" loading={confirmLoading} onClick={this.handleDeleteOk.bind(this, this.userInfo)}>
+                      确定
+                    </Button>
+                  ]}
+                >
+                  <span>确定删除该设备？</span>
+                </Modal>
               </div>
             </div>
           </div>

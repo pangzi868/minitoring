@@ -39,8 +39,8 @@ class LoginForm extends React.Component {
   // 登录页面跳转注册页面
   goToRegister = e => {
     this.setState({
-      isLoginShow: false,
       isRegisterShow: true,
+      isLoginShow: false
     })
   }
 
@@ -68,10 +68,12 @@ class LoginForm extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { isLoginShow, isRegisterShow, isModifierShow } = this.state
+    console.log(this.state.isLoginShow, 'wang1')
 
     return (
       <div className='login-component'>
-        <div className={`register-div ${this.state.isRegisterShow ? '' : 'hide'}`}>
+        <div className={`register-div ${isRegisterShow ? '' : 'hide'}`}>
           <div className='register-div-top'>注册账号</div>
           <div className='register-div-content'>
             <Register goToLogin={this.goToLogin.bind(this)} />
@@ -79,14 +81,14 @@ class LoginForm extends React.Component {
         </div>
 
         { /** 密码登录/短信登录表单 */}
-        <div className={`login-div ${this.state.isLoginShow ? '' : 'hide'}`}>
+        <div className={`login-div ${isLoginShow ? '' : 'hide'}`}>
           <Login
             goToRegister={this.goToRegister.bind(this)}
             modifierBtnHandle={this.modifierBtnHandle.bind(this)} />
         </div>
 
         { /** 密码登录/短信修改表单 */}
-        <div className={`modifier-div ${this.state.isModifierShow ? '' : 'hide'}`}>
+        <div className={`modifier-div ${isModifierShow ? '' : 'hide'}`}>
           <div className={`modifier-psw-content`}>
             <div className='modifier-div-top'>找回密码</div>
             <div className='modifier-div-content'>

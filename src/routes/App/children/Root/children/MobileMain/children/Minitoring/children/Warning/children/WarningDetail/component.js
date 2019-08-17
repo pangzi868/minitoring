@@ -4,6 +4,7 @@ import LeftIcon from './images/1.3.png'
 import MenuIcon from './images/1.1.png'
 import DownloadBtn from './images/3.4.png'
 import VideosIcon from './images/videos.png'
+import Company from './images/company.png'
 import { Popover } from 'antd-mobile';
 import {
   Player, ControlBar, ReplayControl,
@@ -105,7 +106,7 @@ class Detail extends React.Component {
             </div> :
             <div className='warning-content'>
               <div className='real-time-videos'>
-                <img className='real-time-videos-img' alt='real-time-videos-img' src={VideosIcon}></img>
+                <img className='real-time-videos-img' alt='real-time-videos-img' src={Company}></img>
               </div>
               <div className='warning-right-bottom-message'>
                 <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>

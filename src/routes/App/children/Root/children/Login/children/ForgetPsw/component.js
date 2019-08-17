@@ -83,12 +83,15 @@ class ForgetPsw extends React.Component {
           tamp: this.tamp
         }, data => {
           alert('修改密码成功')
-          setInterval(() => {
-            this.props.modifierHandleSubmit && this.props.modifierHandleSubmit()
-          }, 1000);
+          this.props.modifierHandleSubmit && this.props.modifierHandleSubmit()
         })
       }
     });
+  }
+
+  modifierGoToLoginBtnHandle = e => {
+    e.preventDefault();
+    this.props.modifierHandleSubmit && this.props.modifierHandleSubmit()
   }
 
   // 发送验证码
@@ -192,6 +195,7 @@ class ForgetPsw extends React.Component {
             <Button type="primary" htmlType="submit">
               确定
               </Button>
+            <span className='login-operation'><a className="login-form-forgot" href="#" onClick={this.modifierGoToLoginBtnHandle.bind(this)}> 返回登录 </a></span>
           </Form.Item>
         </Form>
       </div >

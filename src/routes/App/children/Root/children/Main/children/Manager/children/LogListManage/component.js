@@ -97,8 +97,8 @@ class LogListManage extends React.Component {
             <Pagination
               total={this.logManagerList ? this.logManagerList.total : 0}
               showTotal={total => `总共 ${total} 条数据`}
-              pageSize={this.logManagerList ? this.logManagerList.pageSize : 1}
-              defaultCurrent={this.logManagerList ? this.logManagerList.pageNo : 1}
+              pageSize={this.logManagerList ? this.logManagerList.pageSize : 15}
+              defaultCurrent={1}
               size='small'
               className='pagination-div'
               onChange={(pageNo, pageSize) => {

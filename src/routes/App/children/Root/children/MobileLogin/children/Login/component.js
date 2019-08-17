@@ -167,6 +167,8 @@ class Login extends React.Component {
         phoneNumber: phoneNum,
         pwd: password
       }, data => {
+        data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
+          localStorage.setItem('userId', data.userId)
         Toast.success('登录成功', 1, history.push('/root/main/minitoring'))
       })
       // if (!err) {
@@ -192,6 +194,8 @@ class Login extends React.Component {
         tamp: this.tamp,
         msgNum: captcha
       }, data => {
+        data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
+          localStorage.setItem('userId', data.userId)
         Toast.success('登录成功', 1, history.push('/root/main/minitoring'))
       })
     });

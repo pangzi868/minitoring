@@ -3,6 +3,7 @@ import './component.scss'
 
 import { Menu, Select, Dropdown, Modal, Upload, Button, message, Row, Col, Icon, Layout, Card } from 'antd';
 
+import ReactDOM from 'react-dom'
 import {
   Player, ControlBar, ReplayControl,
   ForwardControl, CurrentTimeDisplay,
@@ -25,6 +26,8 @@ import File from './images/4.1.png'
 import UploadFile from './images/4.2.png'
 import Setting from './images/setting.png'
 import WarningPicture from './images/warning.png'
+import Company from './images/company.png'
+
 
 const { SubMenu } = Menu;
 
@@ -113,6 +116,7 @@ class Minitoring extends React.Component {
 
       myMinitoringGroup: [],
     }
+    this.userId = null;
     this.tempDeviceList = null;
     this.deviceDetail = null;
     this.tempUserList = null;
@@ -121,6 +125,7 @@ class Minitoring extends React.Component {
     this.fileInput = React.createRef();
     this.myForm = React.createRef();
 
+    this.logOut = this.logOut.bind(this)
     this.secondMenuHandle = this.secondMenuHandle.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.leftBottomShowOrHideHandle = this.leftBottomShowOrHideHandle.bind(this)
@@ -138,6 +143,11 @@ class Minitoring extends React.Component {
     this.onGroupMenuClick = this.onGroupMenuClick.bind(this)
     this.changeLogList = this.changeLogList.bind(this)
     this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
+  }
+
+  logOut = e => {
+    localStorage.setItem('userId', '')
+    this.props.history.push('/root/login')
   }
 
   // 分组菜单按钮
@@ -225,8 +235,7 @@ class Minitoring extends React.Component {
       var groupName = document.getElementById('edit-group-name').value
       this.props.editGroupName({ groupId: item.groupId, groupName: groupName },
         data => {
-          // userid 后期维护删除
-          this.props.getDeviceGroup({ userId: '3' })
+          this.props.getDeviceGroup({ userId: this.userId })
           addGroupId = -1
         }
       )
@@ -252,8 +261,7 @@ class Minitoring extends React.Component {
     if (bool) {
       this.props.deleteGroupName({ groupId: item.groupId },
         data => {
-          // userid 后期维护删除
-          this.props.getDeviceGroup({ userId: '3' })
+          this.props.getDeviceGroup({ userId: this.userId })
         }
       )
     }
@@ -279,8 +287,7 @@ class Minitoring extends React.Component {
       var deviceName = document.getElementById('edit-equipment-name').value
       this.props.editEquipmentName({ deviceId: item.deviceId, deviceName: deviceName },
         data => {
-          // userid 后期维护删除
-          this.props.getDeviceGroup({ userId: '3' })
+          this.props.getDeviceGroup({ userId: this.userId })
         }
       )
     }
@@ -307,9 +314,8 @@ class Minitoring extends React.Component {
       if (item.deviceId !== moveGroupId) {
         this.props.moveEquipmentName({ deviceId: item.deviceId, groupId: item.groupId, newGroupId: moveGroupId },
           data => {
-            // userid 后期维护删除
             moveGroupId = -1
-            this.props.getDeviceGroup({ userId: '3' })
+            this.props.getDeviceGroup({ userId: this.userId })
           }
         )
       } else {
@@ -337,8 +343,7 @@ class Minitoring extends React.Component {
     if (bool) {
       this.props.deleteDeviceByRelation({ deviceId: item.deviceId },
         data => {
-          // userid 后期维护删除
-          this.props.getDeviceGroup({ userId: '3' })
+          this.props.getDeviceGroup({ userId: this.userId })
         }
       )
     }
@@ -383,7 +388,7 @@ class Minitoring extends React.Component {
   // 根据手机号码查询用户信息
   getUserListByPhoneNum = (params) => {
     this.props.getUserList({
-      phoneNumber:params.phoneNumber || '',
+      phoneNumber: params.phoneNumber || '',
       pageNo: params.pageNo,
       pageSize: params.pageSize
     }, data => {
@@ -493,10 +498,9 @@ class Minitoring extends React.Component {
   // 添加分组确定按钮
   addGroupHandle = e => {
     var groupName = document.getElementById('add-group-input').value
-    // userId 后期维护删除
-    this.props.addGroup({ groupName: groupName, userId: '3' }, data => {
+    this.props.addGroup({ groupName: groupName, userId: this.userId }, data => {
       alert('添加成功')
-      this.props.getDeviceGroup({ userId: '3' })
+      this.props.getDeviceGroup({ userId: this.userId })
     })
     var temp = this.state.isWindowShow
     temp.isAdditionGroupShow = false
@@ -516,8 +520,7 @@ class Minitoring extends React.Component {
         deviceVerifyCode: code,
         groupId: groupId
       }, data => {
-        // userid 后期维护删除
-        this.props.getDeviceGroup({ userId: '3' })
+        this.props.getDeviceGroup({ userId: this.userId })
       })
     } else {
       alert('请选择分组')
@@ -611,14 +614,20 @@ class Minitoring extends React.Component {
 
         // 请求告警信息数据
         this.props.getWarningVideos({ serial: serial }, data => {
-          if (data.uglyData) {
-            var temp = data.uglyData
+          if (data.data.uglyData) {
+            var temp = data.data.uglyData
             var detailsTemp = []
             temp.map((item, index) => {
               detailsTemp.push(Object.assign({}, item, { 'validDate': '一个月' }))
             })
             this.setState({
+              warningDetailIndex: 0,
               warningMessageDetails: detailsTemp
+            })
+          } else {
+            this.setState({
+              warningDetailIndex: 0,
+              warningMessageDetails: []
             })
           }
         })
@@ -642,14 +651,20 @@ class Minitoring extends React.Component {
       case '密度分析':
         // 请求密度分析数据
         this.props.getDensityPicture({ serial: serial }, data => {
-          if (data.uglyData) {
-            var temp = data.uglyData
+          if (data.data.uglyData) {
+            var temp = data.data.uglyData
             var densityTempList = []
             temp.map((item, index) => {
               densityTempList.push({ 'path': item.densityPicturePath, 'validDate': formatTime(item.createTime, 'Y-M-D h:m:s') })
             })
             this.setState({
+              densityDetailIndex: 0,
               densityList: densityTempList
+            })
+          } else {
+            this.setState({
+              densityDetailIndex: 0,
+              densityList: []
             })
           }
         })
@@ -843,9 +858,20 @@ class Minitoring extends React.Component {
       JSON.parse(res).message ? alert(JSON.parse(res).message) : alert('上传失败'))
   };
 
+  componentDidUpdate(_prevProps, _prevState) {
+    if (this.refs.videos) {
+      ReactDOM.findDOMNode(this.refs.videos.video).load();
+    }
+  }
+
+
   UNSAFE_componentWillMount() {
-    // userid 后期维护删除
-    this.props.getDeviceGroup({ userId: '3' })
+    this.userId = localStorage.getItem('userId')
+    if (this.userId === '' || this.userId === null) {
+      alert('请进行登录')
+      this.props.history.push('/root/login')
+    }
+    this.props.getDeviceGroup({ userId: this.userId })
   }
 
   UNSAFE_componentWillReceiveProps(props, state) {
@@ -885,6 +911,7 @@ class Minitoring extends React.Component {
     };
     return (
       <div className="manager-component">
+        <div className='log-out' onClick={this.logOut.bind(this)}>退出登录</div>
         <div className='minitoring-left-nav'>
           <div className='left-nav-mine'>
             <div className='nav-mine-title'>我的设备</div>
@@ -1166,12 +1193,12 @@ class Minitoring extends React.Component {
               <div className='emegency-left-list'>
                 <div className='emegency-left-list-box'>
                   {
-                    warningVideos.uglyData && warningVideos.uglyData.length > 0 ? warningVideos.uglyData.map((item, index) => (
+                    warningVideos.data && warningVideos.data.uglyData && warningVideos.data.uglyData.length > 0 ? warningVideos.data.uglyData.map((item, index) => (
                       <div className='emegency-left-item' key={index} onClick={this.warningDetailChangeHandle.bind(this, index)}>
                         <span className='wd-span wd33'>{item.serial}</span>
                         {/* <span className='wd-span wd44'>{formatTime(item.createTime, 'Y-M-D h:m:s')}</span> */}
                         <span className='wd-span wd44'>{item.warningTime}</span>
-                        <img src={WarningPicture} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
+                        <img src={Company} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
                       </div>
                     ))
                       : ''
@@ -1184,11 +1211,8 @@ class Minitoring extends React.Component {
                 <div>
                   <div className='emegency-right-top-videos'>
                     <div style={{ width: '100%', height: '100%' }}>
-                      <Player>
+                      <Player  ref='videos'>
                         <source src={SRC_PATH + this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']} />
-                        {/* <source src={`file:///home/ftp123${this.state.warningMessageDetails[warningDetailIndex]['warningVideoPath']}`} /> */}
-                        {/* <source src="http://peach.themazzone.com/durian/movies/sintel-1024-surround.mp4" /> */}
-                        {/* <source src="http://mirrorblender.top-ix.org/movies/sintel-1024-surround.mp4" /> */}
                         <ControlBar>
                           <ReplayControl seconds={10} order={1.1} />
                           <ForwardControl seconds={30} order={1.2} />
@@ -1211,7 +1235,7 @@ class Minitoring extends React.Component {
                 </div> :
                 <div>
                   <div className='emegency-right-top-videos'>
-                    <img src={WarningPicture} className='emegency-right-top-img' alt='emegency-right-top-img'></img>
+                    <img src={Company} className='emegency-right-top-img' alt='emegency-right-top-img'></img>
                   </div>
                   <div className='emegency-right-bottom-message'>
                     <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
@@ -1236,7 +1260,7 @@ class Minitoring extends React.Component {
               {
                 densityList.length !== 0 ?
                   <img className='density-analysis-videos-img' src={SRC_PATH + densityList[densityDetailIndex].path} alt='density-analysis-videos-img'></img>
-                  : null
+                  : ''
               }
             </div>
             <div className='minitoring-density-analysis-list'>
@@ -1247,7 +1271,10 @@ class Minitoring extends React.Component {
                       <img className='density-analysis-item-img' alt='density-analysis-item-img' src={SRC_PATH + item.path}></img>
                       <span className='density-analysis-item-date'>{item.validDate}</span>
                     </div>
-                  )) : ''
+                  )) : <div className='density-analysis-item'>
+                      ''
+                      <span className='density-analysis-item-date'></span>
+                    </div>
                 }
               </div>
             </div>

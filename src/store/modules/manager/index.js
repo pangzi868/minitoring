@@ -32,7 +32,7 @@ const isMock = mockClosure(IS_MOCK_CURRENT_MODULE)
 // 获取视频列表接口
 export function getWarningVideos(params, cb) {
   return get({
-    url: `/shungkon/video/getWarningInfoList?serial=${params.serial}`,
+    url: `/shungkon/video/getWarningInfoList?serial=${params.serial}&pageSize=999`,
     actionType: WARNING_VIDEOS,
     successConfig: {
       callback: cb
@@ -74,7 +74,7 @@ const warningVideosDetail = (previousState = {}, action) => {
 // 密度分析图片详情接口
 export function getDensityPicture(params, cb) {
   return get({
-    url: `/shungkon/picture/getDensityPicture?serial=${params.serial}`,
+    url: `/shungkon/picture/getDensityPicture?serial=${params.serial}&pageSize=999`,
     actionType: DENSITY_PICTURE,
     successConfig: {
       callback: cb
@@ -158,7 +158,7 @@ export function addDevice(params, cb) {
     },
     failConfig: {
       message: '添加分组失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -173,7 +173,7 @@ export function addGroup(params, cb) {
     },
     failConfig: {
       message: '添加分组失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -189,7 +189,7 @@ export function getDeviceGroup(params, cb) {
     },
     failConfig: {
       message: '获取分组列表失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -217,7 +217,7 @@ export function editGroupName(params, cb) {
     },
     failConfig: {
       message: '修改分组名称失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -232,7 +232,7 @@ export function deleteGroupName(params, cb) {
     },
     failConfig: {
       message: '删除分组失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -251,7 +251,7 @@ export function editEquipmentName(params, cb) {
     },
     failConfig: {
       message: '修改设备名称失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -272,7 +272,7 @@ export function moveEquipmentName(params, cb) {
     },
     failConfig: {
       message: '修改设备分组失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -288,7 +288,7 @@ export function deleteDeviceByRelation(params, cb) {
     },
     failConfig: {
       message: '删除设备失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -303,7 +303,7 @@ export function addDevGroup(params, cb) {
     },
     failConfig: {
       message: '添加设备分组失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -318,7 +318,7 @@ export function getDeviceList(params, cb) {
     },
     failConfig: {
       message: '获取分组列表失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -342,7 +342,7 @@ export function getFuzzyDeviceList(params, cb) {
     },
     failConfig: {
       message: '获取模糊分组列表失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -366,7 +366,7 @@ export function getDeviceDetails(params, cb) {
     },
     failConfig: {
       message: '获取设备详情失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -385,9 +385,7 @@ export function getUserList(params, cb) {
   return post({
     url: `${isMock()}/shungkon/getUserInfo?pageNo=${params.pageNo}&pageSize=${params.pageSize}`,
     bodyData: {
-      vuser: {
-        "phoneNumber": params.phoneNumber
-      }
+      phoneNumber: params.phoneNumber
     },
     actionType: GET_USER_LIST,
     successConfig: {
@@ -395,7 +393,7 @@ export function getUserList(params, cb) {
     },
     failConfig: {
       message: '获取用户列表失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -424,7 +422,7 @@ export function addUserDevice(params, cb) {
     },
     failConfig: {
       message: '添加用户设备失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -443,7 +441,7 @@ export function deleteUserDevice(params, cb) {
     },
     failConfig: {
       message: '删除用户设备失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -458,7 +456,7 @@ export function deleteUserDevice(params, cb) {
 //     },
 //     failConfig: {
 //       message: '获取设备详情失败',
-//       isForceShow: false
+//       isForceShow: true
 //     }
 //   })
 // }
@@ -485,7 +483,7 @@ export function deleteUserDevice(params, cb) {
 //     },
 //     failConfig: {
 //       message: '获取验证码失败',
-//       isForceShow: false
+//       isForceShow: true
 //     }
 //   })
 // }

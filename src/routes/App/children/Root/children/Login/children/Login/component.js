@@ -151,9 +151,11 @@ class Login extends React.Component {
       pwd: password
     }, data => {
       // 根据后端返回判断管理员还是非管理员页面
-      console.log(history,'wangyinbin')
+      console.log(history, 'wangyinbin')
       data.isRoot === '0000' ? history.push('/root/main/manager') :
         history.push('/root/main/minitoring')
+      data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
+        localStorage.setItem('userId', data.userId)
     })
     this.props.form.validateFieldsAndScroll((err, values) => {
 
@@ -185,6 +187,8 @@ class Login extends React.Component {
         // 根据后端返回判断管理员还是非管理员页面
         data.isRoot === '0000' ? history.push('/root/main/manager') :
           history.push('/root/main/minitoring')
+        data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
+          localStorage.setItem('userId', data.userId)
       })
       if (!err) {
         console.log('Received values of form: ', values);

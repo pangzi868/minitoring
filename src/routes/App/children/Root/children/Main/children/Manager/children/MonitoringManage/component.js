@@ -39,7 +39,7 @@ class MonitoringManage extends React.Component {
 
   /** 根据条件查询查询按钮 */
   getListByCondition = e => {
-    debugger
+    // debugger
     this.params.serial = document.getElementById('search-input-serial').value
     this.params.produceDate = document.getElementById('search-input-produceDate').value
     this.params.deviceType = document.getElementById('search-input-deviceType').value
@@ -124,8 +124,8 @@ class MonitoringManage extends React.Component {
         <Pagination
           total={deviceList ? deviceList.total : 0}
           showTotal={total => `总共 ${total} 条数据`}
-          pageSize={deviceList ? deviceList.pageSize : 0}
-          defaultCurrent={deviceList ? deviceList.pageNo : 1}
+          pageSize={deviceList ? deviceList.pageSize : 10}
+          defaultCurrent={1}
           size='small'
           className='pagination-div'
           onChange={(pageNo, pageSize) => {

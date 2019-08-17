@@ -30,7 +30,7 @@ export function getSMSMessage(params, cb) {
     },
     failConfig: {
       message: '获取验证码失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -47,7 +47,7 @@ export function ValidateCode(params) {
     actionType: VALIDATE_SMS,
     failConfig: {
       message: '校验验证码失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -69,7 +69,7 @@ export function phoneNumRegister(params, cb) {
     },
     failConfig: {
       message: '注册账号密码失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -88,7 +88,7 @@ export function passWordLogin(params,cb) {
     },
     failConfig: {
       message: '账号/密码错误，登录失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -110,7 +110,7 @@ export function retrievePassword(params,cb) {
     },
     failConfig: {
       message: '修改密码失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -118,7 +118,7 @@ export function retrievePassword(params,cb) {
 // 账号密码登录
 export function modifyPassword(params,cb) {
   return post({
-    url: `${isMock()}/shungkon/forgetPwd`,
+    url: `${isMock()}/shungkon/modifyPwd`,
     bodyData: {
       phoneNumber: params.phoneNumber,
       newPassword: params.newPassword,
@@ -130,7 +130,7 @@ export function modifyPassword(params,cb) {
     },
     failConfig: {
       message: '修改密码失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }
@@ -149,7 +149,7 @@ export function SMSLogin(params) {
     actionType: SMS_LOGIN,
     failConfig: {
       message: '短信登录失败',
-      isForceShow: false
+      isForceShow: true
     }
   })
 }

@@ -40,7 +40,7 @@ class Auth extends React.Component {
     // this.accountPermission = false
 
     // 调试字段，为true时表示取消权限控制
-    this.cancelPermission = true
+    this.cancelPermission = false
 
     this.judgeInterface = this.judgeInterface.bind(this)
     // this.judge1 = this.judge1.bind(this)
