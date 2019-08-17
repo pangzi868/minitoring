@@ -110,11 +110,13 @@ class Minitoring extends React.Component {
       densityList: [],
       densityDetailIndex: 0,
 
+
       myMinitoringGroup: [],
     }
     this.tempDeviceList = null;
     this.deviceDetail = null;
     this.tempUserList = null;
+    this.tempLogList = null;
 
     this.fileInput = React.createRef();
     this.myForm = React.createRef();
@@ -134,6 +136,7 @@ class Minitoring extends React.Component {
     this.addUserInfo = this.addUserInfo.bind(this)
     this.deleteUserInfo = this.deleteUserInfo.bind(this)
     this.onGroupMenuClick = this.onGroupMenuClick.bind(this)
+    this.changeLogList = this.changeLogList.bind(this)
     this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
   }
 
@@ -369,8 +372,8 @@ class Minitoring extends React.Component {
       serial: params.serial,
       deviceType: params.deviceType,
       produceDate: params.produceDate,
-      pageNo: 1,
-      pageSize: 10
+      pageNo: params.pageNo,
+      pageSize: params.pageSize
     }, data => {
       this.tempDeviceList = JSON.parse(JSON.stringify(data))
       this.setState({})
@@ -380,9 +383,7 @@ class Minitoring extends React.Component {
   // 根据手机号码查询用户信息
   getUserListByPhoneNum = (params) => {
     this.props.getUserList({
-      phoneNumber: {
-        phoneNumber: params.phoneNumber || '',
-      },
+      phoneNumber:params.phoneNumber || '',
       pageNo: params.pageNo,
       pageSize: params.pageSize
     }, data => {
@@ -397,13 +398,11 @@ class Minitoring extends React.Component {
     this.props.addUserDevice({
       phoneNumber: params.phoneNumber,
       serial: params.serial,
-      deviceVerifyCode: params.deviceVerifyCode
+      deviceVertifyCode: params.deviceVertifyCode
     }, data => {
       console.log(data, 'wangyinbin')
       this.props.getUserList({
-        phoneNumber: {
-          phoneNumber: params.phoneNumber || '',
-        },
+        phoneNumber: params.phoneNumber || '',
         pageNo: params.pageNo,
         pageSize: params.pageSize
       }, data => {
@@ -422,9 +421,7 @@ class Minitoring extends React.Component {
     }, data => {
       console.log(data, 'wangyinbin')
       this.props.getUserList({
-        phoneNumber: {
-          phoneNumber: params.phoneNumber || '',
-        },
+        phoneNumber: params.phoneNumber || '',
         pageNo: params.pageNo,
         pageSize: params.pageSize
       }, data => {
@@ -647,12 +644,12 @@ class Minitoring extends React.Component {
         this.props.getDensityPicture({ serial: serial }, data => {
           if (data.uglyData) {
             var temp = data.uglyData
-            var densityListTemp = []
+            var densityTempList = []
             temp.map((item, index) => {
-              densityListTemp.push({ 'path': item.densityPicturePath, 'validDate': formatTime(item.createTime, 'Y-M-D h:m:s') })
+              densityTempList.push({ 'path': item.densityPicturePath, 'validDate': formatTime(item.createTime, 'Y-M-D h:m:s') })
             })
             this.setState({
-              densityList: densityListTemp
+              densityList: densityTempList
             })
           }
         })
@@ -675,24 +672,32 @@ class Minitoring extends React.Component {
         break;
       case '日志列表':
         // 请求密度分析数据
-        // this.props.getLogList({
-        //   deviceId: 123,
-        //   startTime: "",
-        //   endTime: "",
-        //   pageNo: 1,
-        //   pageSize: 15
-        // }, data => {
-        //   if (data.uglyData) {
-        //     var temp = data.uglyData
-        //     var densityListTemp = []
-        //     temp.map((item, index) => {
-        //       densityListTemp.push({ 'path': item, 'validDate': '2019-0807-15:00:00' })
-        //     })
-        //     this.setState({
-        //       densityList: densityListTemp
-        //     })
-        //   }
-        // })
+        this.props.getLogList({
+          serial: 'QSZ001',
+          startTime: "",
+          endTime: "",
+          pageNo: 1,
+          pageSize: 15
+        }, data => {
+          try {
+            this.tempLogList = JSON.parse(JSON.stringify(data))
+            this.setState({})
+            // Do something that could throw
+          } catch (error) {
+            console.log(error)
+          }
+
+          // if (data.uglyData) {
+          //   var temp = data.uglyData
+          //   var LogListTemp = []
+          //   temp.map((item, index) => {
+          //     LogListTemp.push({ 'item': item })
+          //   })
+          //   this.setState({
+          //     logList: LogListTemp
+          //   })
+          // }
+        })
         Object.keys(isWindowShowCopy).map((items, index) => {
           switch (items) {
             case 'isLogListShow':
@@ -710,6 +715,24 @@ class Minitoring extends React.Component {
       default:
         break;
     }
+  }
+
+  changeLogList = (params) => {
+    this.props.getLogList({
+      serial: 'QSZ001',
+      startTime: params.startTime,
+      endTime: params.endTime,
+      pageNo: params.pageNo,
+      pageSize: params.pageSize
+    }, data => {
+      try {
+        this.tempLogList = JSON.parse(JSON.stringify(data))
+        this.setState({})
+        // Do something that could throw
+      } catch (error) {
+        console.log(error)
+      }
+    })
   }
 
   // 导航栏下栏按钮操作
@@ -1234,7 +1257,9 @@ class Minitoring extends React.Component {
             *  isLogListShow控制
            */}
           <div className={`monitoring-detail-content log-list-content ${this.state.isWindowShow.isLogListShow ? '' : 'hide'}`}>
-            <LogListManage />
+            <LogListManage
+              logManageList={this.tempLogList}
+              changeLogList={this.changeLogList.bind(this)} />
           </div>
 
           {/** 更新固件

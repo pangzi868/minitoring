@@ -11,6 +11,13 @@ class MonitoringManage extends React.Component {
       deviceList: {},
       deviceDetail: null
     }
+    this.params = {
+      pageNo: 1,
+      pageSize: 10,
+      serial: "",
+      produceDate: "",
+      deviceType: "",
+    }
 
     this.enterDeviceComfirm = this.enterDeviceComfirm.bind(this)
     this.getListByCondition = this.getListByCondition.bind(this)
@@ -32,11 +39,16 @@ class MonitoringManage extends React.Component {
 
   /** 根据条件查询查询按钮 */
   getListByCondition = e => {
-    e.preventDefault();
+    debugger
+    this.params.serial = document.getElementById('search-input-serial').value
+    this.params.produceDate = document.getElementById('search-input-produceDate').value
+    this.params.deviceType = document.getElementById('search-input-deviceType').value
     var params = {
-      serial: document.getElementById('search-input-serial').value,
-      deviceType: document.getElementById('search-input-deviceType').value,
-      produceDate: document.getElementById('search-input-produceDate').value,
+      serial: this.params.serial,
+      deviceType: this.params.deviceType,
+      produceDate: this.params.produceDate,
+      pageNo: this.params.pageNo,
+      pageSize: this.params.pageSize,
     }
     this.props.getDeviceListByCondition && this.props.getDeviceListByCondition(params)
   }
@@ -116,6 +128,10 @@ class MonitoringManage extends React.Component {
           defaultCurrent={deviceList ? deviceList.pageNo : 1}
           size='small'
           className='pagination-div'
+          onChange={(pageNo, pageSize) => {
+            this.params.pageNo = pageNo
+            this.getListByCondition()
+          }}
         />
         <div className='monitoring-manager-bottom'>
           <div className='manager-detail'>

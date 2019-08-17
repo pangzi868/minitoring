@@ -98,7 +98,7 @@ export function getLogList(params, cb) {
   return post({
     url: `/shungkon/logList`,
     bodyData: {
-      deviceId: params.deviceId,
+      serial: params.serial,
       startTime: params.startTime,
       endTime: params.endTime,
       pageNo: params.pageNo,
@@ -383,13 +383,11 @@ const deviceDetails = (previousState = {}, action) => {
 // 获取用户列表
 export function getUserList(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/getUserInfo`,
+    url: `${isMock()}/shungkon/getUserInfo?pageNo=${params.pageNo}&pageSize=${params.pageSize}`,
     bodyData: {
       vuser: {
         "phoneNumber": params.phoneNumber
-      },
-      pageNo: params.pageNo,
-      pageSize: params.pageSize
+      }
     },
     actionType: GET_USER_LIST,
     successConfig: {
@@ -418,7 +416,7 @@ export function addUserDevice(params, cb) {
     bodyData: {
       phoneNumber: params.phoneNumber,
       serial: params.serial,
-      deviceVerifyCode: params.deviceVerifyCode
+      deviceVerifyCode: params.deviceVertifyCode
     },
     actionType: ADD_USER_DEVICE,
     successConfig: {

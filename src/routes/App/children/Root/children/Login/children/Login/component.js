@@ -151,6 +151,7 @@ class Login extends React.Component {
       pwd: password
     }, data => {
       // 根据后端返回判断管理员还是非管理员页面
+      console.log(history,'wangyinbin')
       data.isRoot === '0000' ? history.push('/root/main/manager') :
         history.push('/root/main/minitoring')
     })

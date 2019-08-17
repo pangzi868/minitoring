@@ -5,9 +5,6 @@ import { Button, Radio, Icon, Modal, Input, Pagination } from 'antd';
 
 
 const { confirm } = Modal;
-
-const searchListIndex = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
 class UserManager extends React.Component {
   constructor(props) {
     super(props)
@@ -17,8 +14,15 @@ class UserManager extends React.Component {
       additionConfirmLoading: false,
       userList: {}
     }
+
+    this.params = {
+      pageNo: 1,
+      pageSize: 10
+    }
+    this.userIndex = 0
     this.userInfo = null
     this.getPhoneNumberSearch = this.getPhoneNumberSearch.bind(this)
+    this.changeUserIndex = this.changeUserIndex.bind(this)
   }
 
   // 通过手机号模糊搜索
@@ -26,9 +30,16 @@ class UserManager extends React.Component {
     var phoneNumber = document.getElementById('user-manager-phone-number').value
     this.props.getUserListByPhoneNum && this.props.getUserListByPhoneNum({
       phoneNumber: phoneNumber,
-      pageSize: 10,
-      pageNo: 1
+      pageSize: this.params.pageSize,
+      pageNo: this.params.pageNo
     })
+  }
+
+  changeUserIndex = (index) => {
+    if (this.userIndex !== index) {
+      this.userIndex = index
+      this.setState({})
+    }
   }
 
 
@@ -45,15 +56,20 @@ class UserManager extends React.Component {
 
   handleAdditionOk = e => {
     console.log(e);
-    var serial = this.refs.productSerialInput.value
-    var vertifyCode = this.refs.verificationInput.value
+
+    var serial = document.getElementById('productSerialInput').value
+    var vertifyCode = document.getElementById('verificationInput').value
+    // var serial = this.refs.productSerialInput.value
+    // var vertifyCode = this.refs.verificationInput.value
     // 写死的参数，该参数需修改成访问用户详情的手机好吗
-    var phoneNumber = this.phoneNumber
+    var phoneNumber = this.state.userList.data.uglyData[this.userIndex].phoneNumber
 
     this.props.addUserInfo && this.props.addUserInfo({
       serial: serial,
       deviceVertifyCode: vertifyCode,
-      phoneNumber: phoneNumber
+      phoneNumber: phoneNumber,
+      pageNo: this.params.pageNo,
+      pageSize: this.params.pageSize,
     })
 
     this.setState({
@@ -117,6 +133,7 @@ class UserManager extends React.Component {
   render() {
     const { match } = this.props
     const { size, confirmLoading, userList } = this.state;
+    console.log(userList, 'wangyin')
     return (
       <div className="user-manager-component">
         <div className='user-manager-title'>用户管理</div>
@@ -136,13 +153,16 @@ class UserManager extends React.Component {
             </div>
             <div className='manager-search-list-item'>
               {
-                // userList
-                searchListIndex ? searchListIndex.map((item, index) => (
-                  <div className='search-item'>
-                    <span className='wd-span wd15 search-item-span'>{item}</span>
-                    <span className='wd-span wd25 search-item-span'>188288388488{item}</span>
-                    <span className='wd-span wd30 search-item-span'>sd8849878{item}</span>
-                    <span className='wd-span wd30 search-item-span'>{item}qw988、qw6898、qwe56849、qwe55787</span>
+                userList && userList.total !== 0 && userList.data !== undefined ? userList.data.uglyData.map((item, index) => (
+                  <div className='search-item' key={index} onClick={this.changeUserIndex.bind(this, index)}>
+                    <span className='wd-span wd15 search-item-span'>{index}</span>
+                    <span className='wd-span wd25 search-item-span'>{item.phoneNumber}</span>
+                    <span className='wd-span wd30 search-item-span'>{item.password}</span>
+                    <span className='wd-span wd30 search-item-span'>{
+                      item.serialList.map((items, indexs) => (
+                        <span>{items}、</span>
+                      ))
+                    }</span>
                   </div>
                 )) : ''
               }
@@ -152,22 +172,34 @@ class UserManager extends React.Component {
         </div>
 
         <Pagination
-          total={85}
+          total={userList ? userList.total : 0}
           showTotal={total => `总共 ${total} 条数据`}
-          pageSize={15}
-          defaultCurrent={1}
+          pageSize={userList ? userList.pageSize : 0}
+          defaultCurrent={userList ? userList.pageNo : 0}
           size='small'
           className='pagination-div'
+          onChange={(pageNo, pageSize) => {
+            this.params.pageNo = pageNo
+            this.getPhoneNumberSearch()
+          }}
         />
 
         <div className='user-manager-bottom'>
           <div className='user-manager-bottom-title'>当前用户信息</div>
           <div className='manager-detail'>
-            <div className='detail-left-message'>
-              <span className='detail-left-message-span'><span>用户名：</span><span>xicha</span></span>
-              <span className='detail-left-message-span'><span>手机号：</span><span>1888888888</span></span>
-              <span className='detail-left-message-span'><span>登录密码：</span><span>xicha20190808</span></span>
-            </div>
+            {
+              userList && userList.total !== 0 && userList.data !== undefined ?
+                <div className='detail-left-message'>
+                  <span className='detail-left-message-span'><span>用户名：</span><span>{userList.data.uglyData[this.userIndex].userId}</span></span>
+                  <span className='detail-left-message-span'><span>手机号：</span><span>{userList.data.uglyData[this.userIndex].phoneNumber}</span></span>
+                  <span className='detail-left-message-span'><span>登录密码：</span><span>{userList.data.uglyData[this.userIndex].password}</span></span>
+                </div> :
+                <div className='detail-left-message'>
+                  <span className='detail-left-message-span'><span>用户名：</span><span>--</span></span>
+                  <span className='detail-left-message-span'><span>手机号：</span><span>--</span></span>
+                  <span className='detail-left-message-span'><span>登录密码：</span><span>--</span></span>
+                </div>
+            }
             <div className='detail-right-list'>
               <div className='detail-right-list-title'>
                 <span className='detail-title'>已绑定的设备</span>
@@ -184,8 +216,8 @@ class UserManager extends React.Component {
                     </Button>,
                   ]}
                 >
-                  <Input className='addition-input' ref='productSerialInput' placeholder="请输入产品序列号" />
-                  <Input className='addition-input' ref='verificationInput' placeholder="请输入验证码" />
+                  <Input className='addition-input' id='productSerialInput' ref='productSerialInput' placeholder="请输入产品序列号" />
+                  <Input className='addition-input' id='verificationInput' ref='verificationInput' placeholder="请输入验证码" />
                 </Modal>
               </div>
 
