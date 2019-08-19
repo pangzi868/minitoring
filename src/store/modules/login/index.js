@@ -55,7 +55,7 @@ export function ValidateCode(params) {
 // 注册手机账号
 export function phoneNumRegister(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/shungkon/toRegister`,
+    url: `${isMock()}/shungkon/toRegister`,
     bodyData: {
       tamp: params.tamp,
       hash: params.hash,
@@ -75,7 +75,7 @@ export function phoneNumRegister(params, cb) {
 }
 
 // 账号密码登录
-export function passWordLogin(params,cb) {
+export function passWordLogin(params, cb) {
   return post({
     url: `${isMock()}/shungkon/login/logOnByPwd`,
     bodyData: {
@@ -94,7 +94,7 @@ export function passWordLogin(params,cb) {
 }
 
 // 账号密码登录
-export function retrievePassword(params,cb) {
+export function retrievePassword(params, cb) {
   return post({
     url: `${isMock()}/shungkon/forgetPwd`,
     bodyData: {
@@ -105,7 +105,7 @@ export function retrievePassword(params,cb) {
       tamp: params.tamp
     },
     actionType: PASSWORD_LOGIN,
-    successConfig : {
+    successConfig: {
       callback: cb
     },
     failConfig: {
@@ -116,7 +116,7 @@ export function retrievePassword(params,cb) {
 }
 
 // 账号密码登录
-export function modifyPassword(params,cb) {
+export function modifyPassword(params, cb) {
   return post({
     url: `${isMock()}/shungkon/modifyPwd`,
     bodyData: {
@@ -125,7 +125,7 @@ export function modifyPassword(params,cb) {
       oldPassword: params.oldPassword,
     },
     actionType: MODIFY_PASSWORD,
-    successConfig : {
+    successConfig: {
       callback: cb
     },
     failConfig: {

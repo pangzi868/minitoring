@@ -21,7 +21,6 @@ class RealtimeVideos extends React.Component {
   }
 
   onSelect = (opt) => {
-    // console.log(opt.props.value);
     this.setState({
       visible: false,
       selected: opt.props.value,

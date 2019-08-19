@@ -138,7 +138,6 @@ class Login extends React.Component {
 
   // 导航栏的点击切换
   tabsCallback = key => {
-    console.log(key)
   }
 
   // 找回密码下一步按钮点击
@@ -146,7 +145,6 @@ class Login extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
       }
     });
   }
@@ -172,8 +170,6 @@ class Login extends React.Component {
         Toast.success('登录成功', 1, history.push('/root/main/minitoring'))
       })
       // if (!err) {
-
-      //   console.log('Received values of form: ', values);
       // }
     });
   };

@@ -30,7 +30,7 @@ class MonitoringManage extends React.Component {
 
 
   handleAdditionOk = e => {
-    console.log(e);
+
     this.setState({
       confirmLoading: true,
     });
@@ -47,7 +47,7 @@ class MonitoringManage extends React.Component {
   };
 
   handleAdditionCancel = e => {
-    console.log(e);
+
     this.setState({
       additionVisible: false,
     });
@@ -61,10 +61,8 @@ class MonitoringManage extends React.Component {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        console.log('OK');
       },
       onCancel() {
-        console.log('Cancel');
       },
     });
   }

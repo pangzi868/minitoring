@@ -55,7 +55,6 @@ class LoginForm extends React.Component {
 
   // 导航栏的点击切换
   tabsCallback = key => {
-    console.log(key)
   }
 
   // 找回密码页面点击确定后跳转登录页面
@@ -69,7 +68,6 @@ class LoginForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { isLoginShow, isRegisterShow, isModifierShow } = this.state
-    console.log(this.state.isLoginShow, 'wang1')
 
     return (
       <div className='login-component'>

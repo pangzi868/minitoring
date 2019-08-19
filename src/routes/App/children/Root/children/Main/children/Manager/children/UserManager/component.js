@@ -66,8 +66,6 @@ class UserManager extends React.Component {
   };
 
   handleAdditionOk = e => {
-    console.log(e);
-
     var serial = document.getElementById('productSerialInput').value
     var vertifyCode = document.getElementById('verificationInput').value
     // var serial = this.refs.productSerialInput.value
@@ -99,15 +97,12 @@ class UserManager extends React.Component {
   };
 
   handleAdditionCancel = e => {
-    console.log(e);
     this.setState({
       additionVisible: false,
     });
   };
 
   handleDeleteOk = e => {
-    console.log(e);
-
     var serial = this.delSerial ? this.delSerial : ''
     var phoneNumber = this.state.userList.data.uglyData[this.userIndex].phoneNumber
 
@@ -135,33 +130,10 @@ class UserManager extends React.Component {
   };
 
   handleDeleteCancel = e => {
-    console.log(e);
     this.setState({
       deleteVisible: false,
     });
   };
-
-  // showDeleteConfirm(serial) {
-  //   var phoneNumber = this.state.userList.data.uglyData[this.userIndex].phoneNumber
-  //   confirm({
-  //     title: '确定删除该设备？',
-  //     content: '设备删除后无法从列表中获取',
-  //     okText: '确定',
-  //     okType: 'danger',
-  //     cancelText: '取消',
-  //     onOk() {
-  //       ondelete()
-  //       this.props.deleteUserInfo && this.props.deleteUserInfo({
-  //         serial: serial,
-  //         phoneNumber: phoneNumber
-  //       })
-  //       console.log(serial, phoneNumber);
-  //     },
-  //     onCancel() {
-  //       console.log('Cancel');
-  //     },
-  //   });
-  // }
 
   UNSAFE_componentWillReceiveProps(nextProps, prevState) {
     if (nextProps.userManagerList !== prevState.userList) {
@@ -169,18 +141,12 @@ class UserManager extends React.Component {
         userList: nextProps.userManagerList
       })
     }
-    // if (nextProps.deviceDetail !== prevState.deviceDetail) {
-    //   this.setState({
-    //     deviceDetail: nextProps.deviceDetail
-    //   })
-    // }
   }
 
 
   render() {
     const { match } = this.props
     const { size, confirmLoading, userList } = this.state;
-    console.log(userList, 'wangyin')
     return (
       <div className="user-manager-component">
         <div className='user-manager-title'>用户管理</div>

@@ -14,7 +14,6 @@ import GroupAddition from './images/blue_add.png'
 import EquipmentAddition from './images/yellow_add.png'
 import DownloadBtn from './images/3.4.png'
 import ViewMore from './images/sidebar-viewmore.svg'
-import WarningPicture from './images/warning.png'
 import Setting from './images/setting.png'
 import Company from './images/company.png'
 
@@ -122,7 +121,6 @@ class Minitoring extends React.Component {
   // 分组菜单按钮
   onGroupMenuClick = (item, e) => {
     e.domEvent.stopPropagation();
-    console.log(item, 'wangyinbin')
     switch (e.key) {
       case '0':
         this.showEditGroupModal(item);
@@ -286,11 +284,9 @@ class Minitoring extends React.Component {
   };
 
   secondMenuHandle(item, e) {
-    console.log(e, item)
   }
 
   editMinitoring(item, e) {
-    console.log(item)
   }
 
 
@@ -299,19 +295,15 @@ class Minitoring extends React.Component {
     if (value) {
       addGroupId = JSON.parse(JSON.stringify(value))
     }
-    console.log(`selected ${value}`);
   }
 
   onBlur() {
-    console.log('blur');
   }
 
   onFocus() {
-    console.log('focus');
   }
 
   onSearch(val) {
-    console.log('search:', val);
   }
   /** 添加分组列表下拉操作end */
 
@@ -320,19 +312,15 @@ class Minitoring extends React.Component {
     if (value) {
       moveGroupId = JSON.parse(JSON.stringify(value))
     }
-    console.log(`selected ${value}`);
   }
 
   onMoveDeviceBlur() {
-    console.log('blur');
   }
 
   onMoveDeviceFocus() {
-    console.log('focus');
   }
 
   onMoveDeviceSearch(val) {
-    console.log('search:', val);
   }
   /** 移动设备分组列表下拉操作end */
 
@@ -468,7 +456,6 @@ class Minitoring extends React.Component {
     var contentType = e.item.props.children
     var monitoringName = e.key
     var serial = monitoringName.split('-')[1]
-    console.log(e, 'wangyinbinb');
     var isWindowShowCopy = this.state.isWindowShow
     switch (contentType) {
       case '实时视频':
@@ -499,7 +486,6 @@ class Minitoring extends React.Component {
             temp.map((item, index) => {
               detailsTemp.push(Object.assign({}, item, { 'validDate': '一个月' }))
             })
-            var container = document.getElementById('videos-dom')
             this.setState({
               warningDetailIndex: 0,
               warningMessageDetails: detailsTemp
@@ -596,15 +582,11 @@ class Minitoring extends React.Component {
   }
 
   render() {
-    const { match, warningVideos } = this.props
+    const {  warningVideos } = this.props
     const { myMinitoringGroup,
       warningDetailIndex,
-      warningMessageDetails,
       densityList,
       densityDetailIndex } = this.state
-    console.log(densityList, '1234')
-    console.log(warningMessageDetails, 'wangdensity')
-    console.log(warningDetailIndex, 'wandensityDetailIndexgdensity')
     return (
       <div className="minitoring-component">
         <div className='log-out' onClick={this.logOut.bind(this)}>退出登录</div>

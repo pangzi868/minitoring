@@ -153,7 +153,6 @@ class Minitoring extends React.Component {
   // 分组菜单按钮
   onGroupMenuClick = (item, e) => {
     e.domEvent.stopPropagation();
-    console.log(item, 'wangyinbin')
     switch (e.key) {
       case '0':
         this.showEditGroupModal(item);
@@ -392,7 +391,6 @@ class Minitoring extends React.Component {
       pageNo: params.pageNo,
       pageSize: params.pageSize
     }, data => {
-      console.log(data, 'wangyinbin')
       this.tempUserList = JSON.parse(JSON.stringify(data))
       this.setState({})
     })
@@ -405,13 +403,13 @@ class Minitoring extends React.Component {
       serial: params.serial,
       deviceVertifyCode: params.deviceVertifyCode
     }, data => {
-      console.log(data, 'wangyinbin')
+
       this.props.getUserList({
         phoneNumber: params.phoneNumber || '',
         pageNo: params.pageNo,
         pageSize: params.pageSize
       }, data => {
-        console.log(data, 'wangyinbin')
+
         this.tempUserList = JSON.parse(JSON.stringify(data))
         this.setState({})
       })
@@ -424,13 +422,13 @@ class Minitoring extends React.Component {
       phoneNumber: params.phoneNumber,
       serial: params.serial,
     }, data => {
-      console.log(data, 'wangyinbin')
+
       this.props.getUserList({
         phoneNumber: params.phoneNumber || '',
         pageNo: params.pageNo,
         pageSize: params.pageSize
       }, data => {
-        console.log(data, 'wangyinbin')
+
         this.tempUserList = JSON.parse(JSON.stringify(data))
         this.setState({})
       })
@@ -445,11 +443,9 @@ class Minitoring extends React.Component {
   }
 
   secondMenuHandle(item, e) {
-    console.log(e, item)
   }
 
   editMinitoring(item, e) {
-    console.log(item)
   }
 
 
@@ -458,19 +454,15 @@ class Minitoring extends React.Component {
     if (value) {
       addGroupId = JSON.parse(JSON.stringify(value))
     }
-    console.log(`selected ${value}`);
   }
 
   onBlur() {
-    console.log('blur');
   }
 
   onFocus() {
-    console.log('focus');
   }
 
   onSearch(val) {
-    console.log('search:', val);
   }
   /** 添加分组列表下拉操作end */
 
@@ -479,19 +471,15 @@ class Minitoring extends React.Component {
     if (value) {
       moveGroupId = JSON.parse(JSON.stringify(value))
     }
-    console.log(`selected ${value}`);
   }
 
   onMoveDeviceBlur() {
-    console.log('blur');
   }
 
   onMoveDeviceFocus() {
-    console.log('focus');
   }
 
   onMoveDeviceSearch(val) {
-    console.log('search:', val);
   }
   /** 移动设备分组列表下拉操作end */
 
@@ -589,7 +577,6 @@ class Minitoring extends React.Component {
     var contentType = e.item.props.children
     var monitoringName = e.key
     var serial = monitoringName.split('-')[1]
-    console.log(e, 'wangyinbinb');
     var isWindowShowCopy = this.state.isWindowShow
     switch (contentType) {
       case '实时视频':

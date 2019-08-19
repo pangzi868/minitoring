@@ -76,9 +76,7 @@ class Register extends React.Component {
   registerHandleSubmit = e => {
     e.preventDefault();
     // this.props.ValidateCode({ msgNum: 'msgNum', hash: this.hash, tamp: this.tamp })
-    // console.log(this.props.form)
     this.props.form.validateFieldsAndScroll((err, values) => {
-      console.log('Received values of form: ', values);
       if (!err) {
         var msgNum = document.getElementById('register_captcha').value
         var phoneNumber = document.getElementById('register_phone').value
@@ -112,7 +110,6 @@ class Register extends React.Component {
 
   // 滑块向右滑动事件
   resultCallback = e => {
-    console.log(e, 'wangyinbin')
   }
 
   // 登录跳转链接

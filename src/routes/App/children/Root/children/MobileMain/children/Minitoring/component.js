@@ -1,18 +1,14 @@
 import React from 'react'
 import './component.scss'
 
-import { Menu, Icon, Select, Dropdown, Modal } from 'antd';
+import { Menu, Select, Dropdown, Modal } from 'antd';
 
-import AddEquipment from './images/upper-bg.png'
-import EgVideos from './images/videos.png'
 import ViewMore from './images/sidebar-viewmore.svg'
 import GroupAddition from './images/blue_add.png'
 import EquipmentAddition from './images/yellow_add.png'
 import Setting from './images/1.9.png'
-import RightBtn from './images/4.3.png'
-import DownloadBtn from './images/3.4.png'
 import InnerPage from 'components/hz/InnerPage'
-import { PullToRefresh, ListView, Toast } from 'antd-mobile';
+import { Toast } from 'antd-mobile';
 import WarningList from './children/Warning/children/WarningList/component'
 import DensityList from './children/Density/component'
 
@@ -152,7 +148,6 @@ class Minitoring extends React.Component {
   // 分组菜单按钮
   onGroupMenuClick = (item, e) => {
     e.domEvent.stopPropagation();
-    console.log(item, 'wangyinbin')
     switch (e.key) {
       case '0':
         this.showEditGroupModal(item);
@@ -323,19 +318,15 @@ class Minitoring extends React.Component {
     if (value) {
       moveGroupId = JSON.parse(JSON.stringify(value))
     }
-    console.log(`selected ${value}`);
   }
 
   onMoveDeviceBlur() {
-    console.log('blur');
   }
 
   onMoveDeviceFocus() {
-    console.log('focus');
   }
 
   onMoveDeviceSearch(val) {
-    console.log('search:', val);
   }
   /** 移动设备分组列表下拉操作end */
 
@@ -419,15 +410,12 @@ class Minitoring extends React.Component {
 
 
   secondMenuHandle(item, e) {
-    console.log(e, item)
   }
 
   editMinitoring(item, e) {
-    console.log(item)
   }
 
   handleClick(e) {
-    console.log('click', e);
     // this.setState({
     //   isAdditionShow: false
     // })
@@ -486,19 +474,15 @@ class Minitoring extends React.Component {
     if (value) {
       addGroupId = JSON.parse(JSON.stringify(value))
     }
-    console.log(`selected ${value}`);
   }
 
   onBlur() {
-    console.log('blur');
   }
 
   onFocus() {
-    console.log('focus');
   }
 
   onSearch(val) {
-    console.log('search:', val);
   }
   /** 添加分组列表下拉操作end */
   UNSAFE_componentWillMount() {
@@ -521,7 +505,6 @@ class Minitoring extends React.Component {
   }
 
   render() {
-    const { match } = this.props
     const {
       myMinitoringGroup, } = this.state
 

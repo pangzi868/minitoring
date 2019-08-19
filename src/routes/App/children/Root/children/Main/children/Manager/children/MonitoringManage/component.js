@@ -76,9 +76,7 @@ class MonitoringManage extends React.Component {
 
 
   render() {
-    const { match } = this.props
     const { deviceList, deviceDetail } = this.state;
-    console.log(deviceDetail, 'wangyinbin')
     return (
       <div className="monitoring-manager-component">
         <div className='monitoring-manager-title'>设备管理</div>
@@ -102,14 +100,13 @@ class MonitoringManage extends React.Component {
             </div>
             <div className='manager-search-list-item'>
               {
-                // console.log(deviceList, 'wanginbin')
                 deviceList && deviceList.total > 0 ? deviceList.data.uglyData.map((item, index) => {
                   return (
                     <div className='search-item' key={index} onClick={this.getDeviceDetail.bind(this, item.deviceId)}>
                       <span className='wd-span wd15 search-item-span'>{index + 1}</span>
                       <span className='wd-span wd15 search-item-span'>{item.serial ? item.serial : ' -- '}</span>
                       <span className='wd-span wd15 search-item-span'>{item.deviceType ? item.deviceType : ' -- '}</span>
-                      <span className='wd-span wd20 search-item-span'>{item.createTime ? item.createTime : ' -- '}</span>
+                      <span className='wd-span wd20 search-item-span'>{item.productDate ? item.productDate : ' -- '}</span>
                       <span className='wd-span wd15 search-item-span'>{item.isOnline ? '在线' : '宕机'}</span>
                       <span className='wd-span wd20 search-item-span'>{'--'}</span>
                     </div>
@@ -145,7 +142,7 @@ class MonitoringManage extends React.Component {
                     <span className='detail-left-message-span'><span>验证码：</span><span>{deviceDetail.device.deviceVertifyCode ? deviceDetail.device.deviceVertifyCode : ' -- '}</span></span>
                     <span className='detail-left-message-span'><span>设备型号：</span><span>{deviceDetail.device.deviceType ? deviceDetail.device.deviceType : ' -- '}</span></span>
                     <span className='detail-left-message-span'><span>软件版本：</span><span>{deviceDetail.device.softVersion ? deviceDetail.device.softVersion : ' -- '}</span></span>
-                    <span className='detail-left-message-span'><span>生产日期：</span><span>{deviceDetail.device.createTime ? deviceDetail.device.createTime : ' -- '}</span></span>
+                    <span className='detail-left-message-span'><span>生产日期：</span><span>{deviceDetail.device.productDate ? deviceDetail.device.productDate : ' -- '}</span></span>
                   </div>
                   :
                   deviceList && deviceList.total > 0 ?
@@ -154,7 +151,7 @@ class MonitoringManage extends React.Component {
                       <span className='detail-left-message-span'><span>验证码：</span><span>{deviceList.data.uglyData[0].deviceVertifyCode ? deviceList.data.uglyData[0].deviceVertifyCode : ' -- '}</span></span>
                       <span className='detail-left-message-span'><span>设备型号：</span><span>{deviceList.data.uglyData[0].deviceType ? deviceList.data.uglyData[0].deviceType : ' -- '}</span></span>
                       <span className='detail-left-message-span'><span>软件版本：</span><span>{deviceList.data.uglyData[0].softVersion ? deviceList.data.uglyData[0].softVersion : ' -- '}</span></span>
-                      <span className='detail-left-message-span'><span>生产日期：</span><span>{deviceList.data.uglyData[0].createTime ? deviceList.data.uglyData[0].createTime : ' -- '}</span></span>
+                      <span className='detail-left-message-span'><span>生产日期：</span><span>{deviceList.data.uglyData[0].productDate ? deviceList.data.uglyData[0].productDate : ' -- '}</span></span>
                     </div> : <div className='left-detail-message'>
                       <span className='detail-left-message-span'><span>序列号：</span><span> -- </span></span>
                       <span className='detail-left-message-span'><span>验证码：</span><span> -- </span></span>

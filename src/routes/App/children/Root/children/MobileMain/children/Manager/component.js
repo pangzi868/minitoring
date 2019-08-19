@@ -110,15 +110,12 @@ class Minitoring extends React.Component {
   }
 
   secondMenuHandle(item, e) {
-    console.log(e, item)
   }
 
   editMinitoring(item, e) {
-    console.log(item)
   }
 
   handleClick(e) {
-    console.log('click', e);
     var contentType = e.item.props.children
     var monitoringName = e.key
     var isWindowShowCopy = this.state.isWindowShow

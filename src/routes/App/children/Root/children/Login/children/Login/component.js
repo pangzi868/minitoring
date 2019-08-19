@@ -132,7 +132,6 @@ class Login extends React.Component {
 
   // 导航栏的点击切换
   tabsCallback = key => {
-    console.log(key)
   }
 
   // 密码登录按钮点击
@@ -151,7 +150,6 @@ class Login extends React.Component {
       pwd: password
     }, data => {
       // 根据后端返回判断管理员还是非管理员页面
-      console.log(history, 'wangyinbin')
       data.isRoot === '0000' ? history.push('/root/main/manager') :
         history.push('/root/main/minitoring')
       data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
@@ -160,7 +158,6 @@ class Login extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
 
       if (!err) {
-        console.log('Received values of form: ', values);
       }
     });
   };
@@ -191,7 +188,6 @@ class Login extends React.Component {
           localStorage.setItem('userId', data.userId)
       })
       if (!err) {
-        console.log('Received values of form: ', values);
       }
     });
   };
