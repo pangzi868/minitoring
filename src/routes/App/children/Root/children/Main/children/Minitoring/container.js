@@ -20,7 +20,8 @@ import {
   deleteDeviceByRelation,
   addDevGroup,
   getLogList,
-  getUserList
+  getUserList,
+  modifyDeviceName
 } from 'store/modules/manager'
 
 import {modifyPassword} from 'store/modules/login'
@@ -46,7 +47,8 @@ const mapDispatchToProps = {
   addDevGroup,
   getLogList,
   getUserList,
-  modifyPassword
+  modifyPassword,
+  modifyDeviceName
 }
 
 const mapStateToProps = (state) => ({

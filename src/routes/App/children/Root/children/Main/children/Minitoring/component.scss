@@ -8,6 +8,9 @@
   background-size: 100% 100%;
   overflow: hidden;
 
+  .cancel-btn {
+    cursor: pointer;
+  }
   .log-out {
     position: absolute;
     top: 10px;
@@ -190,7 +193,7 @@
         .add-equipment-sure-btn {
           display: inline-block;
           height: 15%;
-          width: 20%;
+          margin-left: 40px;
           text-align: right;
           margin-right: 5%;
           cursor: pointer;

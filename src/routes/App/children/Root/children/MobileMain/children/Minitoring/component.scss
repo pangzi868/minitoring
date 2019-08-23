@@ -8,6 +8,9 @@
   background-size: 100% 100%;
   overflow: hidden;
 
+  .cancel-btn {
+
+  }
 
   .return-header-component {
     justify-content: space-between;
@@ -52,6 +55,7 @@
           }
         }
         .right-icon {
+          font-size: 0.5rem;
           width: 1.2rem;
         }
       }
@@ -156,7 +160,7 @@
       .add-equipment-sure-btn {
         display: inline-block;
         height: 15%;
-        width: 20%;
+          margin-left: 40px;
         text-align: right;
         margin-right: 5%;
         cursor: pointer;
@@ -209,7 +213,7 @@
         .add-equipment-sure-btn {
           display: inline-block;
           height: 15%;
-          width: 20%;
+          margin-left: 40px;
           text-align: right;
           margin-right: 5%;
           cursor: pointer;

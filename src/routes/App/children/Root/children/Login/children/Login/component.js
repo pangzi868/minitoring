@@ -139,7 +139,7 @@ class Login extends React.Component {
     e.preventDefault();
     var phoneNum = document.getElementById('login_username').value
     var password = document.getElementById('login_password').value
-    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+    var phoneNumberReg = /^[1][0-9]{10}$/
 
     if (!phoneNumberReg.test(phoneNum)) {
       alert('请输入正确的手机号码')
@@ -150,6 +150,7 @@ class Login extends React.Component {
       pwd: password
     }, data => {
       // 根据后端返回判断管理员还是非管理员页面
+      localStorage.setItem('phoneNum', phoneNum)
       data.isRoot === '0000' ? history.push('/root/main/manager') :
         history.push('/root/main/minitoring')
       data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
@@ -169,7 +170,7 @@ class Login extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       var phoneNum = document.getElementById('login_phone').value
       var captcha = document.getElementById('login_captcha').value
-      var phoneNumberReg = /^[1][34578][0-9]{9}$/
+      var phoneNumberReg = /^[1][0-9]{10}$/
 
       if (!phoneNumberReg.test(phoneNum)) {
         alert('请输入正确的手机号码')
@@ -182,6 +183,8 @@ class Login extends React.Component {
         msgNum: captcha
       }, data => {
         // 根据后端返回判断管理员还是非管理员页面
+
+        localStorage.setItem('phoneNum', phoneNum)
         data.isRoot === '0000' ? history.push('/root/main/manager') :
           history.push('/root/main/minitoring')
         data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
@@ -196,7 +199,7 @@ class Login extends React.Component {
   sendCheckNum = e => {
     e.preventDefault();
     var phoneNum = document.getElementById('login_phone').value
-    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+    var phoneNumberReg = /^[1][0-9]{10}$/
 
     if (!phoneNumberReg.test(phoneNum)) {
       alert('请输入正确的手机号码')

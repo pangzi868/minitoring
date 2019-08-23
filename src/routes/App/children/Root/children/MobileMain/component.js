@@ -5,10 +5,6 @@ import AuthRouter from 'components/AuthRouter'
 import Loadable from 'components/Loadable'
 
 const Minitoring = Loadable(import('./children/Minitoring'))
-const RealtimeVideos = Loadable(import('./children/Minitoring/children/RealtimeVideos'))
-const Warning = Loadable(import('./children/Minitoring/children/Warning'))
-const Density = Loadable(import('./children/Minitoring/children/Density'))
-const Manager = Loadable(import('./children/Manager'))
 
 class Main extends React.Component {
   render() {
@@ -21,26 +17,6 @@ class Main extends React.Component {
               <AuthRouter
                 path={`${match.url}/minitoring`}
                 component={Minitoring}
-                permissionPath={[]}
-              />
-              <AuthRouter
-                path={`${match.url}/videos`}
-                component={RealtimeVideos}
-                permissionPath={[]}
-              />
-              <AuthRouter
-                path={`${match.url}/warning`}
-                component={Warning}
-                permissionPath={[]}
-              />
-              <AuthRouter
-                path={`${match.url}/density`}
-                component={Density}
-                permissionPath={[]}
-              />
-              <AuthRouter
-                path={`${match.url}/manager`}
-                component={Manager}
                 permissionPath={[]}
               />
             </Switch>

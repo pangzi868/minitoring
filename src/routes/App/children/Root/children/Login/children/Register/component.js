@@ -55,11 +55,16 @@ class Register extends React.Component {
     }
   }
 
+  // 用户名输入事件
+  inputUserNameHandle = e => {
+
+  }
+
   // 发送验证码
   sendCheckNum = e => {
     e.preventDefault();
     var phoneNum = document.getElementById('register_phone').value
-    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+    var phoneNumberReg = /^[1][0-9]{10}$/
 
     if (!phoneNumberReg.test(phoneNum)) {
       alert('请输入正确的手机号码')
@@ -80,17 +85,23 @@ class Register extends React.Component {
       if (!err) {
         var msgNum = document.getElementById('register_captcha').value
         var phoneNumber = document.getElementById('register_phone').value
+        var userName = document.getElementById('register_username').value
         var password = document.getElementById('register_password').value
         var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
-        var phoneNumberReg = /^[1][34578][0-9]{9}$/
+        var phoneNumberReg = /^[1][0-9]{10}$/
 
         if (!phoneNumberReg.test(phoneNumber)) {
-          alert('请输入正确的手机号码')
+          alert('请输入正确的手机号码！')
+          return
+        }
+
+        if(userName === '') {
+          alert('请输入用户名！')
           return
         }
 
         if (!passwordReg.test(password)) {
-          alert('请输入8-20位密码，字母/数字/符号至少2种')
+          alert('请输入8-20位密码，字母/数字/符号至少2种！')
           return
         }
 
@@ -98,9 +109,11 @@ class Register extends React.Component {
           tamp: this.tamp,
           hash: this.hash,
           msgNum: msgNum,
+          userName: userName,
           phoneNumber: phoneNumber,
           password: password
         }, data => {
+          alert('注册账号成功！')
           this.props.goToLogin && this.props.goToLogin()
         })
       }
@@ -186,6 +199,16 @@ class Register extends React.Component {
                 <Button disabled={this.state.registerSendSMSBtn} onClick={this.sendCheckNum}>发送验证码</Button>
               </Col>
             </Row>
+          </Form.Item>
+
+          <Form.Item label="">
+            {getFieldDecorator('username', {
+              rules: [{ required: true, message: '请输入用户名' }],
+            })(<Input
+              style={{ width: '100%' }}
+              placeholder="用户名"
+              maxLength='12'
+              onKeyUp={this.inputUserNameHandle.bind(this)} autocomplete="off" />)}
           </Form.Item>
 
           <Form.Item label="" hasFeedback>

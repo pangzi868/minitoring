@@ -105,10 +105,13 @@ class Minitoring extends React.Component {
     this.handleClick = this.handleClick.bind(this)
     this.additionShowHandle = this.additionShowHandle.bind(this)
     this.addGroupHandle = this.addGroupHandle.bind(this)
+    this.cancelAddGroupHandle = this.cancelAddGroupHandle.bind(this)
     this.addEquipmentHandle = this.addEquipmentHandle.bind(this)
+    this.cancelAddEquipmentHandle = this.cancelAddEquipmentHandle.bind(this)
     this.densityDetailHandle = this.densityDetailHandle.bind(this)
     this.onGroupMenuClick = this.onGroupMenuClick.bind(this)
     this.checkSettingPsw = this.checkSettingPsw.bind(this)
+    this.cancelCheckSettingPsw = this.cancelCheckSettingPsw.bind(this)
     this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
   }
 
@@ -152,7 +155,7 @@ class Minitoring extends React.Component {
 
   // 修改分组名称弹窗
   showEditGroupModal = (item, e) => {
-    var groupId = item.groupId
+    var groupId = item.deviceGroupId
     this.setState({
       editGroupVisibled: true,
       editGroupItem: { groupId: groupId }
@@ -178,7 +181,7 @@ class Minitoring extends React.Component {
 
   // 删除分组弹窗
   showDeleteGroupModal = (item, e) => {
-    var groupId = item.groupId
+    var groupId = item.deviceGroupId
     this.setState({
       deleteGroupVisibled: true,
       deleteGroupItem: { groupId: groupId }
@@ -215,7 +218,7 @@ class Minitoring extends React.Component {
     e.preventDefault();
     if (bool) {
       var deviceName = document.getElementById('edit-equipment-name').value
-      this.props.editEquipmentName({ deviceId: item.deviceId, deviceName: deviceName },
+      this.props.modifyDeviceName({ deviceId: item.deviceId, deviceName: deviceName },
         data => {
           this.props.getDeviceGroup({ userId: this.userId })
         }
@@ -230,7 +233,7 @@ class Minitoring extends React.Component {
   // 移动分组弹窗
   showMoveEquipmentModal = (item, group, e) => {
     var deviceId = item.deviceId
-    var groupId = group.groupId
+    var groupId = group.deviceGroupId
     this.setState({
       moveEquipmentVisibled: true,
       moveEquipmentItem: { deviceId: deviceId, groupId: groupId }
@@ -244,7 +247,6 @@ class Minitoring extends React.Component {
       if (item.deviceId !== moveGroupId) {
         this.props.moveEquipmentName({ deviceId: item.deviceId, groupId: item.groupId, newGroupId: moveGroupId },
           data => {
-            moveGroupId = -1
             this.props.getDeviceGroup({ userId: this.userId })
           }
         )
@@ -361,6 +363,15 @@ class Minitoring extends React.Component {
     })
   }
 
+  //取消修改密码
+  cancelCheckSettingPsw = e => {
+    var temp = this.state.isWindowShow
+    temp.isSettingPswShow = !temp.isSettingPswShow
+    this.setState({
+      isWindowShow: temp
+    })
+  }
+
   // 添加分组确定按钮
   addGroupHandle = e => {
     var groupName = document.getElementById('add-group-input').value
@@ -368,6 +379,15 @@ class Minitoring extends React.Component {
       alert('添加成功')
       this.props.getDeviceGroup({ userId: this.userId })
     })
+    var temp = this.state.isWindowShow
+    temp.isAdditionGroupShow = false
+    this.setState({
+      isWindowShow: temp
+    })
+  }
+
+  // 添加设备取消按钮
+  cancelAddGroupHandle = e => {
     var temp = this.state.isWindowShow
     temp.isAdditionGroupShow = false
     this.setState({
@@ -386,8 +406,10 @@ class Minitoring extends React.Component {
         deviceVerifyCode: code,
         groupId: groupId
       }, data => {
+        alert('添加设备成功')
+        document.getElementById('add-equipment-product-num').value = ''
+        document.getElementById('add-equipment-psw').value = ''
         this.props.getDeviceGroup({ userId: this.userId })
-        addGroupId = -1
       })
     } else {
       alert('请选择分组')
@@ -399,6 +421,15 @@ class Minitoring extends React.Component {
       isWindowShow: temp
     })
 
+  }
+
+  // 取消添加设备按钮
+  cancelAddEquipmentHandle = e => {
+    var temp = this.state.isWindowShow
+    temp.isAdditionEquipmentShow = false
+    this.setState({
+      isWindowShow: temp
+    })
   }
 
   // 控制添加设备/分组显示;修改密码显示
@@ -564,7 +595,7 @@ class Minitoring extends React.Component {
 
   UNSAFE_componentWillMount() {
     this.userId = localStorage.getItem('userId')
-    if (this.userId === '' || this.userId === null) {
+    if (this.userId === '' || this.userId === null ) {
       alert('请进行登录')
       this.props.history.push('/root/login')
     }
@@ -582,11 +613,13 @@ class Minitoring extends React.Component {
   }
 
   render() {
-    const {  warningVideos } = this.props
+    const { warningVideos } = this.props
     const { myMinitoringGroup,
       warningDetailIndex,
       densityList,
       densityDetailIndex } = this.state
+
+    console.log(myMinitoringGroup, 'wangyinbin')
     return (
       <div className="minitoring-component">
         <div className='log-out' onClick={this.logOut.bind(this)}>退出登录</div>
@@ -606,14 +639,14 @@ class Minitoring extends React.Component {
                   {
                     myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
                       return (
-                        item.devGroup !== null && item.devGroup !== undefined ?
+                        item.deviceGroup !== null && item.deviceGroup !== undefined ?
                           <SubMenu
                             key={index}
                             title={
                               <span style={{ width: '85%', overflow: 'hidden' }}>
-                                <span title={item.devGroup.groupName} className=''>{` + ` + item.devGroup.groupName}</span>
+                                <span title={item.deviceGroup.deviceGroupName} className=''>{` + ` + item.deviceGroup.deviceGroupName}</span>
                                 <Dropdown overlay={
-                                  <Menu onClick={this.onGroupMenuClick.bind(this, item.devGroup)}>
+                                  <Menu onClick={this.onGroupMenuClick.bind(this, item.deviceGroup)}>
                                     <Menu.Item key="0">修改分组名称</Menu.Item>
                                     <Menu.Item key="1">删除</Menu.Item>
                                   </Menu>
@@ -627,15 +660,15 @@ class Minitoring extends React.Component {
                             {
                               item.deviceList && item.deviceList.length !== 0 ? item.deviceList.map((items, indexs) => {
                                 return (
-                                  items !== null && item.devGroup !== null && item.devGroup !== undefined ?
+                                  items !== null && item.deviceGroup !== null && item.deviceGroup !== undefined ?
                                     <SubMenu
-                                      key={item.devGroup.groupName + items.deviceName}
+                                      key={item.deviceGroup.deviceGroupName + items.deviceName}
                                       title={
                                         <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', display: 'block', width: '85%', overflow: 'hidden' }}>
                                           {/* <Icon type="appstore" /> */}
                                           <span title={items.deviceName}>{` + ` + items.deviceName}</span>
                                           <Dropdown overlay={
-                                            <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.devGroup)}>
+                                            <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.deviceGroup)}>
                                               <Menu.Item key="0">修改设备名称</Menu.Item>
                                               <Menu.Item key="1">移动分组</Menu.Item>
                                               <Menu.Item key="2">删除</Menu.Item>
@@ -646,9 +679,9 @@ class Minitoring extends React.Component {
                                         </span>
                                       }
                                     >
-                                      {/* <Menu.Item key={`${item.devGroup.groupName + '-' + items.serial}-1`}>实时视频</Menu.Item> */}
-                                      <Menu.Item key={`${item.devGroup.groupName + '-' + items.serial}-2`}>告警信息</Menu.Item>
-                                      <Menu.Item key={`${item.devGroup.groupName + '-' + items.serial}-3`}>密度分析</Menu.Item>
+                                      {/* <Menu.Item key={`${item.deviceGroup.deviceGroupName + '-' + items.serial}-1`}>实时视频</Menu.Item> */}
+                                      <Menu.Item key={`${item.deviceGroup.deviceGroupName + '-' + items.serial}-2`}>告警信息</Menu.Item>
+                                      <Menu.Item key={`${item.deviceGroup.deviceGroupName + '-' + items.serial}-3`}>密度分析</Menu.Item>
                                     </SubMenu> : null
                                 )
                               }) : ''
@@ -714,9 +747,9 @@ class Minitoring extends React.Component {
                   {
                     myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
                       return (
-                        item.devGroup !== null && item.devGroup !== undefined ?
-                          <Option value={item.devGroup.groupId} key={index}>{item.devGroup.groupName}</Option>
-                          : null
+                        item.deviceGroup !== null && item.deviceGroup !== undefined ?
+                          <Option value={item.deviceGroup.deviceGroupId} key={index}>{item.deviceGroup.deviceGroupName}</Option>
+                          : ''
                       )
                     }) : ''
                   }
@@ -778,14 +811,15 @@ class Minitoring extends React.Component {
                   {
                     myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
                       return (
-                        item.devGroup !== null && item.devGroup !== undefined ?
-                          <Option value={item.devGroup.groupId} key={index}>{item.devGroup.groupName}</Option>
-                          : null
+                        item.deviceGroup !== null && item.deviceGroup !== undefined ?
+                          <Option value={item.deviceGroup.deviceGroupId} key={index}>{item.deviceGroup.deviceGroupName}</Option>
+                          : ''
                       )
                     }) : ''
                   }
                 </Select>
                 <input id='add-equipment-psw' className='product-psw' placeholder='请输入密码'></input>
+                <span className='cancel-btn' onClick={this.cancelAddEquipmentHandle.bind(this)}>取消</span>
                 <span className='add-equipment-sure-btn' onClick={this.addEquipmentHandle.bind(this)}>确认</span>
               </div>
             </div>
@@ -793,14 +827,16 @@ class Minitoring extends React.Component {
               <div className='add-equipment-form'>
                 <span className='add-equipment-title'>添加分组</span>
                 <input id='add-group-input' className='product-serial-number' placeholder='请输入分组名称'></input>
+                <span className='cancel-btn' onClick={this.cancelAddGroupHandle.bind(this)}>取消</span>
                 <span className='add-equipment-sure-btn' onClick={this.addGroupHandle.bind(this)}>确认</span>
               </div>
             </div>
             <div className={`add-equipment-comfirm ${this.state.isWindowShow.isSettingPswShow ? '' : 'hide'}`}>
               <div className='add-equipment-form'>
                 <span className='add-equipment-title'>修改密码</span>
-                <input id='setting-old-psw' className='product-serial-number' placeholder='请输入旧密码'></input>
-                <input id='setting-new-psw' className='product-serial-number' placeholder='请输入新密码'></input>
+                <input type='password' id='setting-old-psw' className='product-serial-number' placeholder='请输入旧密码'></input>
+                <input type='password' id='setting-new-psw' className='product-serial-number' placeholder='请输入新密码'></input>
+                <span className='cancel-btn' onClick={this.cancelCheckSettingPsw.bind(this)}>取消</span>
                 <span className='add-equipment-sure-btn' onClick={this.checkSettingPsw.bind(this)}>确认</span>
               </div>
             </div>
@@ -935,7 +971,7 @@ class Minitoring extends React.Component {
               {
                 densityList.length !== 0 ?
                   <img className='density-analysis-videos-img' src={SRC_PATH + densityList[densityDetailIndex].path} alt='density-analysis-videos-img'></img>
-                  : ''
+                  : null
               }
             </div>
             <div className='minitoring-density-analysis-list'>
@@ -946,10 +982,7 @@ class Minitoring extends React.Component {
                       <img className='density-analysis-item-img' alt='density-analysis-item-img' src={SRC_PATH + item.path}></img>
                       <span className='density-analysis-item-date'>{item.validDate}</span>
                     </div>
-                  )) : <div className='density-analysis-item'>
-                      null
-                      <span className='density-analysis-item-date'></span>
-                    </div>
+                  )) : null
                 }
               </div>
             </div>

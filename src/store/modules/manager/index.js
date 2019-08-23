@@ -8,14 +8,21 @@ const DOWNLOAD_WARNING_VIDEOS = 'DOWNLOAD_WARNING_VIDEOS'
 const DENSITY_PICTURE = 'DENSITY_PICTURE'
 const DENSITY_PICTURE_DATA = 'DENSITY_PICTURE_DATA'
 const GET_LOG_LIST = 'GET_LOG_LIST'
+const GET_ROOT_DEVICE_GROUP = 'GET_ROOT_DEVICE_GROUP'
 const UPLOAD_ATTACH = 'UPLOAD_ATTACH'
 const ADD_DEVICE = 'ADD_DEVICE'
 const ADD_GROUP = 'ADD_GROUP'
+const ADD_ROOT_GROUP = 'ADD_ROOT_GROUP'
+const DELETE_GROUP_DEVICE = 'DELETE_GROUP_DEVICE'
 const GET_DEVICE_GROUP = 'GET_DEVICE_GROUP'
 const EDIT_GROUP_NAME = 'EDIT_GROUP_NAME'
+const EDIT_ROOT_GROUP = 'EDIT_ROOT_GROUP'
 const DELETE_GROUP_NAME = 'DELETE_GROUP_NAME'
+const DELETE_ROOT_GROUP_NAME = 'DELETE_ROOT_GROUP_NAME'
 const EDIT_EQUIPMENT_NAME = 'EDIT_EQUIPMENT_NAME'
+const MODIFY_DEVICE_NAME = 'MODIFY_DEVICE_NAME'
 const MOVE_EQUIPMENT_NAME = 'MOVE_EQUIPMENT_NAME'
+const MOVE_ROOT_EQUIPMENT_NAME = 'MOVE_ROOT_EQUIPMENT_NAME'
 const DELETE_EQUIPMENT_NAME = 'DELETE_EQUIPMENT_NAME'
 const ADD_DEV_GROUP = 'ADD_DEV_GROUP'
 const GET_FUZZY_DEVICE_LIST = 'GET_FUZZY_DEVICE_LIST'
@@ -23,6 +30,7 @@ const GET_DEVICE_LIST = 'GET_DEVICE_LIST'
 const ADD_DEVICE_TO_SYSTEM = 'ADD_DEVICE_TO_SYSTEM'
 const GET_DEVICE_DETAIL = 'GET_DEVICE_DETAIL'
 const GET_USER_LIST = 'GET_USER_LIST'
+const CHECK_SECOND_PSW = 'CHECK_SECOND_PSW'
 const ADD_USER_DEVICE = 'ADD_USER_DEVICE'
 const DEL_USER_DEVICE = 'DEL_USER_DEVICE'
 
@@ -142,6 +150,20 @@ const densityPictureData = (previousState = {}, action) => {
   }
 }
 
+// 管理员登录设备管理二级密码
+export function checkSecondPsw(params, cb) {
+  return post({
+    url: `/shungkon/rootInfo/validateSecPsw?isRoot=${params.isRoot}&rootPhone=${params.rootPhone}&secondPsw=${params.password}`,
+    actionType: CHECK_SECOND_PSW,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: "管理员登录设备管理失败"
+    }
+  });
+}
+
 
 // 添加分组
 export function addDevice(params, cb) {
@@ -158,7 +180,6 @@ export function addDevice(params, cb) {
     },
     failConfig: {
       message: '添加分组失败',
-      isForceShow: true
     }
   })
 }
@@ -166,14 +187,27 @@ export function addDevice(params, cb) {
 // 添加分组
 export function addGroup(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/device/addGroup?groupName=${params.groupName}&userId=${params.userId}`,
+    url: `${isMock()}/shungkon/device/addGroup?deviceGroupName=${params.groupName}&userId=${params.userId}`,
     actionType: ADD_GROUP,
     successConfig: {
       callback: cb
     },
     failConfig: {
+      message: '添加分组失败'
+    }
+  })
+}
+
+// 添加管理员分组
+export function addRootGroup(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/rootInfo/addRootGroup?rootDeviceGroupName=${params.groupName}`,
+    actionType: ADD_ROOT_GROUP,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
       message: '添加分组失败',
-      isForceShow: true
     }
   })
 }
@@ -189,7 +223,6 @@ export function getDeviceGroup(params, cb) {
     },
     failConfig: {
       message: '获取分组列表失败',
-      isForceShow: true
     }
   })
 }
@@ -203,13 +236,36 @@ const deviceGroup = (previousState = {}, action) => {
   }
 }
 
+// 获取root用户的
+export function getRootDeviceGroup(params, cb) {
+  return get({
+    url: `${isMock()}/shungkon/device/getRootAllDevices?isRoot=true`,
+    actionType: GET_ROOT_DEVICE_GROUP,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '获取管理员分组列表失败',
+    }
+  })
+}
+
+
+const rootDeviceGroup = (previousState = {}, action) => {
+  if (action.type === GET_ROOT_DEVICE_GROUP) {
+    return action.data
+  } else {
+    return previousState
+  }
+}
+
 // 修改分组名称
 export function editGroupName(params, cb) {
   return post({
     url: `${isMock()}/shungkon/device/modifyDeviceGroupName`,
     bodyData: {
-      groupId: params.groupId,
-      groupName: params.groupName,
+      deviceGroupId: params.groupId,
+      deviceGroupName: params.groupName,
     },
     actionType: EDIT_GROUP_NAME,
     successConfig: {
@@ -217,7 +273,6 @@ export function editGroupName(params, cb) {
     },
     failConfig: {
       message: '修改分组名称失败',
-      isForceShow: true
     }
   })
 }
@@ -232,7 +287,55 @@ export function deleteGroupName(params, cb) {
     },
     failConfig: {
       message: '删除分组失败',
-      isForceShow: true
+    }
+  })
+}
+
+// 删除管理员分组
+export function deletRootGroupName(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/rootInfo/deleteRootGroup`,
+    bodyData: {
+      rootDeviceGroupId: params.groupId
+    },
+    actionType: DELETE_ROOT_GROUP_NAME,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '删除分组失败',
+    }
+  })
+}
+
+// 删除管理员设备
+export function deleteGroupDevice(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/rootInfo/deleteRootGroup`,
+    bodyData: {
+      deviceId: params.deviceId,
+      rootDeviceGroupId: params.groupId
+    },
+    actionType: DELETE_GROUP_DEVICE,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '删除设备失败',
+    }
+  })
+}
+
+// 修改分组名称
+export function editRootGroup(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/rootInfo/modifyRootDeviceGroupName?rootDeviceGroupId=${params.groupId}&newDeviceGroupName=${params.groupName}`,
+    actionType: EDIT_ROOT_GROUP,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '修改分组名称失败',
     }
   })
 }
@@ -251,7 +354,24 @@ export function editEquipmentName(params, cb) {
     },
     failConfig: {
       message: '修改设备名称失败',
-      isForceShow: true
+    }
+  })
+}
+
+// 修改分组名称
+export function modifyDeviceName(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/device/modifyDeviceName`,
+    bodyData: {
+      deviceGroupId: params.deviceId,
+      deviceGroupName: params.deviceName,
+    },
+    actionType: MODIFY_DEVICE_NAME,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '修改设备名称失败',
     }
   })
 }
@@ -272,7 +392,20 @@ export function moveEquipmentName(params, cb) {
     },
     failConfig: {
       message: '修改设备分组失败',
-      isForceShow: true
+    }
+  })
+}
+
+// 移动管理员设备
+export function moveRootEquipmentName(params, cb) {
+  return post({
+    url: `${isMock()}/shungkon/rootInfo/moveRootGroup?deviceId=${params.deviceId}&oldGroupId=${params.groupId}&newGroupId=${params.newGroupId}`,
+    actionType: MOVE_ROOT_EQUIPMENT_NAME,
+    successConfig: {
+      callback: cb
+    },
+    failConfig: {
+      message: '修改设备分组失败',
     }
   })
 }
@@ -288,7 +421,6 @@ export function deleteDeviceByRelation(params, cb) {
     },
     failConfig: {
       message: '删除设备失败',
-      isForceShow: true
     }
   })
 }
@@ -303,7 +435,6 @@ export function addDevGroup(params, cb) {
     },
     failConfig: {
       message: '添加设备分组失败',
-      isForceShow: true
     }
   })
 }
@@ -318,7 +449,6 @@ export function getDeviceList(params, cb) {
     },
     failConfig: {
       message: '获取分组列表失败',
-      isForceShow: true
     }
   })
 }
@@ -335,14 +465,13 @@ const deviceList = (previousState = {}, action) => {
 // 获取设备列表
 export function getFuzzyDeviceList(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/device/getDeviceLikeCondition?serial=${params.serial}&deviceType=${params.deviceType}&pageNo=${params.pageNo}&pageSize=${params.pageSize}&produceDate=${params.produceDate}`,
+    url: `${isMock()}/shungkon/device/getDeviceLikeCondition?serial=${params.serial}&deviceType=${params.deviceType}&pageNo=${params.pageNo}&pageSize=${params.pageSize}&productDate=${params.productDate}`,
     actionType: GET_FUZZY_DEVICE_LIST,
     successConfig: {
       callback: cb
     },
     failConfig: {
       message: '获取模糊分组列表失败',
-      isForceShow: true
     }
   })
 }
@@ -366,7 +495,6 @@ export function getDeviceDetails(params, cb) {
     },
     failConfig: {
       message: '获取设备详情失败',
-      isForceShow: true
     }
   })
 }
@@ -393,7 +521,6 @@ export function getUserList(params, cb) {
     },
     failConfig: {
       message: '获取用户列表失败',
-      isForceShow: true
     }
   })
 }
@@ -422,7 +549,6 @@ export function addUserDevice(params, cb) {
     },
     failConfig: {
       message: '添加用户设备失败',
-      isForceShow: true
     }
   })
 }
@@ -441,7 +567,6 @@ export function deleteUserDevice(params, cb) {
     },
     failConfig: {
       message: '删除用户设备失败',
-      isForceShow: true
     }
   })
 }
@@ -456,7 +581,6 @@ export function deleteUserDevice(params, cb) {
 //     },
 //     failConfig: {
 //       message: '获取设备详情失败',
-//       isForceShow: true
 //     }
 //   })
 // }
@@ -483,7 +607,6 @@ export function deleteUserDevice(params, cb) {
 //     },
 //     failConfig: {
 //       message: '获取验证码失败',
-//       isForceShow: true
 //     }
 //   })
 // }
@@ -556,6 +679,7 @@ const manager = combineReducers({
   fuzzyDeviceList,
   deviceDetails,
   logList,
-  userList
+  userList,
+  rootDeviceGroup
 });
 export default manager;

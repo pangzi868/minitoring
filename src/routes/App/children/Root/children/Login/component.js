@@ -16,8 +16,8 @@ class LoginForm extends React.Component {
     this.state = {
       confirmDirty: false,
       autoCompleteResult: [],
-      isRegisterShow: true,
-      isLoginShow: false,
+      isRegisterShow: false,
+      isLoginShow: true,
       isModifierShow: false,
       isModifierComfirmShow: false,
 

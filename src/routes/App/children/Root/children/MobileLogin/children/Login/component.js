@@ -155,7 +155,7 @@ class Login extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       var phoneNum = document.getElementById('login_username').value
       var password = document.getElementById('login_password').value
-      var phoneNumberReg = /^[1][34578][0-9]{9}$/
+      var phoneNumberReg = /^[1][0-9]{10}$/
       if (!phoneNumberReg.test(phoneNum)) {
         // alert('请输入正确的手机号码')
         Toast.fail('请输入正确的手机', 1, {})
@@ -165,6 +165,8 @@ class Login extends React.Component {
         phoneNumber: phoneNum,
         pwd: password
       }, data => {
+
+        localStorage.setItem('phoneNum', phoneNum)
         data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
           localStorage.setItem('userId', data.userId)
         Toast.success('登录成功', 1, history.push('/root/main/minitoring'))
@@ -179,7 +181,7 @@ class Login extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       var phoneNum = document.getElementById('login_phone').value
       var captcha = document.getElementById('login_captcha').value
-      var phoneNumberReg = /^[1][34578][0-9]{9}$/
+      var phoneNumberReg = /^[1][0-9]{10}$/
       if (!phoneNumberReg.test(phoneNum)) {
         Toast.fail('请输入正确的手机号码', 1, {})
         return
@@ -202,7 +204,7 @@ class Login extends React.Component {
   sendCheckNum = e => {
     e.preventDefault();
     var phoneNum = document.getElementById('login_phone').value
-    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+    var phoneNumberReg = /^[1][0-9]{10}$/
 
     if (!phoneNumberReg.test(phoneNum)) {
       Toast.fail('请输入正确的手机号码', 1, {})

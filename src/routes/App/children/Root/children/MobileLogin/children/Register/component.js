@@ -58,7 +58,7 @@ class Register extends React.Component {
   sendCheckNum = e => {
     e.preventDefault();
     var phoneNum = document.getElementById('register_phone').value
-    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+    var phoneNumberReg = /^[1][0-9]{10}$/
 
     if (!phoneNumberReg.test(phoneNum)) {
       Toast.fail('请输入正确的手机号码', 1, {})
@@ -80,11 +80,17 @@ class Register extends React.Component {
         var msgNum = document.getElementById('register_captcha').value
         var phoneNumber = document.getElementById('register_phone').value
         var password = document.getElementById('register_password').value
+        var userName = document.getElementById('register_username').value
         var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
-        var phoneNumberReg = /^[1][34578][0-9]{9}$/
+        var phoneNumberReg = /^[1][0-9]{10}$/
 
         if (!phoneNumberReg.test(phoneNumber)) {
           Toast.fail('请输入正确的手机号码', 1, {})
+          return
+        }
+
+        if(userName === '') {
+          Toast.fail('请输入用户名',1)
           return
         }
 
@@ -97,6 +103,7 @@ class Register extends React.Component {
           tamp: this.tamp,
           hash: this.hash,
           msgNum: msgNum,
+          userName: userName,
           phoneNumber: phoneNumber,
           password: password
         }, data => {
@@ -196,6 +203,17 @@ class Register extends React.Component {
                 </Col>
               </Row>
             </Form.Item>
+
+            <Form.Item label="">
+              {getFieldDecorator('username', {
+                rules: [{ required: true, message: '请输入用户名' }],
+              })(<Input
+                style={{ width: '100%' }}
+                placeholder="用户名"
+                maxLength='12'
+                onKeyUp={this.inputUserNameHandle.bind(this)} autocomplete="off" />)}
+            </Form.Item>
+
 
             <Form.Item label="" hasFeedback>
               {getFieldDecorator('password', {

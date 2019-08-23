@@ -27,7 +27,10 @@ class UserManager extends React.Component {
   }
 
   // 通过手机号模糊搜索
-  getPhoneNumberSearch = e => {
+  getPhoneNumberSearch = (type) => {
+    if (type === 'click') {
+      this.params.pageNo = 1
+    }
     var phoneNumber = document.getElementById('user-manager-phone-number').value
     this.props.getUserListByPhoneNum && this.props.getUserListByPhoneNum({
       phoneNumber: phoneNumber,
@@ -70,7 +73,10 @@ class UserManager extends React.Component {
     var vertifyCode = document.getElementById('verificationInput').value
     // var serial = this.refs.productSerialInput.value
     // var vertifyCode = this.refs.verificationInput.value
-    // 写死的参数，该参数需修改成访问用户详情的手机好吗
+    if (this.state.userList && this.state.userList.data.uglyData.length === 0) {
+      alert('暂无用户可添加数据')
+      return
+    }
     var phoneNumber = this.state.userList.data.uglyData[this.userIndex].phoneNumber
 
     this.props.addUserInfo && this.props.addUserInfo({
@@ -104,6 +110,10 @@ class UserManager extends React.Component {
 
   handleDeleteOk = e => {
     var serial = this.delSerial ? this.delSerial : ''
+    if (this.state.userList && this.state.userList.data.uglyData.length === 0) {
+      alert('暂无用户可添加数据')
+      return
+    }
     var phoneNumber = this.state.userList.data.uglyData[this.userIndex].phoneNumber
 
     if (serial === '') {
@@ -155,7 +165,7 @@ class UserManager extends React.Component {
           <div className='user-manager-search'>
             <span className='user-manager-search-title'>用户查询</span>
             <input id='user-manager-phone-number' className='user-manager-search-input' placeholder='手机号码' ></input>
-            <button className='user-manager-search-btn' onClick={this.getPhoneNumberSearch.bind(this)}>查询</button>
+            <button className='user-manager-search-btn' onClick={this.getPhoneNumberSearch.bind(this, 'click')}>查询</button>
           </div>
           <div className='user-manager-search-list'>
             <div className='manager-search-list-title'>
@@ -168,7 +178,7 @@ class UserManager extends React.Component {
               {
                 userList && userList.total !== 0 && userList.data !== undefined ? userList.data.uglyData.map((item, index) => (
                   <div className='search-item' key={index} onClick={this.changeUserIndex.bind(this, index)}>
-                    <span className='wd-span wd15 search-item-span'>{index + 1}</span>
+                    <span className='wd-span wd15 search-item-span'>{(index + 1) + 10 * (this.params.pageNo - 1)}</span>
                     <span className='wd-span wd25 search-item-span'>{item.phoneNumber}</span>
                     <span className='wd-span wd30 search-item-span'>{item.password}</span>
                     <span className='wd-span wd30 search-item-span'>{
@@ -189,11 +199,12 @@ class UserManager extends React.Component {
           showTotal={total => `总共 ${total} 条数据`}
           pageSize={userList ? userList.pageSize : 10}
           defaultCurrent={1}
+          current={userList ? userList.pageNo : 1}
           size='small'
           className='pagination-div'
           onChange={(pageNo, pageSize) => {
             this.params.pageNo = pageNo
-            this.getPhoneNumberSearch()
+            this.getPhoneNumberSearch('page')
           }}
         />
 
@@ -201,7 +212,7 @@ class UserManager extends React.Component {
           <div className='user-manager-bottom-title'>当前用户信息</div>
           <div className='manager-detail'>
             {
-              userList && userList.total !== 0 && userList.data !== undefined ?
+              userList && userList.total !== 0 && userList.data !== undefined && userList.data.uglyData.length !== 0 ?
                 <div className='detail-left-message'>
                   <span className='detail-left-message-span'><span>用户名：</span><span>{userList.data.uglyData[this.userIndex].nickName}</span></span>
                   <span className='detail-left-message-span'><span>手机号：</span><span>{userList.data.uglyData[this.userIndex].phoneNumber}</span></span>
@@ -237,7 +248,7 @@ class UserManager extends React.Component {
               <div className='monitoring-list'>
 
                 {
-                  userList && userList.total !== 0 && userList.data !== undefined ? userList.data.uglyData[this.userIndex].deviceList.map((item, index) => {
+                  userList && userList.total !== 0 && userList.data !== undefined && userList.data.uglyData.length !== 0 ? userList.data.uglyData[this.userIndex].deviceList.map((item, index) => {
                     return (
                       <span className='detail-right-item'>
                         <span className='monitoring-name'>{item.deviceName}</span>

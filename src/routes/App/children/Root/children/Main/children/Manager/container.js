@@ -22,7 +22,14 @@ import {
   getLogList,
   getUserList,
   deleteUserDevice,
-  addUserDevice
+  checkSecondPsw,
+  addUserDevice,
+  getRootDeviceGroup,
+  addRootGroup,
+  moveRootEquipmentName,
+  deletRootGroupName,
+  deleteGroupDevice,
+  editRootGroup
 } from 'store/modules/manager'
 
 import { modifyPassword } from 'store/modules/login'
@@ -50,7 +57,14 @@ const mapDispatchToProps = {
   getUserList,
   modifyPassword,
   deleteUserDevice,
-  addUserDevice
+  checkSecondPsw,
+  addUserDevice,
+  getRootDeviceGroup,
+  addRootGroup,
+  moveRootEquipmentName,
+  deletRootGroupName,
+  deleteGroupDevice,
+  editRootGroup
 }
 
 const mapStateToProps = (state) => ({
@@ -64,6 +78,6 @@ const mapStateToProps = (state) => ({
   deviceGroup: state.manager.deviceGroup,
   logList: state.manager.logList,
   userList: state.manager.userList,
-
+  rootDeviceGroup: state.manager.rootDeviceGroup,
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Component)

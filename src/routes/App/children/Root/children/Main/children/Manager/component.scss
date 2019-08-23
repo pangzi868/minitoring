@@ -8,6 +8,10 @@
   background-size: 100% 100%;
   overflow: hidden;
 
+
+  .cancel-btn{
+    cursor: pointer;
+  }
   .log-out {
     position: absolute;
     top: 10px;
@@ -108,7 +112,8 @@
           display: flex;
           flex-direction: column;
           height: 100%;
-          width: 50%;
+          // width: 50%;
+          width: 100%;
           text-align: center;
           .left-add-img {
             width: 34px;
@@ -145,6 +150,7 @@
 
   .minitoring-right-content {
     .add-equipment-content {
+
       .add-equipment-img {
         position: absolute;
         left: 25%;
@@ -190,7 +196,7 @@
         .add-equipment-sure-btn {
           display: inline-block;
           height: 15%;
-          width: 20%;
+          margin-left: 40px;
           text-align: right;
           margin-right: 5%;
           cursor: pointer;

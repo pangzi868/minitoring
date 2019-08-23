@@ -15,7 +15,7 @@ class MonitoringManage extends React.Component {
       pageNo: 1,
       pageSize: 10,
       serial: "",
-      produceDate: "",
+      productDate: "",
       deviceType: "",
     }
 
@@ -35,18 +35,25 @@ class MonitoringManage extends React.Component {
       productDate: document.getElementById('product-addition-date').value,
     }
     this.props.enterDeviceToSystem && this.props.enterDeviceToSystem(params)
+    document.getElementById('product-addition-serial').value = ''
+    document.getElementById('product-addition-code').value = ''
+    document.getElementById('product-addition-type').value = ''
+    document.getElementById('product-addition-version').value = ''
+    document.getElementById('product-addition-date').value = ''
   }
 
   /** 根据条件查询查询按钮 */
-  getListByCondition = e => {
-    // debugger
+  getListByCondition = (type) => {
+    if (type === 'click') {
+      this.params.pageNo = 1
+    }
     this.params.serial = document.getElementById('search-input-serial').value
-    this.params.produceDate = document.getElementById('search-input-produceDate').value
+    this.params.productDate = document.getElementById('search-input-productDate').value
     this.params.deviceType = document.getElementById('search-input-deviceType').value
     var params = {
       serial: this.params.serial,
       deviceType: this.params.deviceType,
-      produceDate: this.params.produceDate,
+      productDate: this.params.productDate,
       pageNo: this.params.pageNo,
       pageSize: this.params.pageSize,
     }
@@ -83,11 +90,11 @@ class MonitoringManage extends React.Component {
 
         <div className='monitoring-manager-middle'>
           <div className='monitoring-manager-search'>
-            <span className='monitoring-manager-search-title'>用户查询</span>
+            <span className='monitoring-manager-search-title'>设备查询</span>
             <input id='search-input-serial' className='monitoring-manager-search-input' placeholder='设备序列号' ></input>
             <input id='search-input-deviceType' className='monitoring-manager-search-input' placeholder='设备型号' ></input>
-            <input id='search-input-produceDate' className='monitoring-manager-search-input' placeholder='生产日期2019****' ></input>
-            <button className='monitoring-manager-search-btn' onClick={this.getListByCondition.bind(this)}>查询</button>
+            <input id='search-input-productDate' className='monitoring-manager-search-input' placeholder='生产日期2019****' ></input>
+            <button className='monitoring-manager-search-btn' onClick={this.getListByCondition.bind(this, 'click')}>查询</button>
           </div>
           <div className='monitoring-manager-search-list'>
             <div className='manager-search-list-title'>
@@ -103,11 +110,11 @@ class MonitoringManage extends React.Component {
                 deviceList && deviceList.total > 0 ? deviceList.data.uglyData.map((item, index) => {
                   return (
                     <div className='search-item' key={index} onClick={this.getDeviceDetail.bind(this, item.deviceId)}>
-                      <span className='wd-span wd15 search-item-span'>{index + 1}</span>
+                      <span className='wd-span wd15 search-item-span'>{(index + 1) + 10 * (this.params.pageNo - 1)}</span>
                       <span className='wd-span wd15 search-item-span'>{item.serial ? item.serial : ' -- '}</span>
                       <span className='wd-span wd15 search-item-span'>{item.deviceType ? item.deviceType : ' -- '}</span>
                       <span className='wd-span wd20 search-item-span'>{item.productDate ? item.productDate : ' -- '}</span>
-                      <span className='wd-span wd15 search-item-span'>{item.isOnline ? '在线' : '宕机'}</span>
+                      <span className='wd-span wd15 search-item-span'>{item.isOnline ? '在库' : '交付'}</span>
                       <span className='wd-span wd20 search-item-span'>{'--'}</span>
                     </div>
                   )
@@ -123,11 +130,12 @@ class MonitoringManage extends React.Component {
           showTotal={total => `总共 ${total} 条数据`}
           pageSize={deviceList ? deviceList.pageSize : 10}
           defaultCurrent={1}
+          current={deviceList ? deviceList.pageNo : 1}
           size='small'
           className='pagination-div'
           onChange={(pageNo, pageSize) => {
             this.params.pageNo = pageNo
-            this.getListByCondition()
+            this.getListByCondition('page')
           }}
         />
         <div className='monitoring-manager-bottom'>
@@ -139,7 +147,7 @@ class MonitoringManage extends React.Component {
                 deviceDetail && deviceDetail.totle > 0 ?
                   <div className='left-detail-message'>
                     <span className='detail-left-message-span'><span>序列号：</span><span>{deviceDetail.device.serial ? deviceDetail.device.serial : ' -- '}</span></span>
-                    <span className='detail-left-message-span'><span>验证码：</span><span>{deviceDetail.device.deviceVertifyCode ? deviceDetail.device.deviceVertifyCode : ' -- '}</span></span>
+                    <span className='detail-left-message-span'><span>验证码：</span><span>{deviceDetail.device.deviceVerifyCode ? deviceDetail.device.deviceVerifyCode : ' -- '}</span></span>
                     <span className='detail-left-message-span'><span>设备型号：</span><span>{deviceDetail.device.deviceType ? deviceDetail.device.deviceType : ' -- '}</span></span>
                     <span className='detail-left-message-span'><span>软件版本：</span><span>{deviceDetail.device.softVersion ? deviceDetail.device.softVersion : ' -- '}</span></span>
                     <span className='detail-left-message-span'><span>生产日期：</span><span>{deviceDetail.device.productDate ? deviceDetail.device.productDate : ' -- '}</span></span>
@@ -148,7 +156,7 @@ class MonitoringManage extends React.Component {
                   deviceList && deviceList.total > 0 ?
                     <div className='left-detail-message'>
                       <span className='detail-left-message-span'><span>序列号：</span><span>{deviceList.data.uglyData[0].serial ? deviceList.data.uglyData[0].serial : ' -- '}</span></span>
-                      <span className='detail-left-message-span'><span>验证码：</span><span>{deviceList.data.uglyData[0].deviceVertifyCode ? deviceList.data.uglyData[0].deviceVertifyCode : ' -- '}</span></span>
+                      <span className='detail-left-message-span'><span>验证码：</span><span>{deviceList.data.uglyData[0].deviceVerifyCode ? deviceList.data.uglyData[0].deviceVerifyCode : ' -- '}</span></span>
                       <span className='detail-left-message-span'><span>设备型号：</span><span>{deviceList.data.uglyData[0].deviceType ? deviceList.data.uglyData[0].deviceType : ' -- '}</span></span>
                       <span className='detail-left-message-span'><span>软件版本：</span><span>{deviceList.data.uglyData[0].softVersion ? deviceList.data.uglyData[0].softVersion : ' -- '}</span></span>
                       <span className='detail-left-message-span'><span>生产日期：</span><span>{deviceList.data.uglyData[0].productDate ? deviceList.data.uglyData[0].productDate : ' -- '}</span></span>
@@ -169,7 +177,7 @@ class MonitoringManage extends React.Component {
                 <input id='product-addition-code' className='product-input product-code' placeholder='请输入验证码'></input>
                 <input id='product-addition-device-type' className='product-input product-model' placeholder='请输入设备型号'></input>
                 <input id='product-addition-soft-version' className='product-input product-versions' placeholder='请输入软件版本'></input>
-                <input id='product-addition-date' className='product-input product-date' placeholder='请输入生产日期 例子：2019****'></input>
+                <input id='product-addition-date' className='product-input product-date' placeholder='请输入生产日期 例子：2019-01-01'></input>
                 <span className='add-equipment-sure-btn' onClick={this.enterDeviceComfirm.bind(this)}>确认</span>
               </div>
             </div>

@@ -121,7 +121,7 @@ class Density extends React.Component {
             </div> :
             <div className='videos-content'>
               <div className='real-time-videos'>
-                <img className='real-time-videos-img' alt='real-time-videos-img' src={VideosIcon}></img>
+                暂无密度图片
               </div>
 
               <div className='videos-list-div'>

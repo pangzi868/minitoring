@@ -56,7 +56,7 @@ class ForgetPsw extends React.Component {
         var password = document.getElementById('forgetPsw_password').value
         var passwordAgain = document.getElementById('forgetPsw_password-confirm').value
 
-        var phoneNumberReg = /^[1][34578][0-9]{9}$/
+        var phoneNumberReg = /^[1][0-9]{10}$/
 
         var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
 
@@ -98,7 +98,7 @@ class ForgetPsw extends React.Component {
   sendCheckNum = e => {
     e.preventDefault();
     var phoneNum = document.getElementById('forgetPsw_phone').value
-    var phoneNumberReg = /^[1][34578][0-9]{9}$/
+    var phoneNumberReg = /^[1][0-9]{10}$/
 
     if (!phoneNumberReg.test(phoneNum)) {
       alert('请输入正确的手机号码')

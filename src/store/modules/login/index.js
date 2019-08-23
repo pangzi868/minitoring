@@ -29,8 +29,7 @@ export function getSMSMessage(params, cb) {
       callback: cb
     },
     failConfig: {
-      message: '获取验证码失败',
-      isForceShow: true
+      message: '获取验证码失败'
     }
   })
 }
@@ -60,6 +59,7 @@ export function phoneNumRegister(params, cb) {
       tamp: params.tamp,
       hash: params.hash,
       msgNum: params.msgNum,
+      nickName: params.userName,
       phoneNumber: params.phoneNumber,
       password: params.password
     },

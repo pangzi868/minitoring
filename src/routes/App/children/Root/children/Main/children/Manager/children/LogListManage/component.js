@@ -25,15 +25,16 @@ class LogListManage extends React.Component {
   }
 
   checkLogByCondition = e => {
+    this.params.pageNo = 1
     var startDate = document.getElementById('start-time-date').getElementsByClassName('ant-calendar-picker-input')[0].value
     var startHour = document.getElementById('start-time-hour').value
     var endDate = document.getElementById('end-time-date').getElementsByClassName('ant-calendar-picker-input')[0].value
     var endHour = document.getElementById('end-time-hour').value
-    if(startDate === '') {
+    if (startDate === '') {
       alert('请选择开始时间')
       return
     }
-    if(endDate === '') {
+    if (endDate === '') {
       alert('请选择结束时间')
       return
     }
@@ -99,6 +100,7 @@ class LogListManage extends React.Component {
               showTotal={total => `总共 ${total} 条数据`}
               pageSize={this.logManagerList ? this.logManagerList.pageSize : 15}
               defaultCurrent={1}
+              current={this.logManagerList ? this.logManagerList.pageNo : 1}
               size='small'
               className='pagination-div'
               onChange={(pageNo, pageSize) => {
