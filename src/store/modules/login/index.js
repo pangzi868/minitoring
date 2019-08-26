@@ -136,7 +136,7 @@ export function modifyPassword(params, cb) {
 }
 
 // 短信登录
-export function SMSLogin(params) {
+export function SMSLogin(params,cb) {
   return post({
     url: `${isMock()}/shungkon/login/logOnByMsg`,
     bodyData:
@@ -147,6 +147,9 @@ export function SMSLogin(params) {
       msgNum: params.msgNum
     },
     actionType: SMS_LOGIN,
+    successConfig: {
+      callback: cb
+    },
     failConfig: {
       message: '短信登录失败',
       isForceShow: true

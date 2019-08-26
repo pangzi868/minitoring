@@ -11,6 +11,7 @@ import InnerPage from 'components/hz/InnerPage'
 import { Toast } from 'antd-mobile';
 import WarningList from './children/Warning/children/WarningList/component'
 import DensityList from './children/Density/component'
+import history from 'history.js'
 
 const { SubMenu } = Menu;
 
@@ -108,7 +109,7 @@ class Minitoring extends React.Component {
 
   logOut = e => {
     localStorage.setItem('userId', '')
-    this.props.history.push('/root/login')
+    history.push('/root/login')
   }
 
   // 修改密码确定按钮
@@ -359,7 +360,7 @@ class Minitoring extends React.Component {
         deviceVerifyCode: code,
         groupId: groupId
       }, data => {
-        Toast.success('添加设备成功',1)
+        Toast.success('添加设备成功', 1)
         document.getElementById('add-equipment-product-num').value = ''
         document.getElementById('add-equipment-psw').value = ''
         this.props.getDeviceGroup({ userId: this.userId })
@@ -459,7 +460,7 @@ class Minitoring extends React.Component {
     var serial = key.split('-')[1]
     switch (contentType) {
       case '实时视频':
-        this.props.history.push('/root/main/videos')
+        history.push('/root/main/videos')
         break;
       case '告警信息':
         this.props.getWarningVideos({ serial: serial }, data => {
@@ -477,7 +478,7 @@ class Minitoring extends React.Component {
           }
           this.getBusinessInfoPage.current.show()
         })
-        // this.props.history.push('/root/main/warning?serial=' + serial)
+        // history.push('/root/main/warning?serial=' + serial)
         break;
       case '密度分析':
         // 请求密度分析数据
@@ -497,7 +498,7 @@ class Minitoring extends React.Component {
           this.getDensityInfoPage.current.show()
         })
 
-        // this.props.history.push('/root/main/density?serial=' + serial)
+        // history.push('/root/main/density?serial=' + serial)
         break;
       default:
         break;
@@ -522,11 +523,13 @@ class Minitoring extends React.Component {
   /** 添加分组列表下拉操作end */
   UNSAFE_componentWillMount() {
     this.userId = localStorage.getItem('userId')
-    if (this.userId === '' || this.userId === null) {
+    if (this.userId === '' || this.userId === null || this.userId === '123456789') {
       Toast.success('添加分组成功', 1)
-      this.props.history.push('/root/login')
+      history.push('/root/login')
+      return
+    } else {
+      this.props.getDeviceGroup({ userId: this.userId })
     }
-    this.props.getDeviceGroup({ userId: this.userId })
   }
 
   UNSAFE_componentWillReceiveProps(props, state) {
@@ -585,6 +588,7 @@ class Minitoring extends React.Component {
                                       title={
                                         <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', display: 'block', width: '85%', overflow: 'hidden' }}>
                                           <span title={items.deviceName}>{` + ` + items.deviceName}</span>
+                                          <span className={`group-device-status ${items.isOnline === '0' ? 'off-line-status' : ''}`}></span>
                                           <Dropdown overlay={
                                             <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.deviceGroup)}>
                                               <Menu.Item key="0">修改设备名称</Menu.Item>

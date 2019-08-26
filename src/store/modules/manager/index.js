@@ -329,7 +329,7 @@ export function deleteGroupDevice(params, cb) {
 // 修改分组名称
 export function editRootGroup(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/rootInfo/modifyRootDeviceGroupName?rootDeviceGroupId=${params.groupId}&newDeviceGroupName=${params.groupName}`,
+    url: `${isMock()}/shungkon/rootInfo/modifyRootDeviceGroupName?rootDeviceGroupId=${params.groupId}&newDeviceGroupName=${params.groupName}&oldDeviceGroupName=${params.oldGroupName}`,
     actionType: EDIT_ROOT_GROUP,
     successConfig: {
       callback: cb
@@ -363,8 +363,8 @@ export function modifyDeviceName(params, cb) {
   return post({
     url: `${isMock()}/shungkon/device/modifyDeviceName`,
     bodyData: {
-      deviceGroupId: params.deviceId,
-      deviceGroupName: params.deviceName,
+      deviceId: params.deviceId,
+      deviceName: params.deviceName,
     },
     actionType: MODIFY_DEVICE_NAME,
     successConfig: {
@@ -623,7 +623,7 @@ export function deleteUserDevice(params, cb) {
 // 获取视频详情接口
 export function downloadWarningVideos(params) {
   return get({
-    url: `/shungkon/attach/downloadFirmware?fileLocalPath=d://testPicture`,
+    url: `${isMock()}/shungkon/attach/downloadFirmware?fileLocalPath=d://testPicture`,
     actionType: DOWNLOAD_WARNING_VIDEOS,
     successConfig: {},
     failConfig: {
@@ -635,7 +635,7 @@ export function downloadWarningVideos(params) {
 // 管理员录入设备
 export function addDeviceToSystem(params, cb) {
   return post({
-    url: `/shungkon/device/addDevice`,
+    url: `${isMock()}/shungkon/device/addDevice`,
     actionType: ADD_DEVICE_TO_SYSTEM,
     bodyData: {
       serial: params.serial,
@@ -657,7 +657,7 @@ export function addDeviceToSystem(params, cb) {
 // 备注：前端一个表单，选择文件，form的enctype为multipart/form-data 报文头不需要设置Content-Type
 export function uploadAttach(params) {
   return post({
-    url: `/shungkon/attach/upload`,
+    url: `${isMock()}/shungkon/attach/upload`,
     bodyData: params.file,
     actionType: UPLOAD_ATTACH,
     contentType: 'multipart/form-data',

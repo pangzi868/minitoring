@@ -16,6 +16,7 @@ class UserManager extends React.Component {
       userList: {}
     }
     this.delSerial = null
+    this.delDeviceId = null
     this.params = {
       pageNo: 1,
       pageSize: 10
@@ -57,12 +58,13 @@ class UserManager extends React.Component {
     });
   };
 
-  showDeleteModal = (serial) => {
+  showDeleteModal = (item) => {
     // var productSerialInput = document.getElementById('productSerialInput')
     // productSerialInput.value = ''
     // var verificationInput = document.getElementById('verificationInput')
     // verificationInput.nodeValue = ''
-    this.delSerial = serial
+    // this.delSerial = serial
+    this.delDeviceId = item.deviceId
     this.setState({
       deleteVisible: true,
     });
@@ -110,23 +112,28 @@ class UserManager extends React.Component {
 
   handleDeleteOk = e => {
     var serial = this.delSerial ? this.delSerial : ''
+    var deviceId = this.delDeviceId ? this.delDeviceId : ''
     if (this.state.userList && this.state.userList.data.uglyData.length === 0) {
       alert('暂无用户可添加数据')
       return
     }
     var phoneNumber = this.state.userList.data.uglyData[this.userIndex].phoneNumber
+    var userId = this.state.userList.data.uglyData[this.userIndex].userID
 
-    if (serial === '') {
+    if (deviceId === '') {
       alert('选择设备出错')
       return
     }
+    this.params.pageNo = 1
     this.props.deleteUserInfo && this.props.deleteUserInfo({
-      serial: serial,
+      deviceId: deviceId,
+      userId: userId,
       phoneNumber: phoneNumber,
       pageNo: this.params.pageNo,
       pageSize: this.params.pageSize,
     })
 
+    this.userIndex = 0
     this.setState({
       confirmLoading: true,
     });
@@ -252,7 +259,7 @@ class UserManager extends React.Component {
                     return (
                       <span className='detail-right-item'>
                         <span className='monitoring-name'>{item.deviceName}</span>
-                        <Button type="link" size={size} onClick={this.showDeleteModal.bind(this, item.serial)} className='monitoring-edit-btn detail-monitoring-delete'>
+                        <Button type="link" size={size} onClick={this.showDeleteModal.bind(this, item)} className='monitoring-edit-btn detail-monitoring-delete'>
                           删除
                         </Button>
                       </span>

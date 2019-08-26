@@ -9,6 +9,7 @@ import {
   ForwardControl, CurrentTimeDisplay,
   TimeDivider, PlaybackRateMenuButton, VolumeMenuButton
 } from 'video-react';
+import history from 'history.js'
 import AddEquipment from './images/upper-bg.png'
 import GroupAddition from './images/blue_add.png'
 import EquipmentAddition from './images/yellow_add.png'
@@ -118,7 +119,7 @@ class Minitoring extends React.Component {
 
   logOut = e => {
     localStorage.setItem('userId', '')
-    this.props.history.push('/root/login')
+    history.push('/root/login')
   }
 
   // 分组菜单按钮
@@ -595,11 +596,13 @@ class Minitoring extends React.Component {
 
   UNSAFE_componentWillMount() {
     this.userId = localStorage.getItem('userId')
-    if (this.userId === '' || this.userId === null ) {
+    if (this.userId === '' || this.userId === null || this.userId === '123456789') {
       alert('请进行登录')
-      this.props.history.push('/root/login')
+      history.push('/root/login')
+      return
+    } else {
+      this.props.getDeviceGroup({ userId: this.userId })
     }
-    this.props.getDeviceGroup({ userId: this.userId })
   }
 
   UNSAFE_componentWillReceiveProps(props, state) {
@@ -667,6 +670,7 @@ class Minitoring extends React.Component {
                                         <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', display: 'block', width: '85%', overflow: 'hidden' }}>
                                           {/* <Icon type="appstore" /> */}
                                           <span title={items.deviceName}>{` + ` + items.deviceName}</span>
+                                          <span className={`group-device-status ${items.isOnline === '0' ? 'off-line-status' : ''}`}></span>
                                           <Dropdown overlay={
                                             <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.deviceGroup)}>
                                               <Menu.Item key="0">修改设备名称</Menu.Item>

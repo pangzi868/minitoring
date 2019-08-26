@@ -9,11 +9,12 @@ import {
   ForwardControl, CurrentTimeDisplay,
   TimeDivider, PlaybackRateMenuButton, VolumeMenuButton
 } from 'video-react';
+import history from 'history.js'
 // import reqwest from 'reqwest';
 
 import UserManager from './children/UserManager'
-import MonitoringManage from './children/MonitoringManage'
 import LogListManage from './children/LogListManage'
+import MonitoringManage from './children/MonitoringManage'
 
 import AddEquipment from './images/upper-bg.png'
 import GroupAddition from './images/blue_add.png'
@@ -191,7 +192,7 @@ class Minitoring extends React.Component {
 
   logOut = e => {
     localStorage.setItem('userId', '')
-    this.props.history.push('/root/login')
+    history.push('/root/login')
   }
 
   // 分组菜单按钮
@@ -275,9 +276,10 @@ class Minitoring extends React.Component {
   // 修改分组名称弹窗
   showEditGroupModal = (item, e) => {
     var groupId = item.rootDeviceGroupId
+    var groupName = item.rootDeviceGroupName
     this.setState({
       editGroupVisibled: true,
-      editGroupItem: { groupId: groupId }
+      editGroupItem: { groupId: groupId, oldGroupName: groupName }
     });
   };
 
@@ -286,11 +288,12 @@ class Minitoring extends React.Component {
     e.preventDefault();
     if (bool) {
       var groupName = document.getElementById('edit-group-name').value
+      var oldGroupName = item.oldGroupName
       if (!groupName) {
         alert('请输入新的分组名称！')
         return
       }
-      this.props.editRootGroup({ groupId: item.groupId, groupName: groupName },
+      this.props.editRootGroup({ groupId: item.groupId, groupName: groupName, oldGroupName: oldGroupName },
         data => {
           this.props.getRootDeviceGroup({ userId: this.userId })
         }
@@ -315,10 +318,6 @@ class Minitoring extends React.Component {
   hideDeleteGroupModal = (item, bool, e) => {
     e.preventDefault();
     if (bool) {
-      if (!item.groupId) {
-        alert('分组选择出错！')
-        return;
-      }
       this.props.deletRootGroupName({ groupId: item.groupId },
         data => {
           this.props.getRootDeviceGroup({ userId: this.userId })
@@ -416,6 +415,7 @@ class Minitoring extends React.Component {
   // 录入设备信息
   enterDeviceToSystem = (params) => {
     this.props.addDeviceToSystem(params, data => {
+      alert('设备录入成功')
       this.props.getFuzzyDeviceList({
         // serial: "w4324",
         serial: "",
@@ -480,16 +480,14 @@ class Minitoring extends React.Component {
   // 用户管理删除设备
   deleteUserInfo = (params) => {
     this.props.deleteUserDevice({
-      phoneNumber: params.phoneNumber,
-      serial: params.serial,
+      userId: params.userId,
+      deviceId: params.deviceId,
     }, data => {
-
       this.props.getUserList({
         phoneNumber: params.phoneNumber || '',
         pageNo: params.pageNo,
         pageSize: params.pageSize
       }, data => {
-
         this.tempUserList = JSON.parse(JSON.stringify(data))
         this.setState({})
       })
@@ -931,7 +929,8 @@ class Minitoring extends React.Component {
     this.rootPhone = localStorage.getItem('phoneNum')
     if (this.userId === '' || this.userId === null || this.userId !== '123456789') {
       alert('请进行登录')
-      this.props.history.push('/root/login')
+      history.push('/root/login')
+      return
     }
     this.props.getRootDeviceGroup({ userId: this.userId })
   }
@@ -1014,6 +1013,7 @@ class Minitoring extends React.Component {
                                         <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', display: 'block', width: '85%', overflow: 'hidden' }}>
                                           {/* <Icon type="appstore" /> */}
                                           <span title={items.deviceName}>{` + ` + items.deviceName}</span>
+                                          <span className={`group-device-status ${items.isOnline === '0' ? 'off-line-status' : ''}`}></span>
                                           <Dropdown overlay={
                                             <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.rootDeviceGroup)}>
                                               {/* <Menu.Item key="0">修改设备名称</Menu.Item> */}

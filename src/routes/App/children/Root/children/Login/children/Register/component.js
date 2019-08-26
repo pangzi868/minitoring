@@ -20,12 +20,14 @@ const { Option } = Select;
 
 const { TabPane } = Tabs;
 
+let maxTime = 60
 
 class Register extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      btnText: '发送验证码',
       registerSendSMSBtn: true,
       registerPermission: true,
     }
@@ -65,11 +67,30 @@ class Register extends React.Component {
     e.preventDefault();
     var phoneNum = document.getElementById('register_phone').value
     var phoneNumberReg = /^[1][0-9]{10}$/
-
+    // var forbiddenPhone = /^(166|188)/
+        // if (forbiddenPhone.test(phoneNum)) {
+        //   alert('请输入正确的手机号码')
+        //   return
+        // }
     if (!phoneNumberReg.test(phoneNum)) {
       alert('请输入正确的手机号码')
       return
     }
+    this.timer = setInterval(() => {
+      if (maxTime > 0) {
+        --maxTime
+        this.setState({
+          btnText: '重新获取 ' + maxTime + 's',
+          registerSendSMSBtn: true
+        })
+      } else {
+        maxTime = 60
+        this.setState({
+          btnText: '发送验证码',
+          registerSendSMSBtn: false
+        })
+      }
+    }, 1000)
     this.props.getSMSMessage({ phoneNumber: phoneNum }, data => {
       // 保存短信接口给的hash和tamp，用做校验的判断
       this.hash = data.hash
@@ -89,13 +110,17 @@ class Register extends React.Component {
         var password = document.getElementById('register_password').value
         var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
         var phoneNumberReg = /^[1][0-9]{10}$/
-
+       // var forbiddenPhone = /^(166|188)/
+        // if (forbiddenPhone.test(phoneNum)) {
+        //   alert('请输入正确的手机号码')
+        //   return
+        // }
         if (!phoneNumberReg.test(phoneNumber)) {
           alert('请输入正确的手机号码！')
           return
         }
 
-        if(userName === '') {
+        if (userName === '') {
           alert('请输入用户名！')
           return
         }
@@ -185,7 +210,7 @@ class Register extends React.Component {
               addonBefore={prefixSelector}
               style={{ width: '100%' }}
               placeholder="手机号"
-              onKeyUp={this.inputPhoneNumHandle.bind(this)} autocomplete="off" />)}
+              onKeyUp={this.inputPhoneNumHandle.bind(this)} autoComplete="off" />)}
           </Form.Item>
 
           <Form.Item label="">
@@ -193,10 +218,10 @@ class Register extends React.Component {
               <Col span={12}>
                 {getFieldDecorator('captcha', {
                   rules: [{ required: true, message: '请输入验证码' }],
-                })(<Input placeholder="验证码" autocomplete="off" />)}
+                })(<Input placeholder="验证码" autoComplete="off" />)}
               </Col>
               <Col span={12}>
-                <Button disabled={this.state.registerSendSMSBtn} onClick={this.sendCheckNum}>发送验证码</Button>
+                <Button disabled={this.state.registerSendSMSBtn} onClick={this.sendCheckNum}>{this.state.btnText}</Button>
               </Col>
             </Row>
           </Form.Item>
@@ -207,8 +232,7 @@ class Register extends React.Component {
             })(<Input
               style={{ width: '100%' }}
               placeholder="用户名"
-              maxLength='12'
-              onKeyUp={this.inputUserNameHandle.bind(this)} autocomplete="off" />)}
+              onKeyUp={this.inputUserNameHandle.bind(this)} autoComplete="off" />)}
           </Form.Item>
 
           <Form.Item label="" hasFeedback>
@@ -222,7 +246,7 @@ class Register extends React.Component {
                   validator: this.validateToNextPassword,
                 },
               ],
-            })(<Input.Password placeholder="8-20位密码，字母/数字/符号至少2种" autocomplete="off" />)}
+            })(<Input.Password placeholder="8-20位密码，字母/数字/符号至少2种" autoComplete="off" />)}
           </Form.Item>
 
           <Form.Item {...tailFormItemLayout}>

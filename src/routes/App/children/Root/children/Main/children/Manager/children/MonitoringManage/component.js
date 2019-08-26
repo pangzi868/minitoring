@@ -114,8 +114,8 @@ class MonitoringManage extends React.Component {
                       <span className='wd-span wd15 search-item-span'>{item.serial ? item.serial : ' -- '}</span>
                       <span className='wd-span wd15 search-item-span'>{item.deviceType ? item.deviceType : ' -- '}</span>
                       <span className='wd-span wd20 search-item-span'>{item.productDate ? item.productDate : ' -- '}</span>
-                      <span className='wd-span wd15 search-item-span'>{item.isOnline ? '在库' : '交付'}</span>
-                      <span className='wd-span wd20 search-item-span'>{'--'}</span>
+                      <span className='wd-span wd15 search-item-span'>{item.deviceStatus === 0 ? '在库' : '交付'}</span>
+                      <span className='wd-span wd20 search-item-span'>{item.nickName ? item.nickName : ' -- '}</span>
                     </div>
                   )
                 }) : null

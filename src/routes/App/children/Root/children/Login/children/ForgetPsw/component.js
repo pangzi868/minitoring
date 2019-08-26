@@ -11,15 +11,15 @@ import {
 } from 'antd';
 
 const { Option } = Select;
+let maxTime  = 60
 
 class ForgetPsw extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      permission: {
-        pswPhoneNum: true
-      }
+      btnText: '发送验证码',
+      pswPhoneNum: true
     }
 
     this.hash = null
@@ -32,16 +32,13 @@ class ForgetPsw extends React.Component {
   // 手机号码输入事件
   inputPhoneNumHandle = e => {
     var phoneNum = document.getElementById('forgetPsw_phone').value
-
-    var temp = this.state.permission
     if (phoneNum.length === 11) {
-      temp.pswPhoneNum = false
       this.setState({
-        permission: temp
+        pswPhoneNum: false
       })
     } else {
       this.setState({
-        permission: temp
+        pswPhoneNum: true
       })
     }
   }
@@ -59,7 +56,11 @@ class ForgetPsw extends React.Component {
         var phoneNumberReg = /^[1][0-9]{10}$/
 
         var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
-
+        // var forbiddenPhone = /^(166|188)/
+        // if (forbiddenPhone.test(phoneNum)) {
+        //   alert('请输入正确的手机号码')
+        //   return
+        // }
 
         if (!phoneNumberReg.test(phoneNum)) {
           alert('请输入正确的手机号码')
@@ -99,11 +100,30 @@ class ForgetPsw extends React.Component {
     e.preventDefault();
     var phoneNum = document.getElementById('forgetPsw_phone').value
     var phoneNumberReg = /^[1][0-9]{10}$/
-
+    // var forbiddenPhone = /^(166|188)/
+    // if (forbiddenPhone.test(phoneNum)) {
+    //   alert('请输入正确的手机号码')
+    //   return
+    // }
     if (!phoneNumberReg.test(phoneNum)) {
       alert('请输入正确的手机号码')
       return
     }
+    this.timer = setInterval(() => {
+      if (maxTime > 0) {
+        --maxTime
+        this.setState({
+          btnText: '重新获取 ' + maxTime + 's',
+          pswPhoneNum: true
+        })
+      } else {
+        maxTime = 60
+        this.setState({
+          btnText: '发送验证码',
+          pswPhoneNum: false
+        })
+      }
+    }, 1000)
     this.props.getSMSMessage({ phoneNumber: phoneNum }, data => {
       // 保存短信接口给的hash和tamp，用做校验的判断
       this.hash = data.hash
@@ -166,8 +186,8 @@ class ForgetPsw extends React.Component {
               </Col>
               <Col span={12}>
                 <Button
-                  disabled={this.state.permission.pswPhoneNum}
-                  onClick={this.sendCheckNum}>发送验证码</Button>
+                  disabled={this.state.pswPhoneNum}
+                  onClick={this.sendCheckNum}>{this.state.btnText}</Button>
               </Col>
             </Row>
           </Form.Item>

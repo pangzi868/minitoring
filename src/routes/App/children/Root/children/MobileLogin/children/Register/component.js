@@ -14,17 +14,19 @@ import {
   Tabs
 } from 'antd';
 import { Toast } from 'antd-mobile';
+import history from 'history.js'
 
 const { Option } = Select;
 
 const { TabPane } = Tabs;
-
+let maxTime = 60
 
 class Register extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      btnText: '获取验证码',
       registerSendSMSBtn: true,
       registerPermission: true,
     }
@@ -59,11 +61,30 @@ class Register extends React.Component {
     e.preventDefault();
     var phoneNum = document.getElementById('register_phone').value
     var phoneNumberReg = /^[1][0-9]{10}$/
-
+    // var forbiddenPhone = /^(166|188)/
+    // if (forbiddenPhone.test(phoneNum)) {
+    //   alert('请输入正确的手机号码')
+    //   return
+    // }
     if (!phoneNumberReg.test(phoneNum)) {
       Toast.fail('请输入正确的手机号码', 1, {})
       return
     }
+    this.timer = setInterval(() => {
+      if (maxTime > 0) {
+        --maxTime
+        this.setState({
+          btnText: '重新获取 ' + maxTime + 's',
+          registerSendSMSBtn: true
+        })
+      } else {
+        maxTime = 60
+        this.setState({
+          btnText: '发送验证码',
+          registerSendSMSBtn: false
+        })
+      }
+    }, 1000)
     this.props.getSMSMessage({ phoneNumber: phoneNum }, data => {
       // 保存短信接口给的hash和tamp，用做校验的判断
       this.hash = data.hash
@@ -83,14 +104,18 @@ class Register extends React.Component {
         var userName = document.getElementById('register_username').value
         var passwordReg = /(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$/
         var phoneNumberReg = /^[1][0-9]{10}$/
-
+        // var forbiddenPhone = /^(166|188)/
+        // if (forbiddenPhone.test(phoneNum)) {
+        //   alert('请输入正确的手机号码')
+        //   return
+        // }
         if (!phoneNumberReg.test(phoneNumber)) {
           Toast.fail('请输入正确的手机号码', 1, {})
           return
         }
 
-        if(userName === '') {
-          Toast.fail('请输入用户名',1)
+        if (userName === '') {
+          Toast.fail('请输入用户名', 1)
           return
         }
 
@@ -107,7 +132,7 @@ class Register extends React.Component {
           phoneNumber: phoneNumber,
           password: password
         }, data => {
-          Toast.success('注册成功', 1, this.props.history.push('/root/login'))
+          Toast.success('注册成功', 1, history.push('/root/login'))
         })
       }
     });
@@ -131,7 +156,7 @@ class Register extends React.Component {
 
   // 按钮回退
   backToRegister = e => {
-    this.props.history.push('/root/login')
+    history.push('/root/login')
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -199,7 +224,7 @@ class Register extends React.Component {
                   })(<Input placeholder="验证码" />)}
                 </Col>
                 <Col span={12}>
-                  <Button disabled={this.state.registerSendSMSBtn} onClick={this.sendCheckNum}>发送验证码</Button>
+                  <Button disabled={this.state.registerSendSMSBtn} onClick={this.sendCheckNum}>{this.state.btnText}</Button>
                 </Col>
               </Row>
             </Form.Item>
@@ -210,8 +235,7 @@ class Register extends React.Component {
               })(<Input
                 style={{ width: '100%' }}
                 placeholder="用户名"
-                maxLength='12'
-                onKeyUp={this.inputUserNameHandle.bind(this)} autocomplete="off" />)}
+                autoComplete="off" />)}
             </Form.Item>
 
 
@@ -226,7 +250,7 @@ class Register extends React.Component {
                     validator: this.validateToNextPassword,
                   },
                 ],
-              })(<Input.Password placeholder="8-20位密码，字母/数字/符号至少2种" autocomplete="off" />)}
+              })(<Input.Password placeholder="8-20位密码，字母/数字/符号至少2种" autoComplete="off" />)}
             </Form.Item>
 
             <Form.Item {...tailFormItemLayout}>

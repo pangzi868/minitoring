@@ -21,11 +21,13 @@ import Logo from './images/logo.png'
 const { Option } = Select;
 
 const { TabPane } = Tabs;
+let maxTime = 60
 class Login extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      btnText: '获取验证码',
       permission: {
         // 短信登录按钮”禁止“判断
         smsLoginSendCode: true,
@@ -126,14 +128,14 @@ class Login extends React.Component {
     e.preventDefault();
     // 访问父组件的方法，并修改视图层
     // this.props.goToRegister && this.props.goToRegister()
-    this.props.history.push('/root/login/register')
+    history.push('/root/login/register')
   }
 
   loginGoToModifierBtnHandle = e => {
     e.preventDefault();
     // 访问父组件的方法，并修改视图层
     // this.props.modifierBtnHandle && this.props.modifierBtnHandle()
-    this.props.history.push('/root/login/forgetPsw')
+    history.push('/root/login/forgetPsw')
   }
 
   // 导航栏的点击切换
@@ -156,6 +158,11 @@ class Login extends React.Component {
       var phoneNum = document.getElementById('login_username').value
       var password = document.getElementById('login_password').value
       var phoneNumberReg = /^[1][0-9]{10}$/
+      // var forbiddenPhone = /^(166|188)/
+      // if (forbiddenPhone.test(phoneNum)) {
+      //   alert('请输入正确的手机号码')
+      //   return
+      // }
       if (!phoneNumberReg.test(phoneNum)) {
         // alert('请输入正确的手机号码')
         Toast.fail('请输入正确的手机', 1, {})
@@ -182,6 +189,11 @@ class Login extends React.Component {
       var phoneNum = document.getElementById('login_phone').value
       var captcha = document.getElementById('login_captcha').value
       var phoneNumberReg = /^[1][0-9]{10}$/
+      // var forbiddenPhone = /^(166|188)/
+      // if (forbiddenPhone.test(phoneNum)) {
+      //   alert('请输入正确的手机号码')
+      //   return
+      // }
       if (!phoneNumberReg.test(phoneNum)) {
         Toast.fail('请输入正确的手机号码', 1, {})
         return
@@ -205,11 +217,34 @@ class Login extends React.Component {
     e.preventDefault();
     var phoneNum = document.getElementById('login_phone').value
     var phoneNumberReg = /^[1][0-9]{10}$/
-
+    // var forbiddenPhone = /^(166|188)/
+    // if (forbiddenPhone.test(phoneNum)) {
+    //   alert('请输入正确的手机号码')
+    //   return
+    // }
     if (!phoneNumberReg.test(phoneNum)) {
       Toast.fail('请输入正确的手机号码', 1, {})
       return
     }
+    this.timer = setInterval(() => {
+      if (maxTime > 0) {
+        --maxTime
+        var temp = this.state.permission
+        temp.smsLoginSendCode = true
+        this.setState({
+          btnText: '重新获取 ' + maxTime + 's',
+          permission: temp
+        })
+      } else {
+        maxTime = 60
+        var deTemp = this.state.permission
+        deTemp.smsLoginSendCode = false
+        this.setState({
+          btnText: '发送验证码',
+          permission: deTemp
+        })
+      }
+    }, 1000)
     this.props.getSMSMessage({ phoneNumber: phoneNum }, data => {
       // 保存短信接口给的hash和tamp，用做校验的判断
       this.hash = data.hash
@@ -301,7 +336,7 @@ class Login extends React.Component {
                       style={{ width: '100%' }}
                       placeholder="手机号"
                       onChange={this.inputPhoneNumHandle.bind(this)}
-                      autocomplete="off" />)}
+                      autoComplete="off" />)}
                   </Form.Item>
 
                   <Form.Item label="">
@@ -312,7 +347,7 @@ class Login extends React.Component {
                         })(<Input placeholder="验证码" onKeyUp={this.inputSMSHandle.bind(this)} />)}
                       </Col>
                       <Col span={12}>
-                        <Button disabled={this.state.permission.smsLoginSendCode} onClick={this.sendCheckNum}>发送验证码</Button>
+                        <Button disabled={this.state.permission.smsLoginSendCode} onClick={this.sendCheckNum}>{this.state.btnText}</Button>
                       </Col>
                     </Row>
                   </Form.Item>

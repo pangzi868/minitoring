@@ -87,6 +87,19 @@
                   width: 20px;
                 }
               }
+              .group-device-status {
+                position: absolute;
+                right: 45px;
+                bottom: 12px;
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border-radius: 20px;
+                background-color: #1890ff;
+              }
+              .off-line-status {
+                background-color: #D24545;
+              }
             }
             // border-right: 0px;
             // .ant-menu-submenu {
