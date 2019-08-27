@@ -37,6 +37,7 @@ class Login extends React.Component {
     }
     this.hash = ''
     this.tamp = ''
+    this.timer = null
 
     this.inputPhoneNumHandle = this.inputPhoneNumHandle.bind(this)
     this.inputSMSHandle = this.inputSMSHandle.bind(this)
@@ -228,6 +229,7 @@ class Login extends React.Component {
           permission: temp
         })
       } else {
+        window.clearInterval(this.timer)
         maxTime = 60
         var deTemp = this.state.permission
         deTemp.smsLoginSendCode = false
@@ -343,7 +345,7 @@ class Login extends React.Component {
                     type="primary"
                     htmlType="submit"
                     className="login-form-button"
-                    disabled={this.state.permission.smsLoginSendCode || this.state.permission.smsLoginCode}>
+                    disabled={this.state.permission.smsLoginCode}>
                     登录
                   </Button>
                   {getFieldDecorator('remember', {

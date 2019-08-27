@@ -261,18 +261,6 @@ class SearchPage extends React.Component {
             ) : ''
           }
         </div>
-        {/* <div className={` ${styles['search-container']} ${styles['search-blur-result']} ${styles[`${this.state.isShowBlurResult ? 'show': 'hide'}`]} `}>
-          <div className={styles['search-blur']}>
-            <ul className={styles['blur-items']}>
-              <li className={styles['blur-item']} onClick={this.getValueHandler}>九江新希望有限公司</li>
-              <li className={styles['blur-item']} onClick={this.getValueHandler}>九江新希望有限公司</li>
-              <li className={styles['blur-item']} onClick={this.getValueHandler}>九江新希望有限公司</li>
-              <li className={styles['blur-item']} onClick={this.getValueHandler}>九江新希望有限公司</li>
-              <li className={styles['blur-item']} onClick={this.getValueHandler}>九江新希望有限公司</li>
-              <li className={styles['blur-item']} onClick={this.getValueHandler}>九江新希望有限公司</li>
-            </ul>
-          </div>
-        </div> */}
         <div className={` ${styles['search-container']} ${styles['search-result']} ${styles[`${this.state.isShowResult ? 'show' : 'hide'}`]} `}>
           {this.props.children}
         </div>

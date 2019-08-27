@@ -38,7 +38,6 @@
     "react-tag-cloud": "^1.3.2",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "star-graph": "git+http://git.sz.haizhi.com/xieyuzhong/star-graph.git",
     "superagent": "^4.1.0",
     "video-react": "^0.14.1",
     "yarn": "^1.15.2"

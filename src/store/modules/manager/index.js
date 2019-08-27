@@ -414,7 +414,11 @@ export function moveRootEquipmentName(params, cb) {
 // 删除分组中的设备
 export function deleteDeviceByRelation(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/device/deleteDevice?deviceId=${params.deviceId}`,
+    url: `${isMock()}/shungkon/deleteDeviceGroupRelate`,
+    bodyData: {
+      deviceId: params.deviceId,
+      groupId: params.groupId
+    },
     actionType: DELETE_EQUIPMENT_NAME,
     successConfig: {
       callback: cb
@@ -558,8 +562,8 @@ export function deleteUserDevice(params, cb) {
   return post({
     url: `${isMock()}/shungkon/delUserInfo`,
     bodyData: {
-      phoneNumber: params.phoneNumber,
-      serial: params.serial
+      userId: params.userId,
+      deviceId: params.deviceId
     },
     actionType: DEL_USER_DEVICE,
     successConfig: {

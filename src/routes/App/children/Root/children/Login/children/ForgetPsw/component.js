@@ -21,6 +21,7 @@ class ForgetPsw extends React.Component {
       btnText: '发送验证码',
       pswPhoneNum: true
     }
+    this.timer = null
 
     this.hash = null
     this.tamp = null
@@ -117,6 +118,7 @@ class ForgetPsw extends React.Component {
           pswPhoneNum: true
         })
       } else {
+        window.clearInterval(this.timer)
         maxTime = 60
         this.setState({
           btnText: '发送验证码',

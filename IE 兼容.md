@@ -40,37 +40,7 @@ document.querySelectorAll('div').forEach(()=>{...})
 Array.prototype.slice.call(document.querySelectorAll('xxx'))
 ```
 
-## 3. 图谱边的修改，要修改两个地方
-
-IE 中出现边颜色消失，以及箭头问题等，实际上不是兼容性问题。
-
-原因在于，d3.force 本身绘制边的时候就有针对 __“IE bug, marker-start 不能动态更新”__ 的处理，所以，在修改边的样式以及箭头等，都需要修改两个地方。否则在 IE 中会出现意外。
-
-可复制 IE bug 进行搜索。
-
-## 4. antd 的 Button 组件中不能包含 a 标签或者 Link 组件
-
-包含 a 标签或 Link 组件之后，其跳转等都会失效。估计与 IE 的事件流有关，解决办法：可以让 a 标签 或 Link 组件来包含 Button 组件，或者干脆不使用 Button，样式自己写。
-
-```jsx
-<Link to='/root/main/projectMgt/createOrEdit?operation=create' className="btn-create">
-   <Button type='primary' className='btn-create'>新建项目</Button>
-</Link>
-```
-
-## 5. 样式属性为 url() 最好带上引号
-在设置这种属性时，可以带上，也可以不带引号。在 Chrome 中获取到的属性值，是跟设置的时候一模一样的值，但是__在 IE 中，获取到的值都会带上双引号。__
-
-在图谱中，设置箭头的引用路径时，就需要设置一个 `url(#id)` 。而这个__ id 通常带有边的关键标识__，有时需要获取其值。为了兼容 IE，<strong>最好在设置的时候，就把引号带上，而且要是双引号 </strong><strong><code>url(&quot;#id&quot;)</code></strong>
-
-```javascript
-edge.attr('marker-start', 'url("#arrow_guarantee_circle")')
-```
-
-注意，这个同样要修改两个地方。原因查看第 3 点
-
-
-## 6. 样式调整
+## 3. 样式调整
 
 （1）导航栏出现换行
 盒子模型问题，设置为 content-box
@@ -158,8 +128,6 @@ class A extends React.Component {
 ## 1. 引入 formdata-polyfill
 
 IE 9 不支持 H5 的 FormData 类，所以引入 polyfill
-
-* [formdata-polyfill](https://github.com/jimmywarting/FormData)
 
 ```javascript
 require("@babel/polyfill")

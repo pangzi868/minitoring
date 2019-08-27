@@ -32,6 +32,7 @@ class Register extends React.Component {
       registerPermission: true,
     }
 
+    this.timer = null
     this.CheckboxHandle = this.CheckboxHandle.bind(this)
 
   }
@@ -84,6 +85,7 @@ class Register extends React.Component {
           registerSendSMSBtn: true
         })
       } else {
+        window.clearInterval(this.timer)
         maxTime = 60
         this.setState({
           btnText: '发送验证码',

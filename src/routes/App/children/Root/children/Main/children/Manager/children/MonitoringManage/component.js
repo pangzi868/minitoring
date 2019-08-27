@@ -172,7 +172,7 @@ class MonitoringManage extends React.Component {
             </div>
             <div className='detail-right-list'>
               <div className='add-equipment-form'>
-                <span className='add-equipment-title'>添加设备</span>
+                <span className='add-equipment-title'>录入设备</span>
                 <input id='product-addition-serial' className='product-input product-serial-number' placeholder='请输入产品序列号'></input>
                 <input id='product-addition-code' className='product-input product-code' placeholder='请输入验证码'></input>
                 <input id='product-addition-device-type' className='product-input product-model' placeholder='请输入设备型号'></input>

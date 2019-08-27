@@ -27,6 +27,7 @@ class ForgetPsw extends React.Component {
       }
     }
 
+    this.timer = null
     this.hash = null
     this.tamp = null
     this.inputPhoneNumHandle = this.inputPhoneNumHandle.bind(this)
@@ -121,6 +122,7 @@ class ForgetPsw extends React.Component {
           permission: temp
         })
       } else {
+        window.clearInterval(this.timer)
         maxTime = 60
         var deTemp = this.state.permission
         deTemp.pswPhoneNum = false

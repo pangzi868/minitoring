@@ -37,7 +37,7 @@ class TogglePage extends React.Component {
   }
   componentDidUpdate() {
   }
-  UNSAFE_componentWillReceiveProps({ from }) {
+  componentWillReceiveProps({ from }) {
   }
   render () {
 

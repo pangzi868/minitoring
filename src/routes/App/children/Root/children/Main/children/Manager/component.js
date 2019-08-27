@@ -484,7 +484,7 @@ class Minitoring extends React.Component {
       deviceId: params.deviceId,
     }, data => {
       this.props.getUserList({
-        phoneNumber: params.phoneNumber || '',
+        phoneNumber: '',
         pageNo: params.pageNo,
         pageSize: params.pageSize
       }, data => {
@@ -1059,7 +1059,7 @@ class Minitoring extends React.Component {
                 okText="确认"
                 cancelText="取消"
               >
-                <p>确定删除该分组？</p>
+                <p>若删除该分组，您将删除该分组下的所有设备，确定删除该分组？</p>
               </Modal>
               <Modal
                 title="修改设备名称"
@@ -1149,6 +1149,7 @@ class Minitoring extends React.Component {
               <div className='add-equipment-form'>
                 <span className='add-equipment-title'>添加设备</span>
                 <input id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
+                <input id='add-equipment-psw' className='product-psw' placeholder='请输入密码'></input>
                 <Select
                   showSearch
                   style={{ width: '100%' }}
@@ -1172,7 +1173,6 @@ class Minitoring extends React.Component {
                     }) : ''
                   }
                 </Select>
-                <input id='add-equipment-psw' className='product-psw' placeholder='请输入密码'></input>
                 <span className='cancel-btn' onClick={this.cancelAddEquipmentHandle.bind(this)}>取消</span>
                 <span className='add-equipment-sure-btn' onClick={this.addEquipmentHandle.bind(this)}>确认</span>
               </div>
