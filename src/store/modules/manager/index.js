@@ -414,7 +414,7 @@ export function moveRootEquipmentName(params, cb) {
 // 删除分组中的设备
 export function deleteDeviceByRelation(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/deleteDeviceGroupRelate`,
+    url: `${isMock()}/shungkon/device/deleteDeviceGroupRelate`,
     bodyData: {
       deviceId: params.deviceId,
       groupId: params.groupId

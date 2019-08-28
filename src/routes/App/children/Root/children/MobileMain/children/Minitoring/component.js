@@ -320,6 +320,7 @@ class Minitoring extends React.Component {
     if (bool) {
       this.props.deleteDeviceByRelation({ deviceId: item.deviceId, groupId: item.groupId },
         data => {
+          Toast.success('删除设备成功',1)
           this.props.getDeviceGroup({ userId: this.userId })
         }
       )

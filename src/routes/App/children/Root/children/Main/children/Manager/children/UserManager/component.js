@@ -31,6 +31,7 @@ class UserManager extends React.Component {
   getPhoneNumberSearch = (type) => {
     if (type === 'click') {
       this.params.pageNo = 1
+      this.userIndex = 0
     }
     var phoneNumber = document.getElementById('user-manager-phone-number').value
     this.props.getUserListByPhoneNum && this.props.getUserListByPhoneNum({

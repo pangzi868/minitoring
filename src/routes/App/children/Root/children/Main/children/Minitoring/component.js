@@ -277,6 +277,7 @@ class Minitoring extends React.Component {
     if (bool) {
       this.props.deleteDeviceByRelation({ deviceId: item.deviceId,groupId: item.groupId },
         data => {
+          alert('删除设备成功')
           this.props.getDeviceGroup({ userId: this.userId })
         }
       )
@@ -622,8 +623,6 @@ class Minitoring extends React.Component {
       warningDetailIndex,
       densityList,
       densityDetailIndex } = this.state
-
-    console.log(myMinitoringGroup, 'wangyinbin')
     return (
       <div className="minitoring-component">
         <div className='log-out' onClick={this.logOut.bind(this)}>退出登录</div>

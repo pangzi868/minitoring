@@ -173,11 +173,15 @@ class Login extends React.Component {
         phoneNumber: phoneNum,
         pwd: password
       }, data => {
-
-        localStorage.setItem('phoneNum', phoneNum)
-        data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
-          localStorage.setItem('userId', data.userId)
-        Toast.success('登录成功', 1, history.push('/root/main/minitoring'))
+        if (data.isRoot === '0000') {
+          Toast.fail('账号密码错误', 1)
+          return
+        } else {
+          localStorage.setItem('phoneNum', phoneNum)
+          // data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
+          //   localStorage.setItem('userId', data.userId)
+          Toast.success('登录成功', 1, history.push('/root/main/minitoring'))
+        }
       })
       // if (!err) {
       // }

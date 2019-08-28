@@ -78,7 +78,7 @@ class Minitoring extends React.Component {
         isAdditionShow: true,
         isSecondPsw: false,
 
-        isAdditionEquipmentShow: true,
+        isAdditionEquipmentShow: false,
         isAdditionGroupShow: false,
       },
 
