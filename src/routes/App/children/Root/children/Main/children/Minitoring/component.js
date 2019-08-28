@@ -51,6 +51,24 @@ function formatTime(number, format) {
 }
 
 
+//时间戳转换为 普通日期格式
+function formatDate(now) {
+  var year = now.getFullYear();   //获取获取当前年份
+  var month = now.getMonth() + 1;   //获取获取当前月份
+  var date = now.getDate();       //获取获取当前日期
+  var hour = now.getHours();      //获取时
+  var minute = now.getMinutes();  //获取分
+  var second = now.getSeconds();  //获取秒
+  //时间格式 ：年-月-日
+  return year + "-" + month + "-" + date;
+}
+//计算时间差
+function GetDateDiff(startDate, endDate) {
+  var startTime = new Date(Date.parse(startDate.replace(/-/g, "/"))).getTime();
+  var endTime = new Date(Date.parse(endDate.replace(/-/g, "/"))).getTime();
+  var dates = Math.floor((startTime - endTime)) / (1000 * 60 * 60 * 24);
+  return dates;
+}
 
 let addGroupId = -1;
 let moveGroupId = -1;
@@ -116,6 +134,11 @@ class Minitoring extends React.Component {
     this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
   }
 
+  // menu的点击事件
+  clickSubMenu = e => {
+    var dom = e.domEvent.currentTarget.children[0].children[0].children[0]
+    dom.innerText = dom.innerText === '+ ' ? '- ' : '+ '
+  }
 
   logOut = e => {
     localStorage.setItem('userId', '')
@@ -518,7 +541,13 @@ class Minitoring extends React.Component {
             var temp = data.data.uglyData
             var detailsTemp = []
             temp.map((item, index) => {
-              detailsTemp.push(Object.assign({}, item, { 'validDate': '一个月' }))
+              var current_time = new Date();  //当前时间戳
+              var old_time = new Date(item.createTime);
+              var current_time = formatDate(current_time);
+              var old_time = formatDate(old_time);
+              //计算时间差
+              var validDate = 30 - GetDateDiff(current_time, old_time);
+              detailsTemp.push(Object.assign({}, item, { 'validDate': validDate + '天' }))
             })
             this.setState({
               warningDetailIndex: 0,
@@ -625,7 +654,7 @@ class Minitoring extends React.Component {
       densityDetailIndex } = this.state
     return (
       <div className="minitoring-component">
-        <div className='log-out' onClick={this.logOut.bind(this)}>退出登录</div>
+        <div className='log-out' onClick={this.logOut.bind(this)}>退出</div>
         <div className='minitoring-left-nav'>
           <div className='left-nav-mine'>
             <div className='nav-mine-title'>我的设备</div>
@@ -645,9 +674,10 @@ class Minitoring extends React.Component {
                         item.deviceGroup !== null && item.deviceGroup !== undefined ?
                           <SubMenu
                             key={index}
+                            onTitleClick={this.clickSubMenu.bind(this)}
                             title={
                               <span style={{ width: '85%', overflow: 'hidden' }}>
-                                <span title={item.deviceGroup.deviceGroupName} className=''>{` + ` + item.deviceGroup.deviceGroupName}</span>
+                                <span title={item.deviceGroup.deviceGroupName} className=''><span className='menu-left-icon'>+ </span>{item.deviceGroup.deviceGroupName}</span>
                                 <Dropdown overlay={
                                   <Menu onClick={this.onGroupMenuClick.bind(this, item.deviceGroup)}>
                                     <Menu.Item key="0">修改分组名称</Menu.Item>
@@ -665,11 +695,12 @@ class Minitoring extends React.Component {
                                 return (
                                   items !== null && item.deviceGroup !== null && item.deviceGroup !== undefined ?
                                     <SubMenu
-                                      key={item.deviceGroup.deviceGroupName + items.deviceName}
+                                      key={item.deviceGroup.id + items.deviceName}
+                                      onTitleClick={this.clickSubMenu.bind(this)}
                                       title={
                                         <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', display: 'block', width: '85%', overflow: 'hidden' }}>
                                           {/* <Icon type="appstore" /> */}
-                                          <span title={items.deviceName}>{` + ` + items.deviceName}</span>
+                                          <span title={items.deviceName}><span className='menu-left-icon'>+ </span>{items.deviceName}</span>
                                           <span className={`group-device-status ${items.isOnline === '0' ? 'off-line-status' : ''}`}></span>
                                           <Dropdown overlay={
                                             <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.deviceGroup)}>
@@ -683,9 +714,9 @@ class Minitoring extends React.Component {
                                         </span>
                                       }
                                     >
-                                      {/* <Menu.Item key={`${item.deviceGroup.deviceGroupName + '-' + items.serial}-1`}>实时视频</Menu.Item> */}
-                                      <Menu.Item key={`${item.deviceGroup.deviceGroupName + '-' + items.serial}-2`}>告警信息</Menu.Item>
-                                      <Menu.Item key={`${item.deviceGroup.deviceGroupName + '-' + items.serial}-3`}>密度分析</Menu.Item>
+                                      {/* <Menu.Item key={`${item.deviceGroup.id + '-' + items.serial}-1`}>实时视频</Menu.Item> */}
+                                      <Menu.Item key={`${item.deviceGroup.id + '-' + items.serial}-2`}>告警信息</Menu.Item>
+                                      <Menu.Item key={`${item.deviceGroup.id + '-' + items.serial}-3`}>密度分析</Menu.Item>
                                     </SubMenu> : null
                                 )
                               }) : ''
@@ -908,7 +939,7 @@ class Minitoring extends React.Component {
                 <div className='emegency-left-list-box'>
                   {
                     warningVideos.data && warningVideos.data.uglyData && warningVideos.data.uglyData.length > 0 ? warningVideos.data.uglyData.map((item, index) => (
-                      <div className='emegency-left-item' key={index} onClick={this.warningDetailChangeHandle.bind(this, index)}>
+                      <div className={`emegency-left-item ${warningDetailIndex === index ? 'emegency-left-item-focus' : ''}`} key={index} onClick={this.warningDetailChangeHandle.bind(this, index)}>
                         <span className='wd-span wd33'>{item.serial}</span>
                         {/* <span className='wd-span wd44'>{formatTime(item.createTime, 'Y-M-D h:m:s')}</span> */}
                         <span className='wd-span wd44'>{item.warningTime}</span>
@@ -945,7 +976,7 @@ class Minitoring extends React.Component {
                   <div className='emegency-right-bottom-message'>
                     <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
                     <span className='right-bottom-message right-bottom-message-2'>{this.state.warningMessageDetails[warningDetailIndex]['warningMessage']}</span>
-                    <span className='right-bottom-message right-bottom-message-3'>有效期限：{this.state.warningMessageDetails[warningDetailIndex]['validDate']}</span>
+                    <span className='right-bottom-message right-bottom-message-3'>保存时间：{this.state.warningMessageDetails[warningDetailIndex]['validDate']}</span>
                   </div>
                 </div> :
                 <div>
@@ -955,7 +986,7 @@ class Minitoring extends React.Component {
                   <div className='emegency-right-bottom-message'>
                     <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
                     <span className='right-bottom-message right-bottom-message-2'>暂无</span>
-                    <span className='right-bottom-message right-bottom-message-3'>有效期限：--</span>
+                    <span className='right-bottom-message right-bottom-message-3'>保存时间：--</span>
                   </div>
                 </div>
             }

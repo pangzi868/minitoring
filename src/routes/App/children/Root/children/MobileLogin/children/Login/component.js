@@ -178,8 +178,8 @@ class Login extends React.Component {
           return
         } else {
           localStorage.setItem('phoneNum', phoneNum)
-          // data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
-          //   localStorage.setItem('userId', data.userId)
+          data.isRoot === '0000' ? localStorage.setItem('userId', '123456789') :
+            localStorage.setItem('userId', data.userId)
           Toast.success('登录成功', 1, history.push('/root/main/minitoring'))
         }
       })

@@ -296,7 +296,7 @@ export function deletRootGroupName(params, cb) {
   return post({
     url: `${isMock()}/shungkon/rootInfo/deleteRootGroup`,
     bodyData: {
-      rootDeviceGroupId: params.groupId
+      id: params.groupId
     },
     actionType: DELETE_ROOT_GROUP_NAME,
     successConfig: {
@@ -329,7 +329,7 @@ export function deleteGroupDevice(params, cb) {
 // 修改分组名称
 export function editRootGroup(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/rootInfo/modifyRootDeviceGroupName?rootDeviceGroupId=${params.groupId}&newDeviceGroupName=${params.groupName}&oldDeviceGroupName=${params.oldGroupName}`,
+    url: `${isMock()}/shungkon/rootInfo/modifyRootDeviceGroupName?id=${params.groupId}&newDeviceGroupName=${params.groupName}&oldDeviceGroupName=${params.oldGroupName}`,
     actionType: EDIT_ROOT_GROUP,
     successConfig: {
       callback: cb

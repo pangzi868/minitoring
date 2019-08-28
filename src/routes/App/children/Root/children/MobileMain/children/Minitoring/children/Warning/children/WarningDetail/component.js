@@ -68,7 +68,7 @@ class Detail extends React.Component {
               <div className='warning-right-bottom-message'>
                 <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
                 <span className='right-bottom-message right-bottom-message-2'>{warningVideosDetail.warningMessage}</span>
-                <span className='right-bottom-message right-bottom-message-3'>有效期限：{warningVideosDetail.validDate}</span>
+                <span className='right-bottom-message right-bottom-message-3'>保存时间：{warningVideosDetail.validDate}</span>
               </div>
             </div> :
             <div className='warning-content'>
@@ -78,7 +78,7 @@ class Detail extends React.Component {
               <div className='warning-right-bottom-message'>
                 <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
                 <span className='right-bottom-message right-bottom-message-2'>暂无</span>
-                <span className='right-bottom-message right-bottom-message-3'>有效期限：--</span>
+                <span className='right-bottom-message right-bottom-message-3'>保存时间：--</span>
               </div>
             </div>
         }

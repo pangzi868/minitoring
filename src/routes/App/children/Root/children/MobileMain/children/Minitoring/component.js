@@ -43,6 +43,24 @@ function formatTime(number, format) {
 }
 
 
+//时间戳转换为 普通日期格式
+function formatDate(now) {
+  var year = now.getFullYear();   //获取获取当前年份
+  var month = now.getMonth() + 1;   //获取获取当前月份
+  var date = now.getDate();       //获取获取当前日期
+  var hour = now.getHours();      //获取时
+  var minute = now.getMinutes();  //获取分
+  var second = now.getSeconds();  //获取秒
+  //时间格式 ：年-月-日
+  return year + "-" + month + "-" + date;
+}
+//计算时间差
+function GetDateDiff(startDate, endDate) {
+  var startTime = new Date(Date.parse(startDate.replace(/-/g, "/"))).getTime();
+  var endTime = new Date(Date.parse(endDate.replace(/-/g, "/"))).getTime();
+  var dates = Math.floor((startTime - endTime)) / (1000 * 60 * 60 * 24);
+  return dates;
+}
 let addGroupId = -1;
 let moveGroupId = -1;
 class Minitoring extends React.Component {
@@ -105,6 +123,11 @@ class Minitoring extends React.Component {
     this.onGroupMenuClick = this.onGroupMenuClick.bind(this)
     this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
 
+  }
+  // menu的点击事件
+  clickSubMenu = e => {
+    var dom = e.domEvent.currentTarget.children[0].children[0].children[0]
+    dom.innerText = dom.innerText === '+ ' ? '- ' : '+ '
   }
 
   logOut = e => {
@@ -189,7 +212,7 @@ class Minitoring extends React.Component {
         this.showMoveEquipmentModal(item, group)
         break;
       case '2':
-        this.showDeleteEquipmentModal(item,group)
+        this.showDeleteEquipmentModal(item, group)
         break;
       default:
         break;
@@ -320,7 +343,7 @@ class Minitoring extends React.Component {
     if (bool) {
       this.props.deleteDeviceByRelation({ deviceId: item.deviceId, groupId: item.groupId },
         data => {
-          Toast.success('删除设备成功',1)
+          Toast.success('删除设备成功', 1)
           this.props.getDeviceGroup({ userId: this.userId })
         }
       )
@@ -470,7 +493,13 @@ class Minitoring extends React.Component {
             var temp = data.data.uglyData
             var detailsTemp = []
             temp.map((item, index) => {
-              detailsTemp.push(Object.assign({}, item, { 'validDate': '一个月' }))
+              var current_time = new Date();  //当前时间戳
+              var old_time = new Date(item.createTime);
+              var current_time = formatDate(current_time);
+              var old_time = formatDate(old_time);
+              //计算时间差
+              var validDate = 30 - GetDateDiff(current_time, old_time);
+              detailsTemp.push(Object.assign({}, item, { 'validDate': validDate + '天' }))
             })
             this.warningVideosList = JSON.parse(JSON.stringify(detailsTemp))
             this.setState({})
@@ -523,10 +552,12 @@ class Minitoring extends React.Component {
   onSearch(val) {
   }
   /** 添加分组列表下拉操作end */
+
+
   UNSAFE_componentWillMount() {
     this.userId = localStorage.getItem('userId')
     if (this.userId === '' || this.userId === null || this.userId === '123456789') {
-      Toast.success('添加分组成功', 1)
+      Toast.fail('请进行登录', 1)
       history.push('/root/login')
       return
     } else {
@@ -566,9 +597,10 @@ class Minitoring extends React.Component {
                         item.deviceGroup !== null && item.deviceGroup !== undefined ?
                           <SubMenu
                             key={index}
+                            onTitleClick={this.clickSubMenu.bind(this)}
                             title={
                               <span style={{ width: '85%', overflow: 'hidden' }}>
-                                <span title={item.deviceGroup ? item.deviceGroup.deviceGroupName : ''} className=''>{` + ` + item.deviceGroup.deviceGroupName}</span>
+                                <span title={item.deviceGroup ? item.deviceGroup.deviceGroupName : ''} className=''><span className='menu-left-icon'>+ </span>item.deviceGroup.deviceGroupName}</span>
                                 <Dropdown overlay={
                                   <Menu onClick={this.onGroupMenuClick.bind(this, item.deviceGroup)}>
                                     <Menu.Item key="0">修改分组名称</Menu.Item>
@@ -586,10 +618,11 @@ class Minitoring extends React.Component {
                                 return (
                                   items !== null && item.deviceGroup !== null && item.deviceGroup !== undefined ?
                                     <SubMenu
-                                      key={item.deviceGroup.deviceGroupName + items.deviceName}
+                                      key={item.deviceGroup.id + items.deviceName}
+                                      onTitleClick={this.clickSubMenu.bind(this)}
                                       title={
                                         <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', display: 'block', width: '85%', overflow: 'hidden' }}>
-                                          <span title={items.deviceName}>{` + ` + items.deviceName}</span>
+                                          <span title={items.deviceName}><span className='menu-left-icon'>+ </span>items.deviceName}</span>
                                           <span className={`group-device-status ${items.isOnline === '0' ? 'off-line-status' : ''}`}></span>
                                           <Dropdown overlay={
                                             <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.deviceGroup)}>
@@ -603,8 +636,8 @@ class Minitoring extends React.Component {
                                         </span>
                                       }
                                     >
-                                      <Menu.Item key={`${item.deviceGroup.deviceGroupName + '-' + items.serial}-2`}>告警信息</Menu.Item>
-                                      <Menu.Item key={`${item.deviceGroup.deviceGroupName + '-' + items.serial}-3`}>密度分析</Menu.Item>
+                                      <Menu.Item key={`${item.deviceGroup.id + '-' + items.serial}-2`}>告警信息</Menu.Item>
+                                      <Menu.Item key={`${item.deviceGroup.id + '-' + items.serial}-3`}>密度分析</Menu.Item>
                                     </SubMenu> : null
                                 )
                               }) : ''

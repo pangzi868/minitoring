@@ -447,7 +447,7 @@ class Minitoring extends React.Component {
             <div className='emegency-right-bottom-message'>
               <span className='right-bottom-message right-bottom-message-1'>详细信息： </span>
               <span className='right-bottom-message right-bottom-message-2'>2019年02月5日，上午9时02分03秒，广州噼里啪啦设备机发现目标，目标在右下角，并成功驱赶</span>
-              <span className='right-bottom-message right-bottom-message-3'>有效期限：一个月</span>
+              <span className='right-bottom-message right-bottom-message-3'>保存时间：一个月</span>
             </div>
           </div>
 
