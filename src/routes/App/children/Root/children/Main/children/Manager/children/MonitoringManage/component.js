@@ -91,9 +91,9 @@ class MonitoringManage extends React.Component {
         <div className='monitoring-manager-middle'>
           <div className='monitoring-manager-search'>
             <span className='monitoring-manager-search-title'>设备查询</span>
-            <input id='search-input-serial' className='monitoring-manager-search-input' placeholder='设备序列号' ></input>
-            <input id='search-input-deviceType' className='monitoring-manager-search-input' placeholder='设备型号' ></input>
-            <input id='search-input-productDate' className='monitoring-manager-search-input' placeholder='生产日期2019****' ></input>
+            <input autoComplete="off" id='search-input-serial' className='monitoring-manager-search-input' placeholder='设备序列号' ></input>
+            <input autoComplete="off" id='search-input-deviceType' className='monitoring-manager-search-input' placeholder='设备型号' ></input>
+            <input autoComplete="off" id='search-input-productDate' className='monitoring-manager-search-input' placeholder='生产日期2019****' ></input>
             <button className='monitoring-manager-search-btn' onClick={this.getListByCondition.bind(this, 'click')}>查询</button>
           </div>
           <div className='monitoring-manager-search-list'>
@@ -173,11 +173,11 @@ class MonitoringManage extends React.Component {
             <div className='detail-right-list'>
               <div className='add-equipment-form'>
                 <span className='add-equipment-title'>录入设备</span>
-                <input id='product-addition-serial' className='product-input product-serial-number' placeholder='请输入产品序列号'></input>
-                <input id='product-addition-code' className='product-input product-code' placeholder='请输入验证码'></input>
-                <input id='product-addition-device-type' className='product-input product-model' placeholder='请输入设备型号'></input>
-                <input id='product-addition-soft-version' className='product-input product-versions' placeholder='请输入软件版本'></input>
-                <input id='product-addition-date' className='product-input product-date' placeholder='请输入生产日期 例子：2019-01-01'></input>
+                <input autoComplete="off" id='product-addition-serial' className='product-input product-serial-number' placeholder='请输入产品序列号'></input>
+                <input autoComplete="off" id='product-addition-code' className='product-input product-code' placeholder='请输入验证码'></input>
+                <input autoComplete="off" id='product-addition-device-type' className='product-input product-model' placeholder='请输入设备型号'></input>
+                <input autoComplete="off" id='product-addition-soft-version' className='product-input product-versions' placeholder='请输入软件版本'></input>
+                <input autoComplete="off" id='product-addition-date' className='product-input product-date' placeholder='请输入生产日期 例子：2019-01-01'></input>
                 <span className='add-equipment-sure-btn' onClick={this.enterDeviceComfirm.bind(this)}>确认</span>
               </div>
             </div>

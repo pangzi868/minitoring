@@ -7,9 +7,11 @@
   text-align: center;
   border-bottom: 1Px solid #E6E6E6; /*no*/
   .icon-return {
-    float: left;
-    font-size: 38px;
-    color: #333333;
+    position: absolute;
+    left: 10px;
+    top: 4px;
+    width: 38px;
+    height: 38px;
   }
   .header-title {
     vertical-align: top;

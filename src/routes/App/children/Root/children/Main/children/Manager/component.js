@@ -299,7 +299,7 @@ class Minitoring extends React.Component {
 
   // 修改分组名称弹窗
   showEditGroupModal = (item, e) => {
-    var groupId = item.id
+    var groupId = item.rootDeviceGroupId
     var groupName = item.rootDeviceGroupName
     this.setState({
       editGroupVisibled: true,
@@ -331,7 +331,7 @@ class Minitoring extends React.Component {
 
   // 删除分组弹窗
   showDeleteGroupModal = (item, e) => {
-    var groupId = item.id
+    var groupId = item.rootDeviceGroupId
     this.setState({
       deleteGroupVisibled: true,
       deleteGroupItem: { groupId: groupId }
@@ -716,7 +716,7 @@ class Minitoring extends React.Component {
               var old_time = formatDate(old_time);
               //计算时间差
               var validDate = 30 - GetDateDiff(current_time, old_time);
-              detailsTemp.push(Object.assign({}, item, { 'validDate': validDate + '天'  }))
+              detailsTemp.push(Object.assign({}, item, { 'validDate': validDate + '天' }))
             })
             this.setState({
               warningDetailIndex: 0,
@@ -1182,7 +1182,7 @@ class Minitoring extends React.Component {
               <div className='add-equipment-form'>
                 <span className='add-equipment-title'>添加设备</span>
                 <input id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
-                <input id='add-equipment-psw' className='product-psw' placeholder='请输入密码'></input>
+                <input autoComplete="off" id='add-equipment-psw' className='product-psw' placeholder='请输入设备验证码'></input>
                 <Select
                   showSearch
                   style={{ width: '100%' }}
@@ -1305,7 +1305,7 @@ class Minitoring extends React.Component {
                         <img src={Company} className='emegency-left-item-img' alt='emegency-left-item-img'></img>
                       </div>
                     ))
-                      : ''
+                      : <div className='no-list'>此设备暂无告警信息</div>
                   }
                 </div>
               </div>
@@ -1375,7 +1375,7 @@ class Minitoring extends React.Component {
                       <img className='density-analysis-item-img' alt='density-analysis-item-img' src={SRC_PATH + item.path}></img>
                       <span className='density-analysis-item-date'>{item.validDate}</span>
                     </div>
-                  )) : null
+                  )) : <div className='no-list'>此设备暂无密度图片信息</div>
                 }
               </div>
             </div>

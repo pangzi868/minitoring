@@ -59,7 +59,7 @@ class List extends React.Component {
                   </span>
                 </div>
               ))
-                : ''
+                : <div className='no-list'>此设备暂无告警信息</div>
             }
           </div>
 

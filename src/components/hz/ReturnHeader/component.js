@@ -2,6 +2,7 @@ import React from 'react'
 import './component.scss'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import LeftIcon from './images/1.3.png'
 
 class ReturnHeader extends React.Component {
   // import PropTypes from 'prop-types'
@@ -42,7 +43,7 @@ class ReturnHeader extends React.Component {
   }
   render () {
     const { title, url, rightBtn } = this.props
-    const returnBtn = <i className='iconfont icon-return'></i>
+    const returnBtn = <img className='icon-return' alt='icon-return' src={LeftIcon}></img>
     // const GoBack = <GoBack><i className='iconfont icon-return'></i></GoBack>
     return (
       <div className="return-header-component">

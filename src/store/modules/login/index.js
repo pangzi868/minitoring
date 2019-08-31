@@ -45,8 +45,7 @@ export function ValidateCode(params) {
     },
     actionType: VALIDATE_SMS,
     failConfig: {
-      message: '校验验证码失败',
-      isForceShow: true
+      message: '校验验证码失败'
     }
   })
 }
@@ -68,8 +67,7 @@ export function phoneNumRegister(params, cb) {
       callback: cb
     },
     failConfig: {
-      message: '注册账号密码失败',
-      isForceShow: true
+      message: '注册账号密码失败'
     }
   })
 }
@@ -88,7 +86,7 @@ export function passWordLogin(params, cb) {
     },
     failConfig: {
       message: '账号/密码错误，登录失败',
-      isForceShow: true
+
     }
   })
 }
@@ -110,7 +108,7 @@ export function retrievePassword(params, cb) {
     },
     failConfig: {
       message: '修改密码失败',
-      isForceShow: true
+
     }
   })
 }
@@ -130,7 +128,7 @@ export function modifyPassword(params, cb) {
     },
     failConfig: {
       message: '修改密码失败',
-      isForceShow: true
+
     }
   })
 }
@@ -152,7 +150,7 @@ export function SMSLogin(params,cb) {
     },
     failConfig: {
       message: '短信登录失败',
-      isForceShow: true
+
     }
   })
 }

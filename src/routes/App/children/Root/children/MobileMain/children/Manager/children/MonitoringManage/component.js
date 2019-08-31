@@ -78,9 +78,9 @@ class MonitoringManage extends React.Component {
         <div className='monitoring-manager-middle'>
           <div className='monitoring-manager-search'>
             <span className='monitoring-manager-search-title'>用户查询</span>
-            <input className='monitoring-manager-search-input' placeholder='设备序列号' ></input>
-            <input className='monitoring-manager-search-input' placeholder='设备型号' ></input>
-            <input className='monitoring-manager-search-input' placeholder='生产日期2019****' ></input>
+            <input autoComplete="off" className='monitoring-manager-search-input' placeholder='设备序列号' ></input>
+            <input autoComplete="off" className='monitoring-manager-search-input' placeholder='设备型号' ></input>
+            <input autoComplete="off" className='monitoring-manager-search-input' placeholder='生产日期2019****' ></input>
             <button className='monitoring-manager-search-btn'>查询</button>
           </div>
           <div className='monitoring-manager-search-list'>
@@ -124,11 +124,11 @@ class MonitoringManage extends React.Component {
             <div className='detail-right-list'>
               <div className='add-equipment-form'>
                 <span className='add-equipment-title'>添加设备</span>
-                <input className='product-input product-serial-number' placeholder='请输入产品序列号'></input>
-                <input className='product-input product-code' placeholder='请输入验证码'></input>
-                <input className='product-input product-model' placeholder='请输入设备型号'></input>
-                <input className='product-input product-versions' placeholder='请输入软件版本'></input>
-                <input className='product-input product-date' placeholder='请输入生产日期'></input>
+                <input autoComplete="off" className='product-input product-serial-number' placeholder='请输入产品序列号'></input>
+                <input autoComplete="off" className='product-input product-code' placeholder='请输入验证码'></input>
+                <input autoComplete="off" className='product-input product-model' placeholder='请输入设备型号'></input>
+                <input autoComplete="off" className='product-input product-versions' placeholder='请输入软件版本'></input>
+                <input autoComplete="off" className='product-input product-date' placeholder='请输入生产日期'></input>
                 <span className='add-equipment-sure-btn'>确认</span>
               </div>
             </div>

@@ -374,8 +374,8 @@ class Minitoring extends React.Component {
             <img alt='add-equipment-img' className='add-equipment-img' src={AddEquipment}></img>
             <div className='add-equipment-form'>
               <span className='add-equipment-title'>添加设备</span>
-              <input className='product-serial-number' placeholder='请输入产品序列号'></input>
-              <input className='product-psw' placeholder='请输入密码'></input>
+              <input autoComplete="off" className='product-serial-number' placeholder='请输入产品序列号'></input>
+              <input autoComplete="off" className='product-psw' placeholder='请输入密码'></input>
               <span className='add-equipment-sure-btn'>确认</span>
             </div>
           </div>

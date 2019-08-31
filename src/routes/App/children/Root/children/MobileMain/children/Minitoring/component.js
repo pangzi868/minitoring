@@ -600,7 +600,7 @@ class Minitoring extends React.Component {
                             onTitleClick={this.clickSubMenu.bind(this)}
                             title={
                               <span style={{ width: '85%', overflow: 'hidden' }}>
-                                <span title={item.deviceGroup ? item.deviceGroup.deviceGroupName : ''} className=''><span className='menu-left-icon'>+ </span>item.deviceGroup.deviceGroupName}</span>
+                                <span title={item.deviceGroup ? item.deviceGroup.deviceGroupName : ''} className=''><span className='menu-left-icon'>+ </span>{item.deviceGroup.deviceGroupName}</span>
                                 <Dropdown overlay={
                                   <Menu onClick={this.onGroupMenuClick.bind(this, item.deviceGroup)}>
                                     <Menu.Item key="0">修改分组名称</Menu.Item>
@@ -622,7 +622,7 @@ class Minitoring extends React.Component {
                                       onTitleClick={this.clickSubMenu.bind(this)}
                                       title={
                                         <span onClick={this.secondMenuHandle.bind(this, items)} style={{ height: '100%', display: 'block', width: '85%', overflow: 'hidden' }}>
-                                          <span title={items.deviceName}><span className='menu-left-icon'>+ </span>items.deviceName}</span>
+                                          <span title={items.deviceName}><span className='menu-left-icon'>+ </span>{items.deviceName}</span>
                                           <span className={`group-device-status ${items.isOnline === '0' ? 'off-line-status' : ''}`}></span>
                                           <Dropdown overlay={
                                             <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.deviceGroup)}>
@@ -656,7 +656,7 @@ class Minitoring extends React.Component {
                 okText="确认"
                 cancelText="取消"
               >
-                <input placeholder='请输入分组名称' id='edit-group-name' className='ant-modal-input'></input>
+                <input autoComplete="off" placeholder='请输入分组名称' id='edit-group-name' className='ant-modal-input'></input>
               </Modal>
               <Modal
                 title="删除分组"
@@ -676,7 +676,7 @@ class Minitoring extends React.Component {
                 okText="确认"
                 cancelText="取消"
               >
-                <input placeholder='请输入设备名称' id='edit-equipment-name' className='ant-modal-input'></input>
+                <input autoComplete="off" placeholder='请输入设备名称' id='edit-equipment-name' className='ant-modal-input'></input>
               </Modal>
               <Modal
                 title="移动分组"
@@ -739,8 +739,8 @@ class Minitoring extends React.Component {
           <div className={`add-equipment-comfirm ${this.state.isShowHandle.isSettingPswShow ? '' : 'hide'}`}>
             <div className='add-equipment-form'>
               <span className='add-equipment-title'>修改密码</span>
-              <input type='password' id='setting-old-psw' className='product-serial-number' placeholder='请输入旧密码'></input>
-              <input type='password' id='setting-new-psw' className='product-serial-number' placeholder='请输入新密码'></input>
+              <input autoComplete="off" type='password' id='setting-old-psw' className='product-serial-number' placeholder='请输入旧密码'></input>
+              <input autoComplete="off" type='password' id='setting-new-psw' className='product-serial-number' placeholder='请输入新密码'></input>
               <span className='cancel-btn' onClick={this.cancelCheckSettingPsw.bind(this)}>取消</span>
               <span className='add-equipment-sure-btn' onClick={this.checkSettingPsw.bind(this)}>确认</span>
             </div>
@@ -748,7 +748,7 @@ class Minitoring extends React.Component {
           <div className={`add-equipment-comfirm ${this.state.isShowHandle.isAdditionGroupShow ? '' : 'hide'}`}>
             <div className='add-equipment-form'>
               <span className='add-equipment-title'>添加分组</span>
-              <input id='add-group-input' className='product-serial-number' placeholder='请输入分组名称'></input>
+              <input autoComplete="off" id='add-group-input' className='product-serial-number' placeholder='请输入分组名称'></input>
               <span className='cancel-btn' onClick={this.cancelAddGroupHandle.bind(this)}>取消</span>
               <span className='add-equipment-sure-btn' onClick={this.addGroupHandle.bind(this)}>确认</span>
             </div>
@@ -757,8 +757,8 @@ class Minitoring extends React.Component {
           <div className={`add-equipment-comfirm ${this.state.isShowHandle.isAdditionEquipmentShow ? '' : 'hide'}`}>
             <div className='add-equipment-form'>
               <span className='add-equipment-title'>添加设备</span>
-              <input id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
-              <input id='add-equipment-psw' className='product-psw' placeholder='请输入密码'></input>
+              <input autoComplete="off" id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
+              <input autoComplete="off" id='add-equipment-psw' className='product-psw' placeholder='请输入设备验证码'></input>
               <Select
                 showSearch
                 style={{ width: '100%' }}
