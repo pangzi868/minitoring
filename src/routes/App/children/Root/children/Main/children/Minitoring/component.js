@@ -24,6 +24,7 @@ const { SubMenu } = Menu;
 const { Option } = Select;
 
 const SRC_PATH = 'http://112.74.77.11:2019/shungkon'
+const IMG_DOWNLOAD_ADDRESS = 'http://112.74.77.11:2019'
 
 
 // 格式化日期，如月、日、时、分、秒保证为2位数
@@ -170,7 +171,7 @@ class Minitoring extends React.Component {
         this.showMoveEquipmentModal(item, group)
         break;
       case '2':
-        this.showDeleteEquipmentModal(item,group)
+        this.showDeleteEquipmentModal(item, group)
         break;
       default:
         break;
@@ -285,12 +286,12 @@ class Minitoring extends React.Component {
   };
 
   // 删除设备弹窗
-  showDeleteEquipmentModal = (item,group, e) => {
+  showDeleteEquipmentModal = (item, group, e) => {
     var deviceId = item.deviceId
     var groupId = group.deviceGroupId
     this.setState({
       deleteEquipmentVisibled: true,
-      deleteEquipmentItem: { deviceId: deviceId,groupId: groupId }
+      deleteEquipmentItem: { deviceId: deviceId, groupId: groupId }
     });
   };
 
@@ -298,7 +299,7 @@ class Minitoring extends React.Component {
   hideDeleteEquipmentModal = (item, bool, e) => {
     e.preventDefault();
     if (bool) {
-      this.props.deleteDeviceByRelation({ deviceId: item.deviceId,groupId: item.groupId },
+      this.props.deleteDeviceByRelation({ deviceId: item.deviceId, groupId: item.groupId },
         data => {
           alert('删除设备成功')
           this.props.getDeviceGroup({ userId: this.userId })
@@ -317,7 +318,26 @@ class Minitoring extends React.Component {
   editMinitoring(item, e) {
   }
 
+  densityImgDown = (path) => {
+    debugger
 
+    var params = JSON.stringify({
+      key: 'value'
+    })
+    let formElement = document.createElement('form');
+    formElement.style.display = "display:none;";
+    formElement.method = 'post';
+    formElement.action = SRC_PATH + `${path}`;
+    formElement.target = 'callBackTarget';
+    let inputElement = document.createElement('input');
+    inputElement.type = 'hidden';
+    inputElement.name = "params";
+    inputElement.value = params;
+    formElement.appendChild(inputElement);
+    document.body.appendChild(formElement);
+    formElement.submit();
+    document.body.removeChild(formElement);
+  }
   /** 添加分组列表下拉操作start */
   onChange(value) {
     if (value) {
@@ -1016,11 +1036,13 @@ class Minitoring extends React.Component {
                     <div className='density-analysis-item' key={index} onClick={this.densityDetailHandle.bind(this, index)}>
                       <img className='density-analysis-item-img' alt='density-analysis-item-img' src={SRC_PATH + item.path}></img>
                       <span className='density-analysis-item-date'>{item.validDate}</span>
+                      {/* <img className='real-time-download-img' alt='real-time-download-img' src={DownloadBtn}></img> */}
                     </div>
                   )) : <div className='no-list'>此设备暂无密度图片信息</div>
                 }
               </div>
             </div>
+            <div id='downloadDiv' style={{ display: 'none' }}></div>
           </div>
         </div>
       </div >

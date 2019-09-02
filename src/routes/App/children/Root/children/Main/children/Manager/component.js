@@ -22,12 +22,14 @@ import DownloadBtn from './images/3.4.png'
 import ViewMore from './images/sidebar-viewmore.svg'
 import File from './images/4.1.png'
 import Company from './images/company.png'
-
+import { renderToString } from "react-dom/server";
+import jsPDF from "jspdf";
 
 const { SubMenu } = Menu;
 
 const { Option } = Select;
 const FILE_UPLOAD_ADDRESS = 'http://112.74.77.11:2019/shungkon/attach/upload'
+const IMG_DOWNLOAD_ADDRESS = 'http://112.74.77.11:2019'
 
 const SRC_PATH = 'http://112.74.77.11:2019/shungkon'
 
@@ -162,6 +164,7 @@ class Minitoring extends React.Component {
     this.onGroupMenuClick = this.onGroupMenuClick.bind(this)
     this.changeLogList = this.changeLogList.bind(this)
     this.onEquipmentMenuClick = this.onEquipmentMenuClick.bind(this)
+    this.densityImgDown = this.densityImgDown.bind(this)
   }
 
   // menu的点击事件
@@ -250,6 +253,10 @@ class Minitoring extends React.Component {
         break;
     }
   };
+
+  imgDownLoad = e => {
+    e.preventDefault();
+  }
 
   // 修改密码确定按钮
   checkSettingPsw = e => {
@@ -529,6 +536,26 @@ class Minitoring extends React.Component {
   }
 
   editMinitoring(item, e) {
+  }
+
+  densityImgDown = (path) => {
+    debugger
+    var params = JSON.stringify({
+      key: 'value'
+    })
+    let formElement = document.createElement('form');
+    formElement.style.display = "display:none;";
+    formElement.method = 'post';
+    formElement.action = SRC_PATH + path;
+    formElement.target = 'callBackTarget';
+    let inputElement = document.createElement('input');
+    inputElement.type = 'hidden';
+    inputElement.name = "params";
+    inputElement.value = params;
+    formElement.appendChild(inputElement);
+    document.body.appendChild(formElement);
+    formElement.submit();
+    document.body.removeChild(formElement);
   }
 
 
@@ -1374,10 +1401,12 @@ class Minitoring extends React.Component {
                     <div className='density-analysis-item' key={index} onClick={this.densityDetailHandle.bind(this, index)}>
                       <img className='density-analysis-item-img' alt='density-analysis-item-img' src={SRC_PATH + item.path}></img>
                       <span className='density-analysis-item-date'>{item.validDate}</span>
+                      {/* <a download href={SRC_PATH + item.path} ><img className='density-analysis-download-img' alt='density-analysis-download-img' src={DownloadBtn}></img></a> */}
                     </div>
                   )) : <div className='no-list'>此设备暂无密度图片信息</div>
                 }
               </div>
+              <div id='downloadDiv' style={{ display: 'none' }}></div>
             </div>
           </div>
 
