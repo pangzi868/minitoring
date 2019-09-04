@@ -848,9 +848,10 @@ class Minitoring extends React.Component {
           <div className='add-equipment-content'>
             <div className={`add-equipment-comfirm ${this.state.isWindowShow.isAdditionEquipmentShow ? '' : 'hide'}`}>
               <div className='add-equipment-form'>
+              <form autocomplete="off" style={{ width: '100%' }}>
                 <span className='add-equipment-title'>添加设备</span>
-                <input autoComplete="off" id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
-                <input autoComplete="off" id='add-equipment-psw' className='product-psw' placeholder='请输入设备验证码'></input>
+                <input type='text' autoComplete="off" id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
+                <input type='text' autocomplete="new-password" id='add-equipment-psw' className='product-psw' placeholder='请输入设备验证码'></input>
                 <Select
                   showSearch
                   style={{ width: '100%' }}
@@ -874,6 +875,7 @@ class Minitoring extends React.Component {
                     }) : ''
                   }
                 </Select>
+                </form>
                 <span className='cancel-btn' onClick={this.cancelAddEquipmentHandle.bind(this)}>取消</span>
                 <span className='add-equipment-sure-btn' onClick={this.addEquipmentHandle.bind(this)}>确认</span>
               </div>

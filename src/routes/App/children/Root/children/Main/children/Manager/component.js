@@ -23,7 +23,15 @@ import ViewMore from './images/sidebar-viewmore.svg'
 import File from './images/4.1.png'
 import Company from './images/company.png'
 import { renderToString } from "react-dom/server";
-import jsPDF from "jspdf";
+// import download from 'image-downloader'
+// const fs = require('fs');
+// import fs from 'fs'
+// eslint-disable-next-line
+// const download = require('download');
+// import download from 'download'
+
+// const imageDownloader = require('node-image-downloader')
+// const download = require('image-downloader')
 
 const { SubMenu } = Menu;
 
@@ -254,8 +262,60 @@ class Minitoring extends React.Component {
     }
   };
 
-  imgDownLoad = e => {
-    e.preventDefault();
+
+  // download(url, name) {
+  //   name = name || url
+  //   // fetch抓取图片数据
+  //   fetch(url).then(response => {
+  //     if (response.status == 200)
+  //       // 返回的.blob()为promise，然后生成了blob对象，此方法获得的blob对象包含了数据类型，十分方便
+  //       return response.blob()
+  //     throw new Error(`status: ${response.status}.`)
+  //   }).then(blob => {
+  //     // 获取到blob对象
+  //     downloadFile(name, blob)
+  //   }).catch(error => {
+  //     console.log("failed. cause:", error)
+  //   })
+  // }
+
+  // downloadFile(fileName, blob) {
+  //   // 创建指向blob对象地址
+  //   let eleLink = document.createElement('a')
+  //   var binaryData = [];
+  //   binaryData.push(blob);
+  //   let url = URL.createObjectURL(new Blob(binaryData, { type: "application/zip" }))
+  //   eleLink.download = fileName
+  //   eleLink.href = url
+  //   eleLink.click()
+  //   eleLink.remove()
+  // }
+
+  imgDownLoad = (path) => {
+    let request = new Request(SRC_PATH + path, {
+      method: 'get',
+      // credentials: 'include',
+      headers: {
+        'Accept': '*',
+        'crossOrigin': 'anonymous',
+        'Access-Control-Allow-Origin': 'http://localhost:3008'
+      },
+      contentType: 'multipart/form-data',
+      mode: 'no-cors'
+    });
+
+    let image = new Image()
+    fetch(request).then(res => res.text()).then(res => {
+
+    })
+  }
+
+  download(href, name = 'pic') {
+    let eleLink = document.createElement('a')
+    eleLink.download = name
+    eleLink.href = href
+    eleLink.click()
+    eleLink.remove()
   }
 
   // 修改密码确定按钮
@@ -539,7 +599,6 @@ class Minitoring extends React.Component {
   }
 
   densityImgDown = (path) => {
-    debugger
     var params = JSON.stringify({
       key: 'value'
     })
@@ -1207,32 +1266,34 @@ class Minitoring extends React.Component {
           <div className='add-equipment-content'>
             <div className={`add-equipment-comfirm ${this.state.isWindowShow.isAdditionEquipmentShow ? '' : 'hide'}`}>
               <div className='add-equipment-form'>
-                <span className='add-equipment-title'>添加设备</span>
-                <input id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
-                <input autoComplete="off" id='add-equipment-psw' className='product-psw' placeholder='请输入设备验证码'></input>
-                <Select
-                  showSearch
-                  style={{ width: '100%' }}
-                  placeholder="请选择分组"
-                  optionFilterProp="children"
-                  onChange={this.onChange}
-                  onFocus={this.onFocus}
-                  onBlur={this.onBlur}
-                  onSearch={this.onSearch}
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {
-                    myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
-                      return (
-                        item.rootDeviceGroup !== null && item.rootDeviceGroup !== undefined ?
-                          <Option value={item.rootDeviceGroup.rootDeviceGroupId} key={index}>{item.rootDeviceGroup.rootDeviceGroupName}</Option>
-                          : ''
-                      )
-                    }) : ''
-                  }
-                </Select>
+                <form autocomplete="off" style={{ width: '100%' }}>
+                  <span className='add-equipment-title'>添加设备</span>
+                  <input id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
+                  <input autoComplete="off" id='add-equipment-psw' className='product-psw' placeholder='请输入设备验证码'></input>
+                  <Select
+                    showSearch
+                    style={{ width: '100%' }}
+                    placeholder="请选择分组"
+                    optionFilterProp="children"
+                    onChange={this.onChange}
+                    onFocus={this.onFocus}
+                    onBlur={this.onBlur}
+                    onSearch={this.onSearch}
+                    filterOption={(input, option) =>
+                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {
+                      myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
+                        return (
+                          item.rootDeviceGroup !== null && item.rootDeviceGroup !== undefined ?
+                            <Option value={item.rootDeviceGroup.rootDeviceGroupId} key={index}>{item.rootDeviceGroup.rootDeviceGroupName}</Option>
+                            : ''
+                        )
+                      }) : ''
+                    }
+                  </Select>
+                </form>
                 <span className='cancel-btn' onClick={this.cancelAddEquipmentHandle.bind(this)}>取消</span>
                 <span className='add-equipment-sure-btn' onClick={this.addEquipmentHandle.bind(this)}>确认</span>
               </div>
@@ -1401,6 +1462,7 @@ class Minitoring extends React.Component {
                     <div className='density-analysis-item' key={index} onClick={this.densityDetailHandle.bind(this, index)}>
                       <img className='density-analysis-item-img' alt='density-analysis-item-img' src={SRC_PATH + item.path}></img>
                       <span className='density-analysis-item-date'>{item.validDate}</span>
+                      {/* <img onClick={this.imgDownLoad.bind(this, item.path)} className='density-analysis-download-img' alt='density-analysis-download-img' src={DownloadBtn}></img> */}
                       {/* <a download href={SRC_PATH + item.path} ><img className='density-analysis-download-img' alt='density-analysis-download-img' src={DownloadBtn}></img></a> */}
                     </div>
                   )) : <div className='no-list'>此设备暂无密度图片信息</div>

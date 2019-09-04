@@ -33,6 +33,7 @@ app.use(
         // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
         proxyReq.setHeader('Content-Type', 'application/json;charset=UTF-8');
         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.setHeader('access-control-allow-origin', 'http://localhost:3008');
         // stream the content
         proxyReq.write(bodyData);
       }

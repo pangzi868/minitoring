@@ -3,6 +3,19 @@ import './component.scss'
 
 import { Pagination } from 'antd';
 
+/**
+ * 日期校验
+ * @param date
+ * @returns {Boolean}
+ */
+function isDate(date) {
+  var reg = date.match(/^(\d{4})(-|\/)(\d{2})\2(\d{2})$/);
+  if (reg == null) return false;
+  var d = new Date(reg[1], reg[3] - 1, reg[4]);
+  return (d.getFullYear() == reg[1] && (d.getMonth() + 1) == reg[3] && d.getDate() == reg[4]);
+}
+
+
 class MonitoringManage extends React.Component {
   constructor(props) {
     super(props)
@@ -34,6 +47,10 @@ class MonitoringManage extends React.Component {
       softVersion: document.getElementById('product-addition-soft-version').value,
       productDate: document.getElementById('product-addition-date').value,
     }
+    if (!isDate(params.productDate)) {
+      alert('请输入正确的设备生产时间')
+      return
+    }
     this.props.enterDeviceToSystem && this.props.enterDeviceToSystem(params)
     document.getElementById('product-addition-serial').value = ''
     document.getElementById('product-addition-code').value = ''
@@ -50,6 +67,12 @@ class MonitoringManage extends React.Component {
     this.params.serial = document.getElementById('search-input-serial').value
     this.params.productDate = document.getElementById('search-input-productDate').value
     this.params.deviceType = document.getElementById('search-input-deviceType').value
+    if (this.params.productDate !== '') {
+      if (!isDate(this.params.productDate)) {
+        alert('请输入正确的生产时间')
+        return
+      }
+    }
     var params = {
       serial: this.params.serial,
       deviceType: this.params.deviceType,
@@ -93,7 +116,7 @@ class MonitoringManage extends React.Component {
             <span className='monitoring-manager-search-title'>设备查询</span>
             <input autoComplete="off" id='search-input-serial' className='monitoring-manager-search-input' placeholder='设备序列号' ></input>
             <input autoComplete="off" id='search-input-deviceType' className='monitoring-manager-search-input' placeholder='设备型号' ></input>
-            <input autoComplete="off" id='search-input-productDate' className='monitoring-manager-search-input' placeholder='生产日期2019****' ></input>
+            <input autoComplete="off" id='search-input-productDate' className='monitoring-manager-search-input' placeholder='生产日期2019-01-01' ></input>
             <button className='monitoring-manager-search-btn' onClick={this.getListByCondition.bind(this, 'click')}>查询</button>
           </div>
           <div className='monitoring-manager-search-list'>

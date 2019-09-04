@@ -311,10 +311,10 @@ export function deletRootGroupName(params, cb) {
 // 删除管理员设备
 export function deleteGroupDevice(params, cb) {
   return post({
-    url: `${isMock()}/shungkon/rootInfo/deleteRootGroup`,
+    url: `${isMock()}/shungkon/device/deleteDevice`,
     bodyData: {
       deviceId: params.deviceId,
-      rootDeviceGroupId: params.groupId
+      // rootDeviceGroupId: params.groupId
     },
     actionType: DELETE_GROUP_DEVICE,
     successConfig: {

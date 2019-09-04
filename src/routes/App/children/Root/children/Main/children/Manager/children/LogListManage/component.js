@@ -85,7 +85,7 @@ class LogListManage extends React.Component {
                 this.logManagerList && this.logManagerList !== null && this.logManagerList.total !== 0 ? this.logManagerList.data.uglyData.map((item, index) => {
                   return (
                     <div className='result-items'>
-                      <span className='wd-span wd15 search-items-span'>{item.logNum}</span>
+                      <span className='wd-span wd15 search-items-span'>{index + 1 + (this.params.pageNo - 1) * 10}</span>
                       <span className='wd-span wd25 search-items-span'>{item.ipAddress}</span>
                       <span className='wd-span wd25 search-items-span'>{item.logName}</span>
                       <span className='wd-span wd35 search-items-span'>{item.logTime}</span>
@@ -104,7 +104,8 @@ class LogListManage extends React.Component {
               size='small'
               className='pagination-div'
               onChange={(pageNo, pageSize) => {
-                this.pageNo = pageNo
+                debugger
+                this.params.pageNo = pageNo
                 this.changePagination()
               }}
             />

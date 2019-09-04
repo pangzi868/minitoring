@@ -35,7 +35,8 @@ const DEFAULT_CONFIG = {
   autoUrlPrefix: false, //是否自动补全URL前缀，比如/crm-lz-ls/api
   addAuthorization: true,
   successConfig: null, // {message: '', callback: function, isForceShow: false}
-  failConfig: null // {message: '', callback: function, isForceShow: false}
+  failConfig: null, // {message: '', callback: function, isForceShow: false}
+  "access-control-allow-origin": "http://localhost:3008"
 };
 
 const formatPayload = responseData => {

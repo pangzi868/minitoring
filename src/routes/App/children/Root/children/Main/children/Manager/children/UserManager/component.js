@@ -191,7 +191,7 @@ class UserManager extends React.Component {
                     <span className='wd-span wd30 search-item-span'>{item.password}</span>
                     <span className='wd-span wd30 search-item-span'>{
                       item.deviceList.map((items, indexs) => (
-                        <span>{items.deviceName}、</span>
+                        <span>{items.deviceName + (indexs === item.deviceList.length-1 ? '' : '、')}</span>
                       ))
                     }</span>
                   </div>

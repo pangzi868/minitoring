@@ -756,32 +756,34 @@ class Minitoring extends React.Component {
 
           <div className={`add-equipment-comfirm ${this.state.isShowHandle.isAdditionEquipmentShow ? '' : 'hide'}`}>
             <div className='add-equipment-form'>
-              <span className='add-equipment-title'>添加设备</span>
-              <input autoComplete="off" id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
-              <input autoComplete="off" id='add-equipment-psw' className='product-psw' placeholder='请输入设备验证码'></input>
-              <Select
-                showSearch
-                style={{ width: '100%' }}
-                placeholder="请选择分组"
-                optionFilterProp="children"
-                onChange={this.onChange}
-                onFocus={this.onFocus}
-                onBlur={this.onBlur}
-                onSearch={this.onSearch}
-                filterOption={(input, option) =>
-                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-              >
-                {
-                  myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
-                    return (
-                      item.deviceGroup !== null && item.deviceGroup !== undefined ?
-                        <Option value={item.deviceGroup.deviceGroupId} key={index}>{item.deviceGroup.deviceGroupName}</Option>
-                        : ''
-                    )
-                  }) : ''
-                }
-              </Select>
+              <form autocomplete="off" style={{ width: '100%' }}>
+                <span className='add-equipment-title'>添加设备</span>
+                <input autoComplete="off" id='add-equipment-product-num' className='product-serial-number' placeholder='请输入产品序列号'></input>
+                <input autoComplete="off" id='add-equipment-psw' className='product-psw' placeholder='请输入设备验证码'></input>
+                <Select
+                  showSearch
+                  style={{ width: '100%' }}
+                  placeholder="请选择分组"
+                  optionFilterProp="children"
+                  onChange={this.onChange}
+                  onFocus={this.onFocus}
+                  onBlur={this.onBlur}
+                  onSearch={this.onSearch}
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {
+                    myMinitoringGroup && myMinitoringGroup.length !== 0 ? myMinitoringGroup.map((item, index) => {
+                      return (
+                        item.deviceGroup !== null && item.deviceGroup !== undefined ?
+                          <Option value={item.deviceGroup.deviceGroupId} key={index}>{item.deviceGroup.deviceGroupName}</Option>
+                          : ''
+                      )
+                    }) : ''
+                  }
+                </Select>
+              </form>
               <span className='cancel-btn' onClick={this.cancelAddEquipmentHandle.bind(this)}>取消</span>
               <span className='add-equipment-sure-btn' onClick={this.addEquipmentHandle.bind(this)}>确认</span>
             </div>
