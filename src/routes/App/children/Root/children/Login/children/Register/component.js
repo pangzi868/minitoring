@@ -204,7 +204,7 @@ class Register extends React.Component {
     return (
       < div className="register-div-component" >
         {/** 注册账号表单 */}
-        <Form {...formItemLayout} onSubmit={this.registerHandleSubmit}>
+        <Form {...formItemLayout} onSubmit={this.registerHandleSubmit} autoComplete="off">
           <Form.Item label="">
             {getFieldDecorator('phone', {
               rules: [{ required: true, message: '请输入你的手机号' }],

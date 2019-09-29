@@ -249,7 +249,7 @@ class Minitoring extends React.Component {
     e.domEvent.stopPropagation();
     switch (e.key) {
       case '0':
-        this.showEditEquipmentModal(item);
+        this.showEditEquipmentModal(item, group);
         break;
       case '1':
         this.showMoveEquipmentModal(item, group)
@@ -422,7 +422,7 @@ class Minitoring extends React.Component {
   };
 
   // 修改设备名称弹窗
-  showEditEquipmentModal = (item, e) => {
+  showEditEquipmentModal = (item, group, e) => {
     var deviceId = item.deviceId
     this.setState({
       editEquipmentVisibled: true,
@@ -435,8 +435,9 @@ class Minitoring extends React.Component {
     e.preventDefault();
     if (bool) {
       var deviceName = document.getElementById('edit-equipment-name').value
-      this.props.editEquipmentName({ deviceId: item.deviceId, deviceName: deviceName },
+      this.props.modifyDeviceName({ deviceId: item.deviceId, deviceName: deviceName },
         data => {
+          alert('修改名称成功')
           this.props.getRootDeviceGroup({ userId: this.userId })
         }
       )
@@ -1067,25 +1068,6 @@ class Minitoring extends React.Component {
       warningDetailIndex,
       densityList,
       densityDetailIndex } = this.state
-    const props = {
-      onRemove: file => {
-        this.setState(state => {
-          const index = state.fileList.indexOf(file);
-          const newFileList = state.fileList.slice();
-          newFileList.splice(index, 1);
-          return {
-            fileList: newFileList,
-          };
-        });
-      },
-      beforeUpload: file => {
-        this.setState(state => ({
-          fileList: [...state.fileList, file],
-        }));
-        return false;
-      },
-      fileList,
-    };
     return (
       <div className="manager-component">
         <div className='log-out' onClick={this.logOut.bind(this)}>退出</div>
@@ -1135,7 +1117,7 @@ class Minitoring extends React.Component {
                                           <span className={`group-device-status ${items.isOnline === '0' ? 'off-line-status' : ''}`}></span>
                                           <Dropdown overlay={
                                             <Menu onClick={this.onEquipmentMenuClick.bind(this, items, item.rootDeviceGroup)}>
-                                              {/* <Menu.Item key="0">修改设备名称</Menu.Item> */}
+                                              <Menu.Item key="0">修改设备名称</Menu.Item>
                                               <Menu.Item key="1">移动分组</Menu.Item>
                                               <Menu.Item key="2">删除</Menu.Item>
                                             </Menu>

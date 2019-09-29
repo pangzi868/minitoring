@@ -358,7 +358,7 @@ export function editEquipmentName(params, cb) {
   })
 }
 
-// 修改分组名称
+// 修改设备名称
 export function modifyDeviceName(params, cb) {
   return post({
     url: `${isMock()}/shungkon/device/modifyDeviceName`,

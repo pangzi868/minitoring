@@ -29,7 +29,8 @@ import {
   moveRootEquipmentName,
   deletRootGroupName,
   deleteGroupDevice,
-  editRootGroup
+  editRootGroup,
+  modifyDeviceName
 } from 'store/modules/manager'
 
 import { modifyPassword } from 'store/modules/login'
@@ -64,7 +65,8 @@ const mapDispatchToProps = {
   moveRootEquipmentName,
   deletRootGroupName,
   deleteGroupDevice,
-  editRootGroup
+  editRootGroup,
+  modifyDeviceName
 }
 
 const mapStateToProps = (state) => ({

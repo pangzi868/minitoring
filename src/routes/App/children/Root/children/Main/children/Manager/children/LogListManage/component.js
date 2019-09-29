@@ -4,10 +4,6 @@ import './component.scss'
 
 import { DatePicker, Radio, Button, Input, Pagination } from 'antd';
 
-const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
-
-const searchListIndex = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-
 class LogListManage extends React.Component {
   constructor(props) {
     super(props)
@@ -22,6 +18,20 @@ class LogListManage extends React.Component {
     }
     this.changePagination = this.changePagination.bind(this)
     this.checkLogByCondition = this.checkLogByCondition.bind(this)
+  }
+
+  format = (date) => {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    m = m < 10 ? ('0' + m) : m;
+    var d = date.getDate();
+    d = d < 10 ? ('0' + d) : d;
+    var h = date.getHours();
+    var minute = date.getMinutes();
+    minute = minute < 10 ? ('0' + minute) : minute;
+    var second = date.getSeconds();
+    second = second < 10 ? ('0' + second) : second;
+    return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
   }
 
   checkLogByCondition = e => {
@@ -88,7 +98,7 @@ class LogListManage extends React.Component {
                       <span className='wd-span wd15 search-items-span'>{index + 1 + (this.params.pageNo - 1) * 10}</span>
                       <span className='wd-span wd25 search-items-span'>{item.ipAddress}</span>
                       <span className='wd-span wd25 search-items-span'>{item.logName}</span>
-                      <span className='wd-span wd35 search-items-span'>{item.logTime}</span>
+                      <span className='wd-span wd35 search-items-span'>{this.format(item.logTime)}</span>
                     </div>
 
                   )
